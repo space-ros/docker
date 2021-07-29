@@ -3,7 +3,7 @@
 ORG=openrobotics
 IMAGE=spaceros
 BRANCH=develop
-VCS_REF=27c3659
+VCS_REF=""
 BUILD_DATE=`date -u +”%Y-%m-%dT%H:%M:%SZ”`
 VERSION=preview
 

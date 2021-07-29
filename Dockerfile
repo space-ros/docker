@@ -18,14 +18,14 @@
 #
 #   BUILD_DATE  - The time and date that the docker image was created (no default value).
 #   VCS_REF     - The git revision of the Space ROS source code (no default value).
-#   VERSION     - The version of Space ROS (default: "Preview")
+#   VERSION     - The version of Space ROS (default: "preview")
 #   WORKSPACE   - The location for the Space ROS source code in the container (default: /usr/local/src/spaceros_ws)
 
 FROM ubuntu:20.04
 
 ARG BUILD_DATE
 ARG VCS_REF
-ARG VERSION="Preview"
+ARG VERSION="preview"
 ARG WORKSPACE=/usr/local/src/spaceros_ws
 
 # LABEL the image
@@ -53,7 +53,7 @@ RUN apt-get update
 RUN apt-get install -y locales
 RUN locale-gen en_US en_US.UTF-8
 RUN update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
-RUN export LANG=en_US.UTF-8
+ENV LANG=en_US.UTF-8
 
 # Add the ROS 2 apt repository
 RUN apt-get install -y software-properties-common
