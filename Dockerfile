@@ -44,7 +44,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 # The following commands are based on the source install for ROS 2 Rolling Ridley.
 # See: https://docs.ros.org/en/ros2_documentation/rolling/Installation/Ubuntu-Development-Setup.html
-# The only variation is getting Space ROS source instead of the Rolling source.
+# The only variation is getting Space ROS sources instead of the Rolling sources.
 
 # Update the Ubuntu software repository
 RUN apt-get update
@@ -103,3 +103,8 @@ RUN rosdep install --from-paths src --ignore-src --rosdistro rolling -y --skip-k
 
 # Build the code in the workspace
 RUN colcon build --symlink-install
+
+# Set up the entrypoint
+COPY ./ros_entrypoint.sh /
+ENTRYPOINT ["/ros_entrypoint.sh"]
+CMD ["bash"]
