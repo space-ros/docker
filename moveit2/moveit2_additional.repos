@@ -1,0 +1,121 @@
+repositories:
+  angles:
+    type: git
+    url: https://github.com/ros/angles.git
+    version: ros2
+  control_msgs:
+    type: git
+    url: https://github.com/ros-controls/control_msgs.git
+    version: galactic-devel
+  control_toolbox:
+    type: git
+    url: https://github.com/ros-controls/control_toolbox.git
+    version: ros2-master
+  eigen_stl_containers:
+    type: git
+    url: https://github.com/ros/eigen_stl_containers.git
+    version: ros2
+  ignition/ignition_cmake2_vendor:
+    type: git
+    url: https://github.com/ignition-release/ignition_cmake2_vendor.git
+    version: main
+  ignition/ignition_math6_vendor:
+    type: git
+    url: https://github.com/ignition-release/ignition_math6_vendor.git
+    version: main
+  image_common:
+    type: git
+    url: https://github.com/ros-perception/image_common.git
+    version: ros2
+  interactive_markers:
+    type: git
+    url: https://github.com/ros-visualization/interactive_markers.git
+    version: ros2
+  joint_state_publisher:
+    type: git
+    url: https://github.com/ros/joint_state_publisher.git
+    version: ros2
+  laser_geometry:
+    type: git
+    url: https://github.com/ros-perception/laser_geometry.git
+    version: ros2
+  moveit_msgs:
+    type: git
+    url: https://github.com/ros-planning/moveit_msgs.git
+    version: ros2
+  navigation_msgs:
+    type: git
+    url: https://github.com/ros-planning/navigation_msgs.git
+    version: ros2
+  object_recognition_msgs:
+    type: git
+    url: https://github.com/wg-perception/object_recognition_msgs.git
+    version: ros2
+  octomap:
+    type: git
+    url: https://github.com/octomap/octomap.git
+    version: devel
+  octomap_msgs:
+    type: git
+    url: https://github.com/OctoMap/octomap_msgs.git
+    version: ros2
+  ompl:
+    type: git
+    url: https://github.com/ompl/ompl.git
+    version: main
+  orocos_kinematics_dynamics:
+    type: git
+    url: https://github.com/ros2/orocos_kinematics_dynamics.git
+    version: ros2
+  python_qt_binding:
+    type: git
+    url: https://github.com/ros-visualization/python_qt_binding.git
+    version: main
+  random_numbers:
+    type: git
+    url: https://github.com/ros-planning/random_numbers.git
+    version: ros2
+  realtime_tools:
+    type: git
+    url: https://github.com/mjeronimo/realtime_tools.git
+    version: mjeronimo/fix-log-message
+  resource_retriever:
+    type: git
+    url: https://github.com/ros/resource_retriever.git
+    version: ros2
+  rviz:
+    type: git
+    url: https://github.com/ros2/rviz.git
+    version: ros2
+  ruckig:
+    type: git
+    url: https://github.com/pantor/ruckig.git
+    version: master
+  srdfdom:
+    type: git
+    url: https://github.com/ros-planning/srdfdom.git
+    version: ros2
+  urdfdom:
+    type: git
+    url: https://github.com/ros/urdfdom.git
+    version: ros2
+  urdfdom_headers:
+    type: git
+    url: https://github.com/ros/urdfdom_headers.git
+    version: master
+  urdf_parser_py:
+    type: git
+    url: https://github.com/ros/urdf_parser_py.git
+    version: ros2
+  vision_opencv:
+    type: git
+    url: https://github.com/ros-perception/vision_opencv.git
+    version: ros2
+  xacro:
+    type: git
+    url: https://github.com/ros/xacro.git
+    version: ros2
+  yaml_cpp_vendor:
+    type: git
+    url: https://github.com/ros2/yaml_cpp_vendor.git
+    version: master

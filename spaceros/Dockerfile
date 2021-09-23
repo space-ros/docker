@@ -16,14 +16,12 @@
 #
 # The script provides the following build arguments:
 #
-#   BUILD_DATE  - The time and date that the docker image was created (no default value).
 #   VCS_REF     - The git revision of the Space ROS source code (no default value).
 #   VERSION     - The version of Space ROS (default: "preview")
 #   WORKSPACE   - The location for the Space ROS source code in the container (default: /usr/local/src/spaceros_ws)
 
-FROM ubuntu:20.04
+FROM nvidia/cudagl:11.4.1-devel-ubuntu20.04
 
-ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION="preview"
 ARG WORKSPACE=/usr/local/src/spaceros_ws
@@ -37,14 +35,13 @@ LABEL org.label-schema.version=${VERSION}
 LABEL org.label-schema.url="https://openrobotics.org"
 LABEL org.label-schema.vcs-url="https://github.com/ros2/ros2/tree/spaceros"
 LABEL org.label-schema.vcs-ref=${VCS_REF}
-LABEL org.label-schema.build-date=${BUILD_DATE}
 
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
 
 # The following commands are based on the source install for ROS 2 Rolling Ridley.
 # See: https://docs.ros.org/en/ros2_documentation/rolling/Installation/Ubuntu-Development-Setup.html
-# The only variation is getting Space ROS sources instead of the Rolling sources.
+# The main variation is getting Space ROS sources instead of the Rolling sources.
 
 # Update the Ubuntu software repository
 RUN apt-get update
@@ -62,7 +59,7 @@ RUN apt-get update && apt-get install -y curl gnupg lsb-release
 RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
 RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
 
-# Install required software development tools and ROS tools
+# Install required software development tools and ROS tools (and vim included for convenience)
 RUN apt-get update && apt-get install -y \
   build-essential \
   cmake \
@@ -74,8 +71,10 @@ RUN apt-get update && apt-get install -y \
   python3-rosdep \
   python3-setuptools \
   python3-vcstool \
-  wget
+  wget \
+  vim
 
+# Install the required pip packages
 RUN python3 -m pip install -U \
   flake8-blind-except \
   flake8-builtins \
@@ -90,19 +89,46 @@ RUN python3 -m pip install -U \
   pytest \
   setuptools
 
-# Get Space ROS source code
+# Get the Space ROS source code
 RUN mkdir -p ${WORKSPACE}/src
 WORKDIR ${WORKSPACE}
 RUN wget https://raw.githubusercontent.com/ros2/ros2/spaceros/ros2.repos
 RUN vcs import src < ros2.repos
 
-# Install dependencies using rosdep
-RUN rosdep init
-RUN rosdep update
-RUN rosdep install --from-paths src --ignore-src --rosdistro rolling -y --skip-keys "console_bridge fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers"
+# Install system dependencies
+RUN rosdep init && rosdep update
+RUN rosdep install --from-paths src --ignore-src --rosdistro rolling -y --skip-keys "console_bridge fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers rmw_connextdds ros_testing rmw_connextdds rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp composition demo_nodes_py lifecycle rosidl_typesupport_fastrtps_c ikos"
 
 # Build the code in the workspace
-RUN colcon build --symlink-install
+RUN colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+# Install dependencies needed by IKOS
+RUN apt-get install -y \
+  clang-9 \
+  cmake \
+  g++ \
+  gcc \
+  libboost-dev \
+  libboost-filesystem-dev \
+  libboost-test-dev \
+  libboost-thread-dev \
+  libedit-dev \
+  libgmp-dev \
+  libsqlite3-dev \
+  libtbb-dev \
+  llvm-9 \
+  llvm-9-dev \
+  llvm-9-tools \
+  python3 \
+  python3-pygments \
+  zlib1g-dev
+
+# Get the IKOS source and build it
+WORKDIR /usr/local/src
+RUN git clone https://github.com/nuclearsandwich/ikos && cd ikos && git checkout nuclearsandwich/log-executables-to-file
+RUN mkdir ikos/build && cd ikos/build && cmake .. -DLLVM_CONFIG_EXECUTABLE=/usr/bin/llvm-config-9 --no-warn-unused-cli && make && make install
+ENV PATH "$PATH:/usr/local/src/ikos/install/bin"
+ENV IKOS_SCAN_NOTIFIER_FILES "yes"
 
 # Set up the entrypoint
 COPY ./ros_entrypoint.sh /
