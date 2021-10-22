@@ -77,8 +77,8 @@ repositories:
     version: ros2
   realtime_tools:
     type: git
-    url: https://github.com/mjeronimo/realtime_tools.git
-    version: mjeronimo/fix-log-message
+    url: https://github.com/ros-controls/realtime_tools.git
+    version: ros2_devel
   resource_retriever:
     type: git
     url: https://github.com/ros/resource_retriever.git
