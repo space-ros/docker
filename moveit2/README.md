@@ -53,7 +53,7 @@ $ docker run -it --net=host -e DISPLAY -v /tmp/.X11-unix openrobotics/moveit2
 Upon startup, the container automatically runs the moveit2_entrypoint.sh script, which sources the MoveIt2 and Space ROS environment files. You'll now be running inside the container and should see a prompt similar to this:
 
 ```
-root@8e73b41a4e16:/usr/local/src/moveit2_ws# 
+root@8e73b41a4e16:/root/src/moveit2_ws# 
 ```
 
 For more information on accessing host resources, such as GPUs from a Docker container, see the [Docker documentation](https://docs.docker.com/config/containers/resource_constraints/).
@@ -145,13 +145,13 @@ You can now press ENTER multiple times to step through the demo.
 
 ## Running Unit Tests for the MoveGroup Demo
 
-To run the unit tests for the MoveGroup demo, run the following command from the container command line at the top of the MoveIt2 workspace (/usr/local/src/moveit2_ws/):
+To run the unit tests for the MoveGroup demo, run the following command from the container command line at the top of the MoveIt2 workspace (/root/src/moveit2_ws/):
 
 ```
 colcon test --packages-select moveit_ros_move_group
 ```
 
-The test results will be in the test output directory, /usr/local/src/moveit2_ws/build/moveit_ros_move_group/test_results/.
+The test results will be in the test output directory, /root/src/moveit2_ws/build/moveit_ros_move_group/test_results/.
 
 ## Open Issues
 

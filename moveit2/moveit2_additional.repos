@@ -15,6 +15,10 @@ repositories:
     type: git
     url: https://github.com/ros/eigen_stl_containers.git
     version: ros2
+  graph_msgs:
+    type: git
+    url: https://github.com/PickNikRobotics/graph_msgs.git
+    version: ros2
   ignition/ignition_cmake2_vendor:
     type: git
     url: https://github.com/ignition-release/ignition_cmake2_vendor.git

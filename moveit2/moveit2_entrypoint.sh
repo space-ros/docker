@@ -2,5 +2,5 @@
 set -e
 
 # Setup the MoveIt2 environment
-source "/usr/local/src/moveit2_ws/install/setup.bash"
+source "/root/src/moveit2_ws/install/setup.bash"
 exec "$@"

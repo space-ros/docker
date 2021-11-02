@@ -18,7 +18,7 @@
 #
 #   VCS_REF     - The git revision of the Space ROS source code (no default value).
 #   VERSION     - The version of Space ROS (default: "preview")
-#   WORKSPACE   - The location for the Space ROS source code in the container (default: /usr/local/src/spaceros_ws)
+#   WORKSPACE   - The location for the Space ROS source code in the container (default: /root/src/spaceros_ws)
 #
 # Launch the container:
 #   docker run -it --gpus all --net=host -e DISPLAY -v /tmp/.X11-unix openrobotics/moveit2_tutorials
@@ -33,7 +33,7 @@ FROM openrobotics/moveit2:latest
 
 ARG VCS_REF
 ARG VERSION="preview"
-ARG WORKSPACE=/usr/local/src/moveit2_ws
+ARG WORKSPACE=/root/src/moveit2_ws
 
 # LABEL the image
 LABEL org.label-schema.schema-version="1.0"
@@ -55,7 +55,7 @@ RUN vcs import < moveit2_tutorials/moveit2_tutorials.repos
 
 # Build it
 WORKDIR ${WORKSPACE}
-RUN /bin/bash -c 'source /usr/local/src/spaceros_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
+RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
 
 # Set up the entrypoint
 COPY ./moveit2_tutorials_entrypoint.sh /

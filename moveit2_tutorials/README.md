@@ -54,7 +54,7 @@ $ docker run -it --net=host -e DISPLAY -v /tmp/.X11-unix openrobotics/moveit2_tu
 Upon startup, the container automatically runs the moveit2_entrypoint.sh script, which sources the MoveIt2 and Space ROS environment files. You'll now be running inside the container and should see a prompt similar to this:
 
 ```
-root@8e73b41a4e16:/usr/local/src/moveit2_ws#
+root@8e73b41a4e16:/root/src/moveit2_ws#
 ```
 
 Once the container is started, it must also be configured to run GUI applications. See the [docker/moveit2/README](../moveit2/README.md) in this repo for more information.
