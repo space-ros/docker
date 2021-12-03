@@ -90,12 +90,12 @@ RUN python3 -m pip install -U \
 
 # Get the MoveIt2 source code
 RUN mkdir -p ${WORKSPACE}/src
-COPY moveit2_additional.repos ./
+COPY moveit2.repos ./
 RUN git clone https://github.com/ros-planning/moveit2.git -b main src/moveit2
+RUN cd src/moveit2 && git checkout 5a27d2fac6da1b94ca5b536fe6c766615ffbd615
 
 # Get the repositories required by MoveIt2, but not included in Space ROS
-RUN vcs import src < src/moveit2/moveit2.repos
-RUN vcs import src < moveit2_additional.repos
+RUN vcs import src < moveit2.repos
 
 # Install system dependencies
 RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && rosdep install --from-paths ../spaceros_ws/src src --ignore-src --rosdistro rolling -y --skip-keys "console_bridge fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers rmw_connextdds ros_testing rmw_connextdds rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp composition demo_nodes_py lifecycle rosidl_typesupport_fastrtps_c ikos diagnostic_aggregator diagnostic_updater joy"'

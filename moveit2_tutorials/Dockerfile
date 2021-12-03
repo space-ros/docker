@@ -35,6 +35,8 @@ ARG VCS_REF
 ARG VERSION="preview"
 ARG WORKSPACE=/root/src/moveit2_ws
 
+WORKDIR ${WORKSPACE}
+
 # LABEL the image
 LABEL org.label-schema.schema-version="1.0"
 LABEL org.label-schema.name="Space ROS"
@@ -49,12 +51,15 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Get the MoveIt2 Tutorials source code
-WORKDIR ${WORKSPACE}/src
-RUN git clone https://github.com/ros-planning/moveit2_tutorials.git
-RUN vcs import < moveit2_tutorials/moveit2_tutorials.repos
+RUN mkdir -p ${WORKSPACE}/src
+COPY moveit2_tutorials.repos ./
+RUN git clone https://github.com/ros-planning/moveit2_tutorials.git -b main src/moveit2_tutorials
+RUN cd src/moveit2_tutorials && git checkout ff586977663e4839166891baa116139ea4d3b958
+
+# Get the repositories required by MoveIt2, but not included in Space ROS
+RUN vcs import src < moveit2_tutorials.repos
 
 # Build it
-WORKDIR ${WORKSPACE}
 RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
 
 # Set up the entrypoint

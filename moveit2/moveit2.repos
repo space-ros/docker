@@ -1,0 +1,153 @@
+repositories:
+  angles:
+    type: git
+    url: https://github.com/ros/angles.git
+    version: 1.12.4
+  control_msgs:
+    type: git
+    url: https://github.com/ros-controls/control_msgs.git
+    version: 11fdcdf76434d8ca9047787d17add4e18f56e9d6
+  control_toolbox:
+    type: git
+    url: https://github.com/ros-controls/control_toolbox.git
+    version: d7462e982e40bfdebddbcff8849c611caf8c8422
+  eigen_stl_containers:
+    type: git
+    url: https://github.com/ros/eigen_stl_containers.git
+    version: 1.0.0
+  geometric_shapes:
+    type: git
+    url: https://github.com/ros-planning/geometric_shapes
+    version: 2.1.1
+  graph_msgs:
+    type: git
+    url: https://github.com/PickNikRobotics/graph_msgs.git
+    version: d0557ff5b19b3bdc9382e011c6613db29a69eb7b
+  ignition/ignition_cmake2_vendor:
+    type: git
+    url: https://github.com/ignition-release/ignition_cmake2_vendor.git
+    version: 3695c0a55c14128ac17d87a8c48f51e4c15d161e
+  ignition/ignition_math6_vendor:
+    type: git
+    url: https://github.com/ignition-release/ignition_math6_vendor.git
+    version: c15daef12f8cd1d131d161395baa6f3ed4e25f72
+  image_common:
+    type: git
+    url: https://github.com/ros-perception/image_common.git
+    version: b2d8d5cbaf3edad81f02c572f073368f7ce17615
+  interactive_markers:
+    type: git
+    url: https://github.com/ros-visualization/interactive_markers.git
+    version: 2.3.0
+  joint_state_publisher:
+    type: git
+    url: https://github.com/ros/joint_state_publisher.git
+    version: d595f704a55fda6de7e8cf0f9c4f2325378cbc82
+  laser_geometry:
+    type: git
+    url: https://github.com/ros-perception/laser_geometry.git
+    version: bfe1c494fd0810252bbad2250e870356e167a03c
+  moveit2:
+    type: git
+    url: https://github.com/ros-planning/moveit2.git
+    version: 5a27d2fac6da1b94ca5b536fe6c766615ffbd615
+  moveit_msgs:
+    type: git
+    url: https://github.com/ros-planning/moveit_msgs.git
+    version: 2.1.1
+  moveit_resources:
+    type: git
+    url: https://github.com/ros-planning/moveit_resources
+    version: 2.0.3
+  navigation_msgs:
+    type: git
+    url: https://github.com/ros-planning/navigation_msgs.git
+    version: 2.1.0
+  object_recognition_msgs:
+    type: git
+    url: https://github.com/wg-perception/object_recognition_msgs.git
+    version: 2.0.0
+  octomap:
+    type: git
+    url: https://github.com/octomap/octomap.git
+    version: 10dc9f444605027dbc2cced322607dc805fde24d
+  octomap_msgs:
+    type: git
+    url: https://github.com/OctoMap/octomap_msgs.git
+    version: 2.0.0
+  ompl:
+    type: git
+    url: https://github.com/ompl/ompl.git
+    version: 8e8e33e431d7b0d257746c19754b8729f8ac3235
+  orocos_kinematics_dynamics:
+    type: git
+    url: https://github.com/ros2/orocos_kinematics_dynamics.git
+    version: 47689173ac1cdfba53a137fbe330a3f0ddd1ccf7
+  python_qt_binding:
+    type: git
+    url: https://github.com/ros-visualization/python_qt_binding.git
+    version: 2d31825034a41b1125b3ece24ce42689ce6cef72
+  random_numbers:
+    type: git
+    url: https://github.com/ros-planning/random_numbers.git
+    version: 029bcc792bb281432bf8905f2518481e38618acd
+  realtime_tools:
+    type: git
+    url: https://github.com/ros-controls/realtime_tools.git
+    version: 2e594bb5c354d95a03fc9da5d4ce888a8a26becb
+  resource_retriever:
+    type: git
+    url: https://github.com/ros/resource_retriever.git
+    version: 9caacea77bbbe808388f3e150b9b1a047de0952a
+  ros2_control:
+    type: git
+    url: https://github.com/ros-controls/ros2_control
+    version: 1.0.0
+  ros2_controllers:
+    type: git
+    url: https://github.com/ros-controls/ros2_controllers
+    version: 1.0.0
+  ruckig:
+    type: git
+    url: https://github.com/pantor/ruckig.git
+    version: cf348af58c66c623c274685c379622b441230da9
+  rviz:
+    type: git
+    url: https://github.com/ros2/rviz.git
+    version: 81619d3d6c2afe4b82a8f5163558cf12d64e20d2
+  srdfdom:
+    type: git
+    url: https://github.com/ros-planning/srdfdom.git
+    version: 2.0.3
+  urdf_parser_py:
+    type: git
+    url: https://github.com/ros/urdf_parser_py.git
+    version: 1.1.0
+  urdfdom:
+    type: git
+    url: https://github.com/ros/urdfdom.git
+    version: 2.3.5
+  urdfdom_headers:
+    type: git
+    url: https://github.com/ros/urdfdom_headers.git
+    version: 8bf8fbe5cde728305948eb7fcf2b99b27b7dfab3
+  vision_opencv:
+    type: git
+    url: https://github.com/ros-perception/vision_opencv.git
+    version: 7bbc5ecc232e8faf36b45efaa2b6bc979b04157f
+  warehouse_ros:
+    type: git
+    url: https://github.com/ros-planning/warehouse_ros
+    version: 68503565e0bc51f2ee3ccd414e89bd2ddc6fa432
+  warehouse_ros_mongo:
+    type: git
+    url: https://github.com/ros-planning/warehouse_ros_mongo
+    version: 55118d2b87ba006d256c800def0d354c0b1cff92
+  xacro:
+    type: git
+    url: https://github.com/ros/xacro.git
+    version: 2.0.7
+  yaml_cpp_vendor:
+    type: git
+    url: https://github.com/ros2/yaml_cpp_vendor.git
+    version: a00f059a79e98bd3899e8fe4261ea61da807b6ef

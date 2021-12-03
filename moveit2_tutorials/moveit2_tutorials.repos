@@ -1,0 +1,13 @@
+repositories:
+  rviz_visual_tools:
+    type: git
+    url: https://github.com/PickNikRobotics/rviz_visual_tools
+    version: 4.0.2
+  moveit_resources:
+    type: git
+    url: https://github.com/ros-planning/moveit_resources
+    version: 2.0.3
+  moveit_visual_tools:
+    type: git
+    url: https://github.com/ros-planning/moveit_visual_tools
+    version: fbbe245dca3ef9f4fac6fd7254e0eb4ab71c7b21
