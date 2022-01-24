@@ -69,4 +69,14 @@ You should see lots of console output and the rviz2 window appear:
 
 ![rviz2 tutorial window](resources/moveit2-rviz-tutorial.png)
 
-You can now following the [MoveIt2 Tutorial documentation](http://moveit2_tutorials.picknik.ai/doc/quickstart_in_rviz/quickstart_in_rviz_tutorial.html).
+You can now following the [MoveIt2 Tutorial documentation](https://moveit.picknik.ai/galactic/doc/tutorials/quickstart_in_rviz/quickstart_in_rviz_tutorial.html).
+
+## Running the MoveIt2 Move Group C++ Interface Demo
+
+To run the Move Group C++ Interface Demo, execute the following command:
+
+```
+ros2 launch moveit2_tutorials move_group.launch.py
+```
+
+Then, you can follow the [Move Group C++ Interface Demo documentation](https://moveit.picknik.ai/galactic/doc/examples/move_group_interface/move_group_interface_tutorial.html).
