@@ -2,11 +2,11 @@ repositories:
   angles:
     type: git
     url: https://github.com/ros/angles.git
-    version: 1.12.4
+    version: 1.13.0
   control_msgs:
     type: git
     url: https://github.com/ros-controls/control_msgs.git
-    version: 11fdcdf76434d8ca9047787d17add4e18f56e9d6
+    version: a555c37f1a3536bb452ea555c58fdd9344d87614
   control_toolbox:
     type: git
     url: https://github.com/ros-controls/control_toolbox.git
@@ -18,7 +18,7 @@ repositories:
   geometric_shapes:
     type: git
     url: https://github.com/ros-planning/geometric_shapes
-    version: 2.1.1
+    version: 2.1.2
   graph_msgs:
     type: git
     url: https://github.com/PickNikRobotics/graph_msgs.git
@@ -34,31 +34,31 @@ repositories:
   image_common:
     type: git
     url: https://github.com/ros-perception/image_common.git
-    version: b2d8d5cbaf3edad81f02c572f073368f7ce17615
+    version: 3.1.2
   interactive_markers:
     type: git
     url: https://github.com/ros-visualization/interactive_markers.git
-    version: 2.3.0
+    version: 2.3.1
   joint_state_publisher:
     type: git
     url: https://github.com/ros/joint_state_publisher.git
-    version: d595f704a55fda6de7e8cf0f9c4f2325378cbc82
+    version: e9412ad5fa44e55d49ea0a75b640194ad5ef27b0
   laser_geometry:
     type: git
     url: https://github.com/ros-perception/laser_geometry.git
-    version: bfe1c494fd0810252bbad2250e870356e167a03c
-  moveit2:
+    version: 2.3.0
+  launch_param_builder:
     type: git
-    url: https://github.com/ros-planning/moveit2.git
-    version: 5a27d2fac6da1b94ca5b536fe6c766615ffbd615
+    url: https://github.com/PickNikRobotics/launch_param_builder
+    version: 0.1.0
   moveit_msgs:
     type: git
     url: https://github.com/ros-planning/moveit_msgs.git
-    version: 2.1.1
+    version: 2.2.0
   moveit_resources:
     type: git
     url: https://github.com/ros-planning/moveit_resources
-    version: 2.0.3
+    version: f0a5d4ba2f7e7b4f8364ad75a5bea09b6150049e
   navigation_msgs:
     type: git
     url: https://github.com/ros-planning/navigation_msgs.git
@@ -70,7 +70,7 @@ repositories:
   octomap:
     type: git
     url: https://github.com/octomap/octomap.git
-    version: 10dc9f444605027dbc2cced322607dc805fde24d
+    version: 948048b39986b7c585c0f8e9ae6bfebc89073636
   octomap_msgs:
     type: git
     url: https://github.com/OctoMap/octomap_msgs.git
@@ -78,15 +78,15 @@ repositories:
   ompl:
     type: git
     url: https://github.com/ompl/ompl.git
-    version: 8e8e33e431d7b0d257746c19754b8729f8ac3235
+    version: 96eb89e51d84bbc75093409ce186e6826c93ec5a
   orocos_kinematics_dynamics:
     type: git
     url: https://github.com/ros2/orocos_kinematics_dynamics.git
-    version: 47689173ac1cdfba53a137fbe330a3f0ddd1ccf7
+    version: 6d824cf83e9a299b82dde1eeeec2137d7659936e
   python_qt_binding:
     type: git
     url: https://github.com/ros-visualization/python_qt_binding.git
-    version: 2d31825034a41b1125b3ece24ce42689ce6cef72
+    version: 1.0.8
   random_numbers:
     type: git
     url: https://github.com/ros-planning/random_numbers.git
@@ -94,19 +94,19 @@ repositories:
   realtime_tools:
     type: git
     url: https://github.com/ros-controls/realtime_tools.git
-    version: 2e594bb5c354d95a03fc9da5d4ce888a8a26becb
+    version: 2.2.0
   resource_retriever:
     type: git
     url: https://github.com/ros/resource_retriever.git
-    version: 9caacea77bbbe808388f3e150b9b1a047de0952a
+    version: 3.0.0
   ros2_control:
     type: git
     url: https://github.com/ros-controls/ros2_control
-    version: 1.0.0
+    version: 901df2761160f2bea725d711cf5ceb26e34c39bc
   ros2_controllers:
     type: git
     url: https://github.com/ros-controls/ros2_controllers
-    version: 1.0.0
+    version: 1.3.0
   ruckig:
     type: git
     url: https://github.com/pantor/ruckig.git
@@ -114,7 +114,7 @@ repositories:
   rviz:
     type: git
     url: https://github.com/ros2/rviz.git
-    version: 81619d3d6c2afe4b82a8f5163558cf12d64e20d2
+    version: 9.1.0
   srdfdom:
     type: git
     url: https://github.com/ros-planning/srdfdom.git
@@ -134,7 +134,7 @@ repositories:
   vision_opencv:
     type: git
     url: https://github.com/ros-perception/vision_opencv.git
-    version: 7bbc5ecc232e8faf36b45efaa2b6bc979b04157f
+    version: 3.0.0
   warehouse_ros:
     type: git
     url: https://github.com/ros-planning/warehouse_ros
@@ -150,4 +150,4 @@ repositories:
   yaml_cpp_vendor:
     type: git
     url: https://github.com/ros2/yaml_cpp_vendor.git
-    version: a00f059a79e98bd3899e8fe4261ea61da807b6ef
+    version: 7.1.1

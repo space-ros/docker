@@ -46,8 +46,8 @@ LABEL org.label-schema.name="Space ROS"
 LABEL org.label-schema.description="Preview version of the Space ROS/MoveIt2 platform"
 LABEL org.label-schema.vendor="Open Robotics"
 LABEL org.label-schema.version=${VERSION}
-LABEL org.label-schema.url="https://openrobotics.org"
-LABEL org.label-schema.vcs-url="https://github.com/ros2/ros2/tree/spaceros"
+LABEL org.label-schema.url="https://github.com/space-ros"
+LABEL org.label-schema.vcs-url="https://github.com/space-ros/docker-images"
 LABEL org.label-schema.vcs-ref=${VCS_REF}
 
 # Disable prompting during package installation
@@ -91,8 +91,7 @@ RUN python3 -m pip install -U \
 # Get the MoveIt2 source code
 RUN mkdir -p ${WORKSPACE}/src
 COPY moveit2.repos ./
-RUN git clone https://github.com/ros-planning/moveit2.git -b main src/moveit2
-RUN cd src/moveit2 && git checkout 5a27d2fac6da1b94ca5b536fe6c766615ffbd615
+RUN git clone https://github.com/ros-planning/moveit2.git -b 2.4.0 src/moveit2
 
 # Get the repositories required by MoveIt2, but not included in Space ROS
 RUN vcs import src < moveit2.repos
@@ -100,7 +99,7 @@ RUN vcs import src < moveit2.repos
 # Install system dependencies
 RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && rosdep install --from-paths ../spaceros_ws/src src --ignore-src --rosdistro rolling -y --skip-keys "console_bridge fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers rmw_connextdds ros_testing rmw_connextdds rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp composition demo_nodes_py lifecycle rosidl_typesupport_fastrtps_c ikos diagnostic_aggregator diagnostic_updater joy"'
 
-## Build MoveIt2
+# Build MoveIt2
 RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
 
 # Enable the container to run GUI apps and add a couple sample apps for testing

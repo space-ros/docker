@@ -43,8 +43,8 @@ LABEL org.label-schema.name="Space ROS"
 LABEL org.label-schema.description="Preview version of the Space ROS/MoveIt2 platform"
 LABEL org.label-schema.vendor="Open Robotics"
 LABEL org.label-schema.version=${VERSION}
-LABEL org.label-schema.url="https://openrobotics.org"
-LABEL org.label-schema.vcs-url="https://github.com/ros2/ros2/tree/spaceros"
+LABEL org.label-schema.url="https://github.com/space-ros"
+LABEL org.label-schema.vcs-url="https://github.com/space-ros/docker-images"
 LABEL org.label-schema.vcs-ref=${VCS_REF}
 
 # Disable prompting during package installation
@@ -54,7 +54,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN mkdir -p ${WORKSPACE}/src
 COPY moveit2_tutorials.repos ./
 RUN git clone https://github.com/ros-planning/moveit2_tutorials.git -b main src/moveit2_tutorials
-RUN cd src/moveit2_tutorials && git checkout ff586977663e4839166891baa116139ea4d3b958
+RUN cd src/moveit2_tutorials && git checkout c98d7f10aefb8dffde60621ec5b72d1f5d17caaf
 
 # Get the repositories required by MoveIt2, but not included in Space ROS
 RUN vcs import src < moveit2_tutorials.repos
