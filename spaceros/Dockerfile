@@ -133,7 +133,7 @@ RUN mkdir ikos/build && cd ikos/build && cmake .. -DLLVM_CONFIG_EXECUTABLE=/usr/
 ENV PATH "$PATH:/root/src/ikos/install/bin"
 ENV IKOS_SCAN_NOTIFIER_FILES "yes"
 
-# The above installation doesn't properly install the IKOS egg file, so do it manually
+# The above installation doesn't properly install the IKOS egg file, so do it manually https://github.com/NASA-SW-VnV/ikos/issues/185
 RUN cd /root/src/ikos/install/lib/python3.8/site-packages && zip ikos-3.0-py3.8.egg ikos-3.0-py3.8.egg-info/* && python3 /usr/lib/python3/dist-packages/easy_install.py ./ikos-3.0-py3.8.egg
 
 # Set up the entrypoint
