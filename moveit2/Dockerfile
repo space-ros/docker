@@ -91,13 +91,13 @@ RUN python3 -m pip install -U \
 # Get the MoveIt2 source code
 RUN mkdir -p ${WORKSPACE}/src
 COPY moveit2.repos ./
-RUN git clone https://github.com/ros-planning/moveit2.git -b 2.4.0 src/moveit2
+RUN git clone https://github.com/ros-planning/moveit2.git -b main src/moveit2
 
 # Get the repositories required by MoveIt2, but not included in Space ROS
 RUN vcs import src < moveit2.repos
 
 # Install system dependencies
-RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && rosdep install --from-paths ../spaceros_ws/src src --ignore-src --rosdistro rolling -y --skip-keys "console_bridge fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers rmw_connextdds ros_testing rmw_connextdds rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp composition demo_nodes_py lifecycle rosidl_typesupport_fastrtps_c ikos diagnostic_aggregator diagnostic_updater joy"'
+RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && rosdep install --from-paths ../spaceros_ws/src src --ignore-src --rosdistro rolling -y --skip-keys "console_bridge fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers rmw_connextdds ros_testing rmw_connextdds rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp composition demo_nodes_py lifecycle rosidl_typesupport_fastrtps_cpp rosidl_typesupport_fastrtps_c ikos diagnostic_aggregator diagnostic_updater joy"'
 
 # Build MoveIt2
 RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
