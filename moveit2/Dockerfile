@@ -12,33 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# A Docker configuration script to build the Space ROS image.
+# A Docker configuration script to build the Space ROS/MoveIt2 image.
 #
 # The script provides the following build arguments:
 #
-#   VCS_REF     - The git revision of the Space ROS source code (no default value).
-#   VERSION     - The version of Space ROS (default: "preview")
-#   WORKSPACE   - The location for the Space ROS source code in the container (default: /root/src/spaceros_ws)
+#   VCS_REF     - The git revision of the MoveIt2 source code (no default value)
+#   VERSION     - The version of this Space ROS/MoveIt2 build (default: "preview")
 #
-# Launch the container:
-#   docker run -it --gpus all --net=host -e DISPLAY -v /tmp/.X11-unix openrobotics/moveit2
+# See the documentation for details on running the container:
 #
-# Run xauth add inside the container (get the values from the host system via 'xauth list'):
-#   xauth add <hostname>/unix:1  MIT-MAGIC-COOKIE-1  <cookie-value>
+#   https://github.com/space-ros/docker-images/tree/main/moveit2
 #
-# Launch the MoveGroup demo in side the container:
-#   ros2 launch run_move_group run_move_group.launch.py
-#
-# Launch another terminal into the same or a new container and run:
-#   ros2 launch run_move_group run_move_group_interface.launch.py
 
 FROM openrobotics/spaceros:latest
 
 ARG VCS_REF
 ARG VERSION="preview"
-ARG WORKSPACE=/root/src/moveit2_ws
 
-WORKDIR ${WORKSPACE}
+ARG SRCDIR=/root/src
+ARG SPACEROS_WS=${SRCDIR}/spaceros_ws
+ARG OCTOMAP_WS=${SRCDIR}/octomap_ws
+ARG UNDERLAY_WS=${SRCDIR}/moveit2_underlay_ws
+ARG MOVEIT2_WS=${SRCDIR}/moveit2_ws
 
 # LABEL the image
 LABEL org.label-schema.schema-version="1.0"
@@ -88,19 +83,34 @@ RUN python3 -m pip install -U \
   pytest-rerunfailures \
   pytest
 
-# Get the MoveIt2 source code
-RUN mkdir -p ${WORKSPACE}/src
+# Get the MoveIt2 underlay source code and install any required system dependencies
+RUN mkdir -p ${UNDERLAY_WS}/src
+WORKDIR ${UNDERLAY_WS}
 COPY moveit2.repos ./
-RUN git clone https://github.com/ros-planning/moveit2.git -b main src/moveit2
-
-# Get the repositories required by MoveIt2, but not included in Space ROS
 RUN vcs import src < moveit2.repos
+RUN /bin/bash -c 'source ${SPACEROS_WS}/install/setup.bash && rosdep install --from-paths src --ignore-src --rosdistro rolling -y --skip-keys "urdfdom_headers"'
 
-# Install system dependencies
-RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && rosdep install --from-paths ../spaceros_ws/src src --ignore-src --rosdistro rolling -y --skip-keys "console_bridge fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers rmw_connextdds ros_testing rmw_connextdds rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp composition demo_nodes_py lifecycle rosidl_typesupport_fastrtps_cpp rosidl_typesupport_fastrtps_c ikos diagnostic_aggregator diagnostic_updater joy"'
+# Build octomap separately since it has a special 'octomap-distribution' package that needs to be built
+# and sourced before building the other underlay packages
+RUN /bin/bash -c 'mkdir -p ${OCTOMAP_WS}/src && mv src/octomap* ${OCTOMAP_WS}/src'
+WORKDIR ${OCTOMAP_WS}
+RUN /bin/bash -c 'source ${SPACEROS_WS}/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
+
+# Fix a compile-time issue with a misplaced header file
+RUN /bin/bash -c 'cp ${OCTOMAP_WS}/install/octomap_msgs/include/octomap_msgs/conversions.h ${OCTOMAP_WS}/install/octomap_msgs/include/octomap_msgs/octomap_msgs'
+
+# Build the underlay
+WORKDIR ${UNDERLAY_WS}
+RUN /bin/bash -c 'source ${OCTOMAP_WS}/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
+
+# Get the MoveIt2 source code and install any required system dependencies
+RUN mkdir -p ${MOVEIT2_WS}/src
+WORKDIR ${MOVEIT2_WS}
+RUN git clone https://github.com/ros-planning/moveit2.git -b main src
+RUN /bin/bash -c 'source ${UNDERLAY_WS}/install/setup.bash && rosdep install --from-paths src --ignore-src --rosdistro rolling -y --skip-keys "ruckig orocos_kdl joy octomap ompl urdfdom urdfdom_headers"'
 
 # Build MoveIt2
-RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
+RUN /bin/bash -c 'source ${UNDERLAY_WS}/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
 
 # Enable the container to run GUI apps and add a couple sample apps for testing
 RUN touch /root/.Xauthority
