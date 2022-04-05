@@ -34,12 +34,12 @@ repositories:
     url: https://github.com/PickNikRobotics/graph_msgs.git
     # branch: ros2
     version: 0.2.0
-  ignition_cmake2_vendor:
+  ignition/ignition_cmake2_vendor:
     type: git
     url: https://github.com/ignition-release/ignition_cmake2_vendor.git
     # branch: main
     version: 0.0.2
-  ignition_math6_vendor:
+  ignition/ignition_math6_vendor:
     type: git
     url: https://github.com/ignition-release/ignition_math6_vendor.git
     # branch: main

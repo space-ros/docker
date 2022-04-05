@@ -97,7 +97,7 @@ RUN git clone https://github.com/ros-planning/moveit2.git -b main src/moveit2
 RUN vcs import src < moveit2.repos
 
 # Install system dependencies
-RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && rosdep install --from-paths ../spaceros_ws/src src --ignore-src --rosdistro rolling -y --skip-keys "console_bridge fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers rmw_connextdds ros_testing rmw_connextdds rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp composition demo_nodes_py lifecycle rosidl_typesupport_fastrtps_c ikos diagnostic_aggregator diagnostic_updater joy"'
+RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && rosdep install --from-paths ../spaceros_ws/src src --ignore-src --rosdistro rolling -y --skip-keys "console_bridge fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers rmw_connextdds ros_testing rmw_connextdds rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp composition demo_nodes_py lifecycle rosidl_typesupport_fastrtps_cpp rosidl_typesupport_fastrtps_c ikos diagnostic_aggregator diagnostic_updater joy"'
 
 # Build MoveIt2
 RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
