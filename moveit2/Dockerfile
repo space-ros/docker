@@ -86,17 +86,18 @@ RUN python3 -m pip install -U \
 # Get the MoveIt2 underlay source code and install any required system dependencies
 RUN mkdir -p ${UNDERLAY_WS}/src
 WORKDIR ${UNDERLAY_WS}
-COPY moveit2.repos ./
-RUN vcs import src < moveit2.repos
+COPY moveit2_underlay.repos ./
+RUN vcs import src < moveit2_underlay.repos
 RUN /bin/bash -c 'source ${SPACEROS_WS}/install/setup.bash && rosdep install --from-paths src --ignore-src --rosdistro rolling -y --skip-keys "urdfdom_headers"'
 
-# Build octomap separately since it has a special 'octomap-distribution' package that needs to be built
-# and sourced before building the other underlay packages
+# Build octomap separately since it has a special 'octomap-distribution' package with optional sub-packages that
+# needs to be built and sourced before building the other underlay packages
 RUN /bin/bash -c 'mkdir -p ${OCTOMAP_WS}/src && mv src/octomap* ${OCTOMAP_WS}/src'
 WORKDIR ${OCTOMAP_WS}
 RUN /bin/bash -c 'source ${SPACEROS_WS}/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
 
-# Fix a compile-time issue with a misplaced header file
+# Fix a compile-time issue with the conversins.h header file. The source build of octomap puts the file where a client can't
+# find it using #include <octomap_msgs/conversions.h>, since the -I directory is install/octomap_msgs/include/octomap_msgs.
 RUN /bin/bash -c 'cp ${OCTOMAP_WS}/install/octomap_msgs/include/octomap_msgs/conversions.h ${OCTOMAP_WS}/install/octomap_msgs/include/octomap_msgs/octomap_msgs'
 
 # Build the underlay
