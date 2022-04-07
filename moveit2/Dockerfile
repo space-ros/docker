@@ -96,7 +96,7 @@ RUN /bin/bash -c 'mkdir -p ${OCTOMAP_WS}/src && mv src/octomap* ${OCTOMAP_WS}/sr
 WORKDIR ${OCTOMAP_WS}
 RUN /bin/bash -c 'source ${SPACEROS_WS}/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
 
-# Fix a compile-time issue with the conversins.h header file. The source build of octomap puts the file where a client can't
+# Fix a compile-time issue with the conversions.h header file. The source build of octomap puts the file where a client can't
 # find it using #include <octomap_msgs/conversions.h>, since the -I directory is install/octomap_msgs/include/octomap_msgs.
 RUN /bin/bash -c 'cp ${OCTOMAP_WS}/install/octomap_msgs/include/octomap_msgs/conversions.h ${OCTOMAP_WS}/install/octomap_msgs/include/octomap_msgs/octomap_msgs'
 
@@ -108,6 +108,7 @@ RUN /bin/bash -c 'source ${OCTOMAP_WS}/install/setup.bash && colcon build --cmak
 RUN mkdir -p ${MOVEIT2_WS}/src
 WORKDIR ${MOVEIT2_WS}
 RUN git clone https://github.com/ros-planning/moveit2.git -b main src
+RUN cd src && vcs import . < moveit2.repos
 RUN /bin/bash -c 'source ${UNDERLAY_WS}/install/setup.bash && rosdep install --from-paths src --ignore-src --rosdistro rolling -y --skip-keys "ruckig orocos_kdl joy octomap ompl urdfdom urdfdom_headers"'
 
 # Build MoveIt2

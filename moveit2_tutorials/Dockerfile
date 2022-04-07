@@ -18,7 +18,6 @@
 #
 #   VCS_REF     - The git revision of the Space ROS source code (no default value).
 #   VERSION     - The version of Space ROS (default: "preview")
-#   WORKSPACE   - The location for the Space ROS source code in the container (default: /root/src/spaceros_ws)
 #
 # Launch the container:
 #   docker run -it --gpus all --net=host -e DISPLAY -v /tmp/.X11-unix openrobotics/moveit2_tutorials
@@ -33,9 +32,10 @@ FROM openrobotics/moveit2:latest
 
 ARG VCS_REF
 ARG VERSION="preview"
-ARG WORKSPACE=/root/src/moveit2_ws
 
-WORKDIR ${WORKSPACE}
+ARG MOVEIT2_WORKSPACE=/root/src/moveit2_ws
+ARG MOVEIT2_UNDERLAY_WS=/root/src/moveit2_underlay_ws
+
 
 # LABEL the image
 LABEL org.label-schema.schema-version="1.0"
@@ -51,16 +51,16 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Get the MoveIt2 Tutorials source code
-RUN mkdir -p ${WORKSPACE}/src
-COPY moveit2_tutorials.repos ./
+RUN mkdir -p ${MOVEIT2_WORKSPACE}/src
+WORKDIR ${MOVEIT2_WORKSPACE}
 RUN git clone https://github.com/ros-planning/moveit2_tutorials.git -b main src/moveit2_tutorials
-RUN cd src/moveit2_tutorials && git checkout c98d7f10aefb8dffde60621ec5b72d1f5d17caaf
 
-# Get the repositories required by MoveIt2, but not included in Space ROS
+# Get the repositories required by the MoveIt2 tutorials, but not included in Space ROS or MoveIt2
+COPY moveit2_tutorials.repos ./
 RUN vcs import src < moveit2_tutorials.repos
 
 # Build it
-RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
+RUN /bin/bash -c 'source ${MOVEIT2_UNDERLAY_WS}/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
 
 # Set up the entrypoint
 COPY ./moveit2_tutorials_entrypoint.sh /

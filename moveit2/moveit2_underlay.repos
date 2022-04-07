@@ -24,11 +24,6 @@ repositories:
     url: https://github.com/ros/eigen_stl_containers.git
     # branch: ros2
     version: 1.0.0
-  geometric_shapes:
-    type: git
-    url: https://github.com/ros-planning/geometric_shapes.git
-    # branch: ros2
-    version: ros2
   graph_msgs:
     type: git
     url: https://github.com/PickNikRobotics/graph_msgs.git
@@ -69,16 +64,6 @@ repositories:
     url: https://github.com/PickNikRobotics/launch_param_builder.git
     # branch: main
     version: 0.1.0
-  moveit_msgs:
-    type: git
-    url: https://github.com/ros-planning/moveit_msgs.git
-    # branch: ros2
-    version: 2.2.0
-  moveit_resources:
-    type: git
-    url: https://github.com/ros-planning/moveit_resources.git
-    # branch: ros2
-    version: ros2
   navigation_msgs:
     type: git
     url: https://github.com/ros-planning/navigation_msgs.git
@@ -99,11 +84,6 @@ repositories:
     url: https://github.com/octomap/octomap_msgs.git
     # branch: ros2
     version: 2.0.0
-  ompl:
-    type: git
-    url: https://github.com/ompl/ompl.git
-    # branch: main
-    version: main
   orocos_kinematics_dynamics:
     type: git
     url: https://github.com/ros2/orocos_kinematics_dynamics.git
@@ -149,11 +129,6 @@ repositories:
     url: https://github.com/ros2/rviz.git
     # branch: ros2
     version: 11.1.1
-  srdfdom:
-    type: git
-    url: https://github.com/ros-planning/srdfdom.git
-    # branch: ros2
-    version: ros2
   urdf_parser_py:
     type: git
     url: https://github.com/ros/urdf_parser_py.git
