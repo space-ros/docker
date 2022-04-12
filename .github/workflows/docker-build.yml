@@ -1,0 +1,23 @@
+name: Docker build
+on:
+  push:
+    branches: ['main']
+  pull_request:
+  schedule:
+    - cron: '0 11 * * *'
+jobs:
+  spaceros:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Build spaceros image
+        uses: docker/build-push-action@v2
+        with:
+          context: spaceros
+          push: false
+          tags: spaceros
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
