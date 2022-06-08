@@ -1,0 +1,6 @@
+repositories:
+  xacro:
+    type: git
+    url: https://github.com/ros/xacro.git
+    # branch: ros2
+    version: 2.0.7
