@@ -82,17 +82,17 @@ RUN python3 -m pip install -U \
 RUN mkdir -p ${WORKSPACE}/src
 COPY demo_spaceros.repos ./
 
-# Get the repositories, but not included in Space ROS
-RUN vcs import src < demo_spaceros.repos
+# # Get the repositories, but not included in Space ROS
+# RUN vcs import src < demo_spaceros.repos
 
 # Build demos
 RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
 
 # Get ign-gazebo6
-RUN /bin/bash -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
-RUN wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
-RUN apt-get update
-RUN apt-get install -y libignition-gazebo6-dev
+# RUN /bin/bash -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
+# RUN wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
+# RUN apt-get update
+# RUN apt-get install -y libignition-gazebo6-dev
 
 
 # Set up the entrypoint
@@ -101,6 +101,6 @@ COPY ./demo_entrypoint.sh /
 ENTRYPOINT ["/demo_entrypoint.sh"]
 CMD ["bash"]
 
-
+#rosinstall_generator --rosdistro rolling --from-path ros_gz --deps --format repos
 
 
