@@ -75,30 +75,6 @@ repositories:
     type: git
     url: https://github.com/ros2-gbp/resource_retriever-release.git
     version: release/rolling/resource_retriever/3.2.0-1
-  rmw_connextdds/rmw_connextdds:
-    type: git
-    url: https://github.com/ros2-gbp/rmw_connextdds-release.git
-    version: release/rolling/rmw_connextdds/0.12.0-1
-  rmw_connextdds/rmw_connextdds_common:
-    type: git
-    url: https://github.com/ros2-gbp/rmw_connextdds-release.git
-    version: release/rolling/rmw_connextdds_common/0.12.0-1
-  rmw_connextdds/rti_connext_dds_cmake_module:
-    type: git
-    url: https://github.com/ros2-gbp/rmw_connextdds-release.git
-    version: release/rolling/rti_connext_dds_cmake_module/0.12.0-1
-  rmw_fastrtps/rmw_fastrtps_cpp:
-    type: git
-    url: https://github.com/ros2-gbp/rmw_fastrtps-release.git
-    version: release/rolling/rmw_fastrtps_cpp/6.3.0-1
-  rmw_fastrtps/rmw_fastrtps_dynamic_cpp:
-    type: git
-    url: https://github.com/ros2-gbp/rmw_fastrtps-release.git
-    version: release/rolling/rmw_fastrtps_dynamic_cpp/6.3.0-1
-  rmw_fastrtps/rmw_fastrtps_shared_cpp:
-    type: git
-    url: https://github.com/ros2-gbp/rmw_fastrtps-release.git
-    version: release/rolling/rmw_fastrtps_shared_cpp/6.3.0-1
   ros_ign/ros_ign:
     type: git
     url: https://github.com/ros2-gbp/ros_ign-release.git

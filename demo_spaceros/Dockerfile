@@ -79,18 +79,6 @@ RUN python3 -m pip install -U \
   pytest-rerunfailures \
   pytest
 
-# Get the depends source code
-WORKDIR ${WORKSPACE}/..
-RUN mkdir -p depends_ws/src
-
-# # Get the repositories, but not included in Space ROS
-WORKDIR /root/src/depends_ws
-COPY demo_spaceros.repos ./
-RUN vcs import src < demo_spaceros.repos
-
-# Build demos
-WORKDIR ${WORKSPACE}
-RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
 
 
 # Get OpenCV
@@ -105,6 +93,21 @@ WORKDIR /root/src/opencv/build
 RUN cmake  ../opencv-4.x
 RUN cmake --build .
 ENV OpenCV_DIR /root/src/opencv/build
+
+# Get the depends source code
+WORKDIR ${WORKSPACE}/..
+RUN mkdir -p depends_ws/src
+
+# # Get the repositories, but not included in Space ROS
+WORKDIR /root/src/depends_ws
+COPY demo_spaceros.repos ./
+RUN vcs import src < demo_spaceros.repos
+
+# Build demos
+WORKDIR ${WORKSPACE}
+RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
+
+
 
 # Get dependencies of dependencies
 RUN apt install -y \
@@ -138,7 +141,7 @@ RUN apt-get install -y \
 # Set up the entrypoint
 WORKDIR /root/src/depends_ws
 # RUN /bin/bash -c 'rosdep install --from-paths src --ignore-src -r -y --rosdistro rolling'
-
+# RUN /bin/bash -c 'colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release && source /root/src/spaceros_demo_ws/install/setup.bash'
 
 COPY ./demo_entrypoint.sh /
 ENTRYPOINT ["/demo_entrypoint.sh"]
