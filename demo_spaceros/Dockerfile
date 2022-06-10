@@ -103,10 +103,6 @@ WORKDIR /root/src/depends_ws
 COPY demo_spaceros.repos ./
 RUN vcs import src < demo_spaceros.repos
 
-# Build demos
-WORKDIR ${WORKSPACE}
-RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
-
 
 
 # Get dependencies of dependencies
@@ -141,7 +137,12 @@ RUN apt-get install -y \
 # Set up the entrypoint
 WORKDIR /root/src/depends_ws
 # RUN /bin/bash -c 'rosdep install --from-paths src --ignore-src -r -y --rosdistro rolling'
-# RUN /bin/bash -c 'colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release && source /root/src/spaceros_demo_ws/install/setup.bash'
+RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
+
+
+# Build demos
+WORKDIR ${WORKSPACE}
+RUN /bin/bash -c 'source /root/src/depends_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
 
 COPY ./demo_entrypoint.sh /
 ENTRYPOINT ["/demo_entrypoint.sh"]
