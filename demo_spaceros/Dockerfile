@@ -132,6 +132,7 @@ RUN apt-get install -y \
     libignition-transport11-dev \
     libignition-gazebo6-dev 
 
+ENV IGNITION_VERSION fortress
 
 
 # Set up the entrypoint
@@ -142,7 +143,7 @@ RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && colcon buil
 
 # Build demos
 WORKDIR ${WORKSPACE}
-RUN /bin/bash -c 'source /root/src/depends_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
+RUN /bin/bash -c 'source /root/src/depends_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
 
 COPY ./demo_entrypoint.sh /
 ENTRYPOINT ["/demo_entrypoint.sh"]

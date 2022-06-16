@@ -1,4 +1,16 @@
 repositories:
+  angles:
+    type: git
+    url: https://github.com/ros/angles.git
+    version: ros2
+  control_msgs:
+    type: git
+    url: https://github.com/ros-controls/control_msgs.git
+    version: galactic-devel
+  control_toolbox:
+    type: git
+    url: https://github.com/ros-controls/control_toolbox.git
+    version: ros2-master
   fastcdr:
     type: git
     url: https://github.com/ros2-gbp/fastcdr-release.git
@@ -11,6 +23,10 @@ repositories:
     type: git
     url: https://github.com/ros2-gbp/foonathan_memory_vendor-release.git
     version: release/rolling/foonathan_memory_vendor/1.2.0-2
+  gz_ros2_control:
+    type: git
+    url: https://github.com/ros-controls/gz_ros2_control.git
+    version: main
   ignition_cmake2_vendor:
     type: git
     url: https://github.com/ros2-gbp/ignition_cmake2_vendor-release.git
@@ -67,6 +83,10 @@ repositories:
     type: git
     url: https://github.com/ros2-gbp/qt_gui_core-release.git
     version: release/rolling/qt_gui_py_common/2.3.0-1
+  realtime_tools:
+    type: git
+    url: https://github.com/ros-controls/realtime_tools.git
+    version: foxy-devel
   resource_retriever/libcurl_vendor:
     type: git
     url: https://github.com/ros2-gbp/resource_retriever-release.git
@@ -111,6 +131,14 @@ repositories:
     type: git
     url: https://github.com/ros2-gbp/rosidl_typesupport_fastrtps-release.git
     version: release/rolling/rosidl_typesupport_fastrtps_cpp/2.3.0-1
+  ros2_control:
+    type: git
+    url: https://github.com/ros-controls/ros2_control.git
+    version: master
+  ros2_controllers:
+    type: git
+    url: https://github.com/ros-controls/ros2_controllers.git
+    version: master
   rqt/rqt_gui:
     type: git
     url: https://github.com/ros2-gbp/rqt-release.git
