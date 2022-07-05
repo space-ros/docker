@@ -1,0 +1,120 @@
+# Copyright 2021 Open Source Robotics Foundation, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+VERSION 0.6
+
+setup:
+  FROM nvidia/cudagl:11.4.1-devel-ubuntu20.04
+  # https://github.com/NVIDIA/cuda-repo-management/issues/1
+  # Use new GPG keys for nvidia apt repositories that have not yet propagated to base images.
+  RUN apt-key del 7fa2af80
+  RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/3bf863cc.pub
+  
+  # Disable prompting during package installation
+  ARG DEBIAN_FRONTEND=noninteractive
+  
+  # The following commands are based on the source install for ROS 2 Rolling Ridley.
+  # See: https://docs.ros.org/en/ros2_documentation/rolling/Installation/Ubuntu-Development-Setup.html
+  # The main variation is getting Space ROS sources instead of the Rolling sources.
+  
+  # Update the Ubuntu software repository
+  RUN apt-get update
+  
+  # Set the locale
+  RUN apt-get install -y locales
+  RUN locale-gen en_US en_US.UTF-8
+  RUN update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+  ENV LANG=en_US.UTF-8
+  
+  # Add the ROS 2 apt repository
+  RUN apt-get install -y software-properties-common
+  RUN add-apt-repository universe
+  RUN apt-get update && apt-get install -y curl gnupg lsb-release
+  RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+  RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
+  
+  # Install required software development tools and ROS tools (and vim included for convenience)
+  RUN apt-get update && apt-get install -y \
+    bison \
+    build-essential \
+    cmake \
+    git \
+    python3-colcon-common-extensions \
+    python3-flake8 \
+    python3-pip \
+    python3-pytest-cov \
+    python3-rosdep \
+    python3-setuptools \
+    python3-vcstool \
+    wget \
+    vim
+  
+  # Install the required pip packages
+  RUN python3 -m pip install -U \
+    flake8-blind-except \
+    flake8-builtins \
+    flake8-class-newline \
+    flake8-comprehensions \
+    flake8-deprecated \
+    flake8-docstrings \
+    flake8-import-order \
+    flake8-quotes \
+    pytest-repeat \
+    pytest-rerunfailures \
+    pytest \
+    setuptools
+
+  RUN mkdir /spaceros_ws
+  WORKDIR /spaceros_ws
+
+vcs-file:
+  FROM curlimages/curl
+  RUN curl --compressed 'https://raw.githubusercontent.com/space-ros/space-ros/main/ros2.repos' > /tmp/ros2.repos
+  SAVE ARTIFACT /tmp/ros2.repos /ros2.repos AS LOCAL spaceros_ws/ros2.repos
+
+sources:
+  FROM +setup
+  BUILD +vcs-file
+  COPY +vcs-file/ros2.repos ros2.repos
+  RUN mkdir src
+  RUN vcs import src < ros2.repos
+  SAVE ARTIFACT src /src AS LOCAL spaceros_ws/src
+
+workspace:
+  FROM +setup
+  COPY spaceros_ws/src src
+
+vcs-exact:
+  FROM +workspace
+  RUN vcs export --exact src > exact.repos
+  SAVE ARTIFACT exact.repos /exact.repos AS LOCAL spaceros_ws/exact.repos
+
+rosdep:
+  FROM +workspace
+  # Install system package dependencies using rosdep
+  RUN rosdep init && rosdep update
+  RUN rosdep install --from-paths src --ignore-src --rosdistro rolling -y --skip-keys "console_bridge fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers rmw_connextdds ros_testing rmw_connextdds rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp composition demo_nodes_py lifecycle rosidl_typesupport_fastrtps_cpp rosidl_typesupport_fastrtps_c ikos"
+
+build:
+  FROM +rosdep
+  RUN colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+  COPY +vcs-exact/exact.repos install/exact.repos
+  SAVE ARTIFACT install /install AS LOCAL spaceros_ws/install
+
+image:
+  FROM +rosdep
+  COPY +build/install /spaceros_ws/install
+  COPY ros_entrypoint.sh /
+  ENTRYPOINT ["/ros_entrypoint.sh"]
+  CMD ["bash"]
+  SAVE IMAGE spaceros
