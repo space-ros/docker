@@ -41,9 +41,6 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Make sure the latest versions of packages are installed
-RUN apt-get update
-RUN apt-get dist-upgrade -y
 RUN DEBIAN_FRONTEND=noninteractive apt install -y python3-pip wget lsb-release gnupg2 tmux g++ gdb curl
 
 # Install the various build and test tools
