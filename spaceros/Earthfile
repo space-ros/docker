@@ -111,6 +111,13 @@ build:
   COPY +vcs-exact/exact.repos install/exact.repos
   SAVE ARTIFACT install /install AS LOCAL spaceros_ws/install
 
+build-testing:
+  FROM +rosdep
+  RUN colcon build --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --no-warn-unused-cli
+  RUN colcon test --retest-until-pass 2 --ctest-args -LE "(ikos|xfail)" --pytest-args -m "not xfail"
+  RUN echo TODO aggregate results and save as an artifact.
+  COPY +vcs-exact/exact.repos install/exact.repos
+
 image:
   FROM +rosdep
   COPY +build/install /spaceros_ws/install
