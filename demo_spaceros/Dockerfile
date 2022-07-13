@@ -125,8 +125,6 @@ RUN apt install -y \
     libfreetype6-dev
 
 # Get ign-gazebo6
-RUN /bin/bash -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
-RUN wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
 RUN apt-get update
 RUN apt-get install -y \
     libignition-math6-dev \
