@@ -41,14 +41,17 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN DEBIAN_FRONTEND=noninteractive apt install -y python3-pip wget lsb-release gnupg2 tmux g++ gdb curl
-
 # Install the various build and test tools
 RUN apt install -y \
   build-essential \
   cmake \
+  curl \
+  g++ \
+  gdb \
   git \
+  gnupg2 \
   libbullet-dev \
+  lsb-release \
   python3-colcon-common-extensions \
   python3-flake8 \
   python3-pip \
@@ -58,6 +61,7 @@ RUN apt install -y \
   python3-vcstool \
   wget \
   clang-format-10 \
+  tmux \
   unzip
 
 
@@ -136,16 +140,16 @@ ENV IGNITION_VERSION fortress
 WORKDIR /root/src/depends_ws
 # RUN /bin/bash -c 'rosdep install --from-paths src --ignore-src -r -y --rosdistro rolling'
 RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
-
+# RUN rosinstall_generator --rosdistro rolling --from-path ros_gz --deps --format repos
 
 # Build demos
 WORKDIR ${WORKSPACE}
-RUN /bin/bash -c 'source /root/src/depends_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
+# RUN /bin/bash -c 'source /root/src/depends_ws/install/setup.bash'
 
 COPY ./demo_entrypoint.sh /
 ENTRYPOINT ["/demo_entrypoint.sh"]
 CMD ["bash"]
 
-#rosinstall_generator --rosdistro rolling --from-path ros_gz --deps --format repos
+
 
 
