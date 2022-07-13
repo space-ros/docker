@@ -1,4 +1,5 @@
 repositories:
+<<<<<<< HEAD
   ament_cmake_ros/ament_cmake_ros:
     type: git
     url: https://github.com/ros2-gbp/ament_cmake_ros-release.git
@@ -7,6 +8,20 @@ repositories:
     type: git
     url: https://github.com/ros2-gbp/cyclonedds-release.git
     version: release/rolling/cyclonedds/0.9.0-1
+=======
+  angles:
+    type: git
+    url: https://github.com/ros/angles.git
+    version: ros2
+  control_msgs:
+    type: git
+    url: https://github.com/ros-controls/control_msgs.git
+    version: foxy-devel
+  control_toolbox:
+    type: git
+    url: https://github.com/ros-controls/control_toolbox.git
+    version: ros2-master
+>>>>>>> tonylitianyu/demo_depends
   fastcdr:
     type: git
     url: https://github.com/ros2-gbp/fastcdr-release.git
@@ -19,6 +34,7 @@ repositories:
     type: git
     url: https://github.com/ros2-gbp/foonathan_memory_vendor-release.git
     version: release/rolling/foonathan_memory_vendor/1.2.0-2
+<<<<<<< HEAD
   iceoryx/iceoryx_binding_c:
     type: git
     url: https://github.com/ros2-gbp/iceoryx-release.git
@@ -31,6 +47,12 @@ repositories:
     type: git
     url: https://github.com/ros2-gbp/iceoryx-release.git
     version: release/rolling/iceoryx_posh/2.0.2-1
+=======
+  gz_ros2_control:
+    type: git
+    url: https://github.com/ros-controls/gz_ros2_control.git
+    version: main
+>>>>>>> tonylitianyu/demo_depends
   ignition_cmake2_vendor:
     type: git
     url: https://github.com/ros2-gbp/ignition_cmake2_vendor-release.git
@@ -63,10 +85,13 @@ repositories:
     type: git
     url: https://github.com/ros2-gbp/interactive_markers-release.git
     version: release/rolling/interactive_markers/2.3.2-1
+<<<<<<< HEAD
   kdl_parser:
     type: git
     url: https://github.com/ros2-gbp/kdl_parser-release.git
     version: release/rolling/kdl_parser/2.7.0-1
+=======
+>>>>>>> tonylitianyu/demo_depends
   laser_geometry:
     type: git
     url: https://github.com/ros2-gbp/laser_geometry-release.git
@@ -75,10 +100,13 @@ repositories:
     type: git
     url: https://github.com/ros2-gbp/navigation_msgs-release.git
     version: release/rolling/map_msgs/2.1.0-2
+<<<<<<< HEAD
   pluginlib:
     type: git
     url: https://github.com/ros2-gbp/pluginlib-release.git
     version: release/rolling/pluginlib/5.2.0-1
+=======
+>>>>>>> tonylitianyu/demo_depends
   python_qt_binding:
     type: git
     url: https://github.com/ros2-gbp/python_qt_binding-release.git
@@ -95,6 +123,13 @@ repositories:
     type: git
     url: https://github.com/ros2-gbp/qt_gui_core-release.git
     version: release/rolling/qt_gui_py_common/2.3.0-1
+<<<<<<< HEAD
+=======
+  realtime_tools:
+    type: git
+    url: https://github.com/ros-controls/realtime_tools.git
+    version: foxy-devel
+>>>>>>> tonylitianyu/demo_depends
   resource_retriever/libcurl_vendor:
     type: git
     url: https://github.com/ros2-gbp/resource_retriever-release.git
@@ -103,6 +138,7 @@ repositories:
     type: git
     url: https://github.com/ros2-gbp/resource_retriever-release.git
     version: release/rolling/resource_retriever/3.2.0-1
+<<<<<<< HEAD
   rmw_connextdds/rmw_connextdds:
     type: git
     url: https://github.com/ros2-gbp/rmw_connextdds-release.git
@@ -135,6 +171,8 @@ repositories:
     type: git
     url: https://github.com/ros2-gbp/robot_state_publisher-release.git
     version: release/rolling/robot_state_publisher/3.1.0-1
+=======
+>>>>>>> tonylitianyu/demo_depends
   ros_ign/ros_ign:
     type: git
     url: https://github.com/ros2-gbp/ros_ign-release.git
@@ -171,6 +209,17 @@ repositories:
     type: git
     url: https://github.com/ros2-gbp/rosidl_typesupport_fastrtps-release.git
     version: release/rolling/rosidl_typesupport_fastrtps_cpp/2.3.0-1
+<<<<<<< HEAD
+=======
+  ros2_control:
+    type: git
+    url: https://github.com/ros-controls/ros2_control.git
+    version: master
+  ros2_controllers:
+    type: git
+    url: https://github.com/tonylitianyu/ros2_controllers.git
+    version: effort_group_position_controller_2
+>>>>>>> tonylitianyu/demo_depends
   rqt/rqt_gui:
     type: git
     url: https://github.com/ros2-gbp/rqt-release.git
@@ -199,6 +248,7 @@ repositories:
     type: git
     url: https://github.com/ros2-gbp/rqt_topic-release.git
     version: release/rolling/rqt_topic/1.3.0-1
+<<<<<<< HEAD
   rviz/rviz2:
     type: git
     url: https://github.com/ros2-gbp/rviz-release.git
@@ -231,10 +281,13 @@ repositories:
     type: git
     url: https://github.com/ros2-gbp/rviz-release.git
     version: release/rolling/rviz_visual_testing_framework/11.3.0-1
+=======
+>>>>>>> tonylitianyu/demo_depends
   tango_icons_vendor:
     type: git
     url: https://github.com/ros2-gbp/tango_icons_vendor-release.git
     version: release/rolling/tango_icons_vendor/0.2.0-1
+<<<<<<< HEAD
   tinyxml2_vendor:
     type: git
     url: https://github.com/ros2-gbp/tinyxml2_vendor-release.git
@@ -259,6 +312,8 @@ repositories:
     type: git
     url: https://github.com/ros2-gbp/urdfdom_headers-release.git
     version: release/rolling/urdfdom_headers/1.1.0-1
+=======
+>>>>>>> tonylitianyu/demo_depends
   vision_opencv/cv_bridge:
     type: git
     url: https://github.com/ros2-gbp/vision_opencv-release.git

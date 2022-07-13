@@ -41,17 +41,17 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Make sure the latest versions of packages are installed
-RUN apt-get update
-RUN apt-get dist-upgrade -y
-RUN DEBIAN_FRONTEND=noninteractive apt install -y python3-pip wget lsb-release gnupg2 tmux g++ gdb curl
-
 # Install the various build and test tools
 RUN apt install -y \
   build-essential \
   cmake \
+  curl \
+  g++ \
+  gdb \
   git \
+  gnupg2 \
   libbullet-dev \
+  lsb-release \
   python3-colcon-common-extensions \
   python3-flake8 \
   python3-pip \
@@ -60,7 +60,9 @@ RUN apt install -y \
   python3-setuptools \
   python3-vcstool \
   wget \
-  clang-format-10
+  clang-format-10 \
+  tmux \
+  unzip
 
 
 # Install some pip packages needed for testing
@@ -78,29 +80,75 @@ RUN python3 -m pip install -U \
   pytest-rerunfailures \
   pytest
 
+
+
+# Get OpenCV
+WORKDIR ${WORKSPACE}/..
+RUN apt install -y libboost-python-dev
+RUN mkdir -p opencv
+WORKDIR /root/src/opencv
+RUN wget -O opencv.zip https://github.com/opencv/opencv/archive/4.x.zip
+RUN unzip opencv.zip
+RUN mkdir -p build
+WORKDIR /root/src/opencv/build
+RUN cmake  ../opencv-4.x
+RUN cmake --build .
+ENV OpenCV_DIR /root/src/opencv/build
+
 # Get the depends source code
-RUN mkdir -p ${WORKSPACE}/src
-COPY demo_spaceros.repos ./
+WORKDIR ${WORKSPACE}/..
+RUN mkdir -p depends_ws/src
 
 # # Get the repositories, but not included in Space ROS
-# RUN vcs import src < demo_spaceros.repos
+WORKDIR /root/src/depends_ws
+COPY demo_spaceros.repos ./
+RUN vcs import src < demo_spaceros.repos
 
-# Build demos
-RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
+
+
+# Get dependencies of dependencies
+RUN apt install -y \
+    libxaw7-dev \
+    libxrandr-dev \
+    libasio-dev \
+    qtbase5-dev \
+    qtdeclarative5-dev \
+    python3-pyqt5 \
+    sip-dev \
+    pyqt5-dev \
+    python-sip-dev \
+    pyqt5-dev-tools \
+    libgflags-dev \
+    libgtest-dev \
+    libogg-dev \
+    libtheora-dev \
+    libfreetype6-dev
 
 # Get ign-gazebo6
-# RUN /bin/bash -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
-# RUN wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
-# RUN apt-get update
-# RUN apt-get install -y libignition-gazebo6-dev
+RUN /bin/bash -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
+RUN wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
+RUN apt-get update
+RUN apt-get install -y \
+    libignition-math6-dev \
+    libignition-transport11-dev \
+    libignition-gazebo6-dev 
+
+ENV IGNITION_VERSION fortress
 
 
 # Set up the entrypoint
+WORKDIR /root/src/depends_ws
+# RUN /bin/bash -c 'rosdep install --from-paths src --ignore-src -r -y --rosdistro rolling'
+RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
+# RUN rosinstall_generator --rosdistro rolling --from-path ros_gz --deps --format repos
+
+# Build demos
 WORKDIR ${WORKSPACE}
+# RUN /bin/bash -c 'source /root/src/depends_ws/install/setup.bash'
+
 COPY ./demo_entrypoint.sh /
 ENTRYPOINT ["/demo_entrypoint.sh"]
 CMD ["bash"]
 
-#rosinstall_generator --rosdistro rolling --from-path ros_gz --deps --format repos
 
 
