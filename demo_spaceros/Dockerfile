@@ -41,11 +41,6 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Install opencv
-RUN apt-get update && apt-get install -y \
-  libopencv-dev \
-  python3-opencv
-
 # Get the depends source code
 WORKDIR ${WORKSPACE}/..
 RUN mkdir -p depends_ws/src
@@ -55,7 +50,7 @@ WORKDIR /root/src/depends_ws
 COPY demo_spaceros.repos ./
 RUN vcs import src < demo_spaceros.repos
 
-
+RUN apt-get update -y
 RUN rosdep install --from-paths src --ignore-src -r -y
 
 # Get ign-gazebo6
