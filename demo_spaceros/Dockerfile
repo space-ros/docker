@@ -53,15 +53,7 @@ RUN vcs import src < demo_spaceros.repos
 RUN apt-get update -y
 RUN rosdep install --from-paths src --ignore-src -r -y
 
-# Get ign-gazebo6
-RUN apt-get update
-RUN apt-get install -y \
-    libignition-math6-dev \
-    libignition-transport11-dev \
-    libignition-gazebo6-dev 
-
 ENV IGNITION_VERSION fortress
-
 
 # Set up the entrypoint
 WORKDIR /root/src/depends_ws
