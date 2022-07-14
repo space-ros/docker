@@ -41,59 +41,10 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Install the various build and test tools
-RUN apt install -y \
-  build-essential \
-  cmake \
-  curl \
-  g++ \
-  gdb \
-  git \
-  gnupg2 \
-  libbullet-dev \
-  lsb-release \
-  python3-colcon-common-extensions \
-  python3-flake8 \
-  python3-pip \
-  python3-pytest-cov \
-  python3-rosdep \
-  python3-setuptools \
-  python3-vcstool \
-  wget \
-  clang-format-10 \
-  tmux \
-  unzip
-
-
-# Install some pip packages needed for testing
-RUN python3 -m pip install -U \
-  argcomplete \
-  flake8-blind-except \
-  flake8-builtins \
-  flake8-class-newline \
-  flake8-comprehensions \
-  flake8-deprecated \
-  flake8-docstrings \
-  flake8-import-order \
-  flake8-quotes \
-  pytest-repeat \
-  pytest-rerunfailures \
-  pytest
-
-
-
-# Get OpenCV
-WORKDIR ${WORKSPACE}/..
-RUN apt install -y libboost-python-dev
-RUN mkdir -p opencv
-WORKDIR /root/src/opencv
-RUN wget -O opencv.zip https://github.com/opencv/opencv/archive/4.x.zip
-RUN unzip opencv.zip
-RUN mkdir -p build
-WORKDIR /root/src/opencv/build
-RUN cmake  ../opencv-4.x
-RUN cmake --build .
-ENV OpenCV_DIR /root/src/opencv/build
+# Install opencv
+RUN apt-get update && apt-get install -y \
+  libopencv-dev \
+  python3-opencv
 
 # Get the depends source code
 WORKDIR ${WORKSPACE}/..
@@ -105,24 +56,7 @@ COPY demo_spaceros.repos ./
 RUN vcs import src < demo_spaceros.repos
 
 
-
-# Get dependencies of dependencies
-RUN apt install -y \
-    libxaw7-dev \
-    libxrandr-dev \
-    libasio-dev \
-    qtbase5-dev \
-    qtdeclarative5-dev \
-    python3-pyqt5 \
-    sip-dev \
-    pyqt5-dev \
-    python-sip-dev \
-    pyqt5-dev-tools \
-    libgflags-dev \
-    libgtest-dev \
-    libogg-dev \
-    libtheora-dev \
-    libfreetype6-dev
+RUN rosdep install --from-paths src --ignore-src -r -y
 
 # Get ign-gazebo6
 RUN apt-get update
@@ -142,8 +76,8 @@ RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && colcon buil
 
 # Build demos
 WORKDIR ${WORKSPACE}
-# RUN /bin/bash -c 'source /root/src/depends_ws/install/setup.bash'
 
+RUN rm /ros_entrypoint.sh
 COPY ./demo_entrypoint.sh /
 ENTRYPOINT ["/demo_entrypoint.sh"]
 CMD ["bash"]
