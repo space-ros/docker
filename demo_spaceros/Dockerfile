@@ -50,6 +50,9 @@ WORKDIR /root/src/depends_ws
 COPY demo_spaceros.repos ./
 RUN vcs import src < demo_spaceros.repos
 
+COPY addition.repos ./
+RUN vcs import src < addition.repos
+
 RUN apt-get update -y
 RUN rosdep install --from-paths src --ignore-src -r -y
 

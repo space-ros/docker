@@ -1,186 +1,322 @@
 repositories:
-  angles:
+  ament_cmake:
     type: git
-    url: https://github.com/ros/angles.git
-    version: ros2
+    url: https://github.com/ament/ament_cmake.git
+    version: rolling
+  ament_cmake_ros:
+    type: git
+    url: https://github.com/ros2/ament_cmake_ros.git
+    version: rolling
+  ament_index:
+    type: git
+    url: https://github.com/ament/ament_index.git
+    version: rolling
+  ament_lint:
+    type: git
+    url: https://github.com/ament/ament_lint.git
+    version: rolling
+  ament_package:
+    type: git
+    url: https://github.com/ament/ament_package.git
+    version: rolling
+  class_loader:
+    type: git
+    url: https://github.com/ros/class_loader.git
+    version: rolling
+  common_interfaces:
+    type: git
+    url: https://github.com/ros2/common_interfaces.git
+    version: rolling
+  console_bridge_vendor:
+    type: git
+    url: https://github.com/ros2/console_bridge_vendor.git
+    version: rolling
   control_msgs:
     type: git
     url: https://github.com/ros-controls/control_msgs.git
     version: foxy-devel
-  control_toolbox:
+  cyclonedds:
     type: git
-    url: https://github.com/ros-controls/control_toolbox.git
-    version: ros2-master
-  fastcdr:
+    url: https://github.com/eclipse-cyclonedds/cyclonedds.git
+    version: releases/0.9.x
+  eigen3_cmake_module:
     type: git
-    url: https://github.com/ros2-gbp/fastcdr-release.git
-    version: release/rolling/fastcdr/1.0.24-2
-  fastrtps:
+    url: https://github.com/ros2/eigen3_cmake_module.git
+    version: rolling
+  geometry2:
     type: git
-    url: https://github.com/ros2-gbp/fastrtps-release.git
-    version: release/rolling/fastrtps/2.6.0-3
-  foonathan_memory_vendor:
+    url: https://github.com/ros2/geometry2.git
+    version: rolling
+  google_benchmark_vendor:
     type: git
-    url: https://github.com/ros2-gbp/foonathan_memory_vendor-release.git
-    version: release/rolling/foonathan_memory_vendor/1.2.0-2
-  gz_ros2_control:
+    url: https://github.com/ament/google_benchmark_vendor.git
+    version: rolling
+  googletest:
     type: git
-    url: https://github.com/ros-controls/gz_ros2_control.git
-    version: main
+    url: https://github.com/ament/googletest.git
+    version: rolling
+  iceoryx:
+    type: git
+    url: https://github.com/eclipse-iceoryx/iceoryx.git
+    version: release_2.0
   ignition_cmake2_vendor:
     type: git
-    url: https://github.com/ros2-gbp/ignition_cmake2_vendor-release.git
-    version: release/rolling/ignition_cmake2_vendor/0.0.2-1
+    url: https://github.com/ignition-release/ignition_cmake2_vendor.git
+    version: rolling
   ignition_math6_vendor:
     type: git
-    url: https://github.com/ros2-gbp/ignition_math6_vendor-release.git
-    version: release/rolling/ignition_math6_vendor/0.0.2-1
-  image_common/image_transport:
+    url: https://github.com/ignition-release/ignition_math6_vendor.git
+    version: rolling
+  image_common:
     type: git
-    url: https://github.com/ros2-gbp/image_common-release.git
-    version: release/rolling/image_transport/3.2.0-1
-  image_transport_plugins/compressed_depth_image_transport:
+    url: https://github.com/ros-perception/image_common.git
+    version: rolling
+  image_transport_plugins:
     type: git
-    url: https://github.com/ros2-gbp/image_transport_plugins-release.git
-    version: release/rolling/compressed_depth_image_transport/2.5.0-1
-  image_transport_plugins/compressed_image_transport:
-    type: git
-    url: https://github.com/ros2-gbp/image_transport_plugins-release.git
-    version: release/rolling/compressed_image_transport/2.5.0-1
-  image_transport_plugins/image_transport_plugins:
-    type: git
-    url: https://github.com/ros2-gbp/image_transport_plugins-release.git
-    version: release/rolling/image_transport_plugins/2.5.0-1
-  image_transport_plugins/theora_image_transport:
-    type: git
-    url: https://github.com/ros2-gbp/image_transport_plugins-release.git
-    version: release/rolling/theora_image_transport/2.5.0-1
+    url: https://github.com/ros-perception/image_transport_plugins.git
+    version: ros2
   interactive_markers:
     type: git
-    url: https://github.com/ros2-gbp/interactive_markers-release.git
-    version: release/rolling/interactive_markers/2.3.2-1
+    url: https://github.com/ros-visualization/interactive_markers.git
+    version: rolling
+  kdl_parser:
+    type: git
+    url: https://github.com/ros/kdl_parser.git
+    version: rolling
   laser_geometry:
     type: git
-    url: https://github.com/ros2-gbp/laser_geometry-release.git
-    version: release/rolling/laser_geometry/2.4.0-1
-  map_msgs:
+    url: https://github.com/ros-perception/laser_geometry.git
+    version: rolling
+  launch:
     type: git
-    url: https://github.com/ros2-gbp/navigation_msgs-release.git
-    version: release/rolling/map_msgs/2.1.0-2
+    url: https://github.com/ros2/launch.git
+    version: rolling
+  launch_ros:
+    type: git
+    url: https://github.com/ros2/launch_ros.git
+    version: rolling
+  libstatistics_collector:
+    type: git
+    url: https://github.com/ros-tooling/libstatistics_collector.git
+    version: rolling
+  libyaml_vendor:
+    type: git
+    url: https://github.com/ros2/libyaml_vendor.git
+    version: rolling
+  message_filters:
+    type: git
+    url: https://github.com/ros2/message_filters.git
+    version: rolling
+  mimick_vendor:
+    type: git
+    url: https://github.com/ros2/mimick_vendor.git
+    version: rolling
+  navigation_msgs:
+    type: git
+    url: https://github.com/ros-planning/navigation_msgs.git
+    version: rolling
+  orocos_kdl_vendor:
+    type: git
+    url: https://github.com/ros2/orocos_kdl_vendor.git
+    version: rolling
+  osrf_pycommon:
+    type: git
+    url: https://github.com/osrf/osrf_pycommon.git
+    version: master
+  osrf_testing_tools_cpp:
+    type: git
+    url: https://github.com/osrf/osrf_testing_tools_cpp.git
+    version: master
+  performance_test_fixture:
+    type: git
+    url: https://github.com/ros2/performance_test_fixture.git
+    version: rolling
+  pluginlib:
+    type: git
+    url: https://github.com/ros/pluginlib.git
+    version: rolling
+  pybind11_vendor:
+    type: git
+    url: https://github.com/ros2/pybind11_vendor.git
+    version: rolling
+  python_cmake_module:
+    type: git
+    url: https://github.com/ros2/python_cmake_module.git
+    version: rolling
   python_qt_binding:
     type: git
-    url: https://github.com/ros2-gbp/python_qt_binding-release.git
-    version: release/rolling/python_qt_binding/1.2.0-1
-  qt_gui_core/qt_gui:
+    url: https://github.com/ros-visualization/python_qt_binding.git
+    version: rolling
+  qt_gui_core:
     type: git
-    url: https://github.com/ros2-gbp/qt_gui_core-release.git
-    version: release/rolling/qt_gui/2.3.0-1
-  qt_gui_core/qt_gui_cpp:
+    url: https://github.com/ros-visualization/qt_gui_core.git
+    version: rolling
+  rcl:
     type: git
-    url: https://github.com/ros2-gbp/qt_gui_core-release.git
-    version: release/rolling/qt_gui_cpp/2.3.0-1
-  qt_gui_core/qt_gui_py_common:
+    url: https://github.com/ros2/rcl.git
+    version: rolling
+  rcl_interfaces:
     type: git
-    url: https://github.com/ros2-gbp/qt_gui_core-release.git
-    version: release/rolling/qt_gui_py_common/2.3.0-1
+    url: https://github.com/ros2/rcl_interfaces.git
+    version: rolling
+  rcl_logging:
+    type: git
+    url: https://github.com/ros2/rcl_logging.git
+    version: rolling
+  rclcpp:
+    type: git
+    url: https://github.com/ros2/rclcpp.git
+    version: rolling
+  rclpy:
+    type: git
+    url: https://github.com/ros2/rclpy.git
+    version: rolling
+  rcpputils:
+    type: git
+    url: https://github.com/ros2/rcpputils.git
+    version: rolling
+  rcutils:
+    type: git
+    url: https://github.com/ros2/rcutils.git
+    version: rolling
   realtime_tools:
     type: git
     url: https://github.com/ros-controls/realtime_tools.git
     version: foxy-devel
-  resource_retriever/libcurl_vendor:
+  resource_retriever:
     type: git
-    url: https://github.com/ros2-gbp/resource_retriever-release.git
-    version: release/rolling/libcurl_vendor/3.2.0-1
-  resource_retriever/resource_retriever:
+    url: https://github.com/ros/resource_retriever.git
+    version: rolling
+  rmw:
     type: git
-    url: https://github.com/ros2-gbp/resource_retriever-release.git
-    version: release/rolling/resource_retriever/3.2.0-1
-  ros_ign/ros_ign:
+    url: https://github.com/ros2/rmw.git
+    version: rolling
+  rmw_cyclonedds:
     type: git
-    url: https://github.com/ros2-gbp/ros_ign-release.git
-    version: release/rolling/ros_ign/0.244.3-1
-  ros_ign/ros_ign_bridge:
+    url: https://github.com/ros2/rmw_cyclonedds.git
+    version: rolling
+  rmw_dds_common:
     type: git
-    url: https://github.com/ros2-gbp/ros_ign-release.git
-    version: release/rolling/ros_ign_bridge/0.244.3-1
-  ros_ign/ros_ign_gazebo:
+    url: https://github.com/ros2/rmw_dds_common.git
+    version: rolling
+  rmw_implementation:
     type: git
-    url: https://github.com/ros2-gbp/ros_ign-release.git
-    version: release/rolling/ros_ign_gazebo/0.244.3-1
-  ros_ign/ros_ign_gazebo_demos:
+    url: https://github.com/ros2/rmw_implementation.git
+    version: rolling
+  robot_state_publisher:
     type: git
-    url: https://github.com/ros2-gbp/ros_ign-release.git
-    version: release/rolling/ros_ign_gazebo_demos/0.244.3-1
-  ros_ign/ros_ign_image:
-    type: git
-    url: https://github.com/ros2-gbp/ros_ign-release.git
-    version: release/rolling/ros_ign_image/0.244.3-1
-  ros_ign/ros_ign_interfaces:
-    type: git
-    url: https://github.com/ros2-gbp/ros_ign-release.git
-    version: release/rolling/ros_ign_interfaces/0.244.3-1
-  rosidl_typesupport_fastrtps/fastrtps_cmake_module:
-    type: git
-    url: https://github.com/ros2-gbp/rosidl_typesupport_fastrtps-release.git
-    version: release/rolling/fastrtps_cmake_module/2.3.0-1
-  rosidl_typesupport_fastrtps/rosidl_typesupport_fastrtps_c:
-    type: git
-    url: https://github.com/ros2-gbp/rosidl_typesupport_fastrtps-release.git
-    version: release/rolling/rosidl_typesupport_fastrtps_c/2.3.0-1
-  rosidl_typesupport_fastrtps/rosidl_typesupport_fastrtps_cpp:
-    type: git
-    url: https://github.com/ros2-gbp/rosidl_typesupport_fastrtps-release.git
-    version: release/rolling/rosidl_typesupport_fastrtps_cpp/2.3.0-1
+    url: https://github.com/ros/robot_state_publisher.git
+    version: rolling
   ros2_control:
     type: git
     url: https://github.com/ros-controls/ros2_control.git
     version: master
-  ros2_controllers:
+  ros2_tracing:
     type: git
-    url: https://github.com/tonylitianyu/ros2_controllers.git
-    version: effort_group_position_controller_2
-  rqt/rqt_gui:
+    url: https://gitlab.com/ros-tracing/ros2_tracing.git
+    version: master
+  ros2cli:
     type: git
-    url: https://github.com/ros2-gbp/rqt-release.git
-    version: release/rolling/rqt_gui/1.2.0-1
-  rqt/rqt_gui_cpp:
+    url: https://github.com/ros2/ros2cli.git
+    version: rolling
+  ros_ign:
     type: git
-    url: https://github.com/ros2-gbp/rqt-release.git
-    version: release/rolling/rqt_gui_cpp/1.2.0-1
-  rqt/rqt_gui_py:
+    url: https://github.com/ignitionrobotics/ros_ign.git
+    version: ros2
+  rosidl:
     type: git
-    url: https://github.com/ros2-gbp/rqt-release.git
-    version: release/rolling/rqt_gui_py/1.2.0-1
-  rqt/rqt_py_common:
+    url: https://github.com/ros2/rosidl.git
+    version: rolling
+  rosidl_defaults:
     type: git
-    url: https://github.com/ros2-gbp/rqt-release.git
-    version: release/rolling/rqt_py_common/1.2.0-1
+    url: https://github.com/ros2/rosidl_defaults.git
+    version: rolling
+  rosidl_python:
+    type: git
+    url: https://github.com/ros2/rosidl_python.git
+    version: rolling
+  rosidl_runtime_py:
+    type: git
+    url: https://github.com/ros2/rosidl_runtime_py.git
+    version: rolling
+  rosidl_typesupport:
+    type: git
+    url: https://github.com/ros2/rosidl_typesupport.git
+    version: rolling
+  rpyutils:
+    type: git
+    url: https://github.com/ros2/rpyutils.git
+    version: rolling
+  rqt:
+    type: git
+    url: https://github.com/ros-visualization/rqt.git
+    version: rolling
   rqt_image_view:
     type: git
-    url: https://github.com/ros2-gbp/rqt_image_view-release.git
-    version: release/rolling/rqt_image_view/1.2.0-1
+    url: https://github.com/ros-visualization/rqt_image_view.git
+    version: rolling-devel
   rqt_plot:
     type: git
-    url: https://github.com/ros2-gbp/rqt_plot-release.git
-    version: release/rolling/rqt_plot/1.2.0-1
+    url: https://github.com/ros-visualization/rqt_plot.git
+    version: rolling
   rqt_topic:
     type: git
-    url: https://github.com/ros2-gbp/rqt_topic-release.git
-    version: release/rolling/rqt_topic/1.3.0-1
+    url: https://github.com/ros-visualization/rqt_topic.git
+    version: rolling
+  rviz:
+    type: git
+    url: https://github.com/ros2/rviz.git
+    version: rolling
+  spdlog_vendor:
+    type: git
+    url: https://github.com/ros2/spdlog_vendor.git
+    version: rolling
   tango_icons_vendor:
     type: git
-    url: https://github.com/ros2-gbp/tango_icons_vendor-release.git
-    version: release/rolling/tango_icons_vendor/0.2.0-1
-  vision_opencv/cv_bridge:
+    url: https://github.com/ros-visualization/tango_icons_vendor.git
+    version: rolling
+  test_interface_files:
     type: git
-    url: https://github.com/ros2-gbp/vision_opencv-release.git
-    version: release/rolling/cv_bridge/3.0.3-1
+    url: https://github.com/ros2/test_interface_files.git
+    version: rolling
+  tinyxml2_vendor:
+    type: git
+    url: https://github.com/ros2/tinyxml2_vendor.git
+    version: rolling
+  tinyxml_vendor:
+    type: git
+    url: https://github.com/ros2/tinyxml_vendor.git
+    version: rolling
+  uncrustify_vendor:
+    type: git
+    url: https://github.com/ament/uncrustify_vendor.git
+    version: rolling
+  unique_identifier_msgs:
+    type: git
+    url: https://github.com/ros2/unique_identifier_msgs.git
+    version: rolling
+  urdf:
+    type: git
+    url: https://github.com/ros2/urdf.git
+    version: rolling
+  urdfdom:
+    type: git
+    url: https://github.com/ros/urdfdom.git
+    version: master
+  urdfdom_headers:
+    type: git
+    url: https://github.com/ros/urdfdom_headers.git
+    version: master
+  vision_opencv:
+    type: git
+    url: https://github.com/ros-perception/vision_opencv.git
+    version: ros2
   xacro:
     type: git
-    url: https://github.com/ros2-gbp/xacro-release.git
-    version: release/rolling/xacro/2.0.7-2
+    url: https://github.com/ros/xacro.git
+    version: ros2
   yaml_cpp_vendor:
     type: git
-    url: https://github.com/ros2-gbp/yaml_cpp_vendor-release.git
-    version: release/rolling/yaml_cpp_vendor/8.0.1-1
+    url: https://github.com/ros2/yaml_cpp_vendor.git
+    version: rolling
 
