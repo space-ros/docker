@@ -46,7 +46,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 # Get rosinstall_generator
 RUN apt-get update -y && apt-get install -y python3-rosinstall-generator
 
-# Get dependencies, but not included in Space ROS
+# Generate repos file for demo dependencies, excluding packages from Space ROS core.
 RUN mkdir src
 COPY spaceros-demo-pkgs.txt /tmp/
 COPY excluded-pkgs.txt /tmp/
