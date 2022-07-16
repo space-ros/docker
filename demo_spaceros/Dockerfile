@@ -25,6 +25,8 @@ FROM openrobotics/spaceros:latest
 ARG VCS_REF
 ARG VERSION="preview"
 ARG WORKSPACE=/root/src/spaceros_demo_ws
+ARG ROSDISTRO=rolling
+ENV IGNITION_VERSION fortress
 
 WORKDIR ${WORKSPACE}
 
@@ -41,32 +43,37 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Get the depends source code
-WORKDIR ${WORKSPACE}/..
-RUN mkdir -p depends_ws/src
+# Get rosinstall_generator
+RUN apt-get update -y && apt-get install -y python3-rosinstall-generator
 
-# # Get the repositories, but not included in Space ROS
-WORKDIR /root/src/depends_ws
-COPY demo_spaceros.repos ./
-RUN vcs import src < demo_spaceros.repos
+# Get dependencies, but not included in Space ROS
+RUN mkdir src
+COPY spaceros-demo-pkgs.txt /tmp/
+COPY excluded-pkgs.txt /tmp/
+RUN rosinstall_generator \
+  --rosdistro ${ROSDISTRO} \
+  --deps \
+  --upstream-development \
+  --exclude-path /root/src/spaceros_ws/src \
+  --exclude $(cat /tmp/excluded-pkgs.txt) -- \
+  $(cat /tmp/spaceros-demo-pkgs.txt) \
+  > /tmp/spaceros_demo.repos
 
-COPY addition.repos ./
-RUN vcs import src < addition.repos
+RUN vcs import src < /tmp/spaceros_demo.repos
+
+COPY addition.repos /tmp/
+RUN vcs import src < /tmp/addition.repos --force
 
 RUN apt-get update -y
 RUN rosdep install --from-paths src --ignore-src -r -y
 
-ENV IGNITION_VERSION fortress
+RUN git clone https://github.com/space-ros/demo.git src/demo
 
-# Set up the entrypoint
-WORKDIR /root/src/depends_ws
-# RUN /bin/bash -c 'rosdep install --from-paths src --ignore-src -r -y --rosdistro rolling'
-RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
-# RUN rosinstall_generator --rosdistro rolling --from-path ros_gz --deps --format repos
-
-# Build demos
+# Build the demo
 WORKDIR ${WORKSPACE}
+RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
 
+# Setup the entrypoint
 RUN rm /ros_entrypoint.sh
 COPY ./demo_entrypoint.sh /
 ENTRYPOINT ["/demo_entrypoint.sh"]

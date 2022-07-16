@@ -7,4 +7,3 @@ rmw_connextdds
 rosidl_typesupport_fastrtps_c
 rosidl_typesupport_fastrtps_cpp
 fastrtps_cmake_module
-ros2_controllers
