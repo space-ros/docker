@@ -70,7 +70,6 @@ RUN rosdep install --from-paths src --ignore-src -r -y
 RUN git clone https://github.com/space-ros/demo.git src/demo
 
 # Build the demo
-WORKDIR ${WORKSPACE}
 RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
 
 # Setup the entrypoint
