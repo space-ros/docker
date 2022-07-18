@@ -50,6 +50,7 @@ RUN apt-get update -y && apt-get install -y python3-rosinstall-generator
 RUN mkdir src
 COPY spaceros-demo-pkgs.txt /tmp/
 COPY excluded-pkgs.txt /tmp/
+
 RUN rosinstall_generator \
   --rosdistro ${ROSDISTRO} \
   --deps \
@@ -67,8 +68,6 @@ RUN vcs import src < /tmp/addition.repos --force
 RUN apt-get update -y
 RUN rosdep install --from-paths src --ignore-src -r -y
 
-RUN git clone https://github.com/space-ros/demo.git src/demo
-
 # Build the demo
 RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
 
@@ -77,6 +76,3 @@ RUN rm /ros_entrypoint.sh
 COPY ./demo_entrypoint.sh /
 ENTRYPOINT ["/demo_entrypoint.sh"]
 CMD ["bash"]
-
-
-
