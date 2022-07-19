@@ -1,0 +1,13 @@
+repositories:
+  ros2_controllers:
+    type: git
+    url: https://github.com/tonylitianyu/ros2_controllers.git
+    version: effort_group_position_controller_2
+  gz_ros2_control:
+    type: git
+    url: https://github.com/ros-controls/gz_ros2_control.git
+    version: main
+  demo:
+    type: git
+    url: https://github.com/space-ros/demo.git
+    version: main
