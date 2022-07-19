@@ -58,12 +58,12 @@ RUN rosinstall_generator \
   --exclude-path /root/src/spaceros_ws/src \
   --exclude $(cat /tmp/excluded-pkgs.txt) -- \
   $(cat /tmp/spaceros-demo-pkgs.txt) \
-  > /tmp/spaceros_demo.repos
+  > /tmp/spaceros_demo_generated_pkgs.repos
 
-RUN vcs import src < /tmp/spaceros_demo.repos
+RUN vcs import src < /tmp/spaceros_demo_generated_pkgs.repos
 
-COPY addition.repos /tmp/
-RUN vcs import src < /tmp/addition.repos --force
+COPY spaceros_demo_manual_pkgs.repos /tmp/
+RUN vcs import src < /tmp/spaceros_demo_manual_pkgs.repos --force
 
 RUN apt-get update -y
 RUN rosdep install --from-paths src --ignore-src -r -y
