@@ -40,7 +40,7 @@ On the top left corner, click on the refresh button to show camera feed
 Open a new terminal and attach to the currently running container
 
 ```
-$ docker -it exec <container-name> bash
+$ docker exec -it <container-name> bash
 ```
 
 Make sure packages are sourced
