@@ -18,19 +18,14 @@
 #
 #   VCS_REF     - The git revision of the Space ROS source code (no default value).
 #   VERSION     - The version of Space ROS (default: "preview")
-#   WORKSPACE   - The location for the Space ROS source code in the container (default: /root/src/spaceros_ws)
 
 FROM openrobotics/spaceros:latest
 
+# Define arguments used in the metadata definition
 ARG VCS_REF
 ARG VERSION="preview"
-ARG WORKSPACE=/root/src/spaceros_demo_ws
-ARG ROSDISTRO=rolling
-ENV IGNITION_VERSION fortress
 
-WORKDIR ${WORKSPACE}
-
-# LABEL the image
+# Specify the docker image metadata
 LABEL org.label-schema.schema-version="1.0"
 LABEL org.label-schema.name="Space ROS"
 LABEL org.label-schema.description="Preview demo of the Space ROS platform"
@@ -43,36 +38,42 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
 
+# Define a few key variables
+ARG SPACEROS_DEMO_DIR=${SRC_DIR}/spaceros_demo
+ARG ROSDISTRO=rolling
+ENV IGNITION_VERSION fortress
+
 # Get rosinstall_generator
-RUN apt-get update -y && apt-get install -y python3-rosinstall-generator
+RUN sudo apt-get update -y && sudo apt-get install -y python3-rosinstall-generator
 
 # Generate repos file for demo dependencies, excluding packages from Space ROS core.
-RUN mkdir src
-COPY spaceros-demo-pkgs.txt /tmp/
-COPY excluded-pkgs.txt /tmp/
-
+RUN mkdir -p ${SPACEROS_DEMO_DIR}/src
+WORKDIR ${SPACEROS_DEMO_DIR}
+COPY --chown=${USERNAME}:${USERNAME} spaceros-demo-pkgs.txt /tmp/
+COPY --chown=${USERNAME}:${USERNAME} excluded-pkgs.txt /tmp/
 RUN rosinstall_generator \
   --rosdistro ${ROSDISTRO} \
   --deps \
-  --upstream-development \
-  --exclude-path /root/src/spaceros_ws/src \
+  --exclude-path ${SPACEROS_DIR}/src \
   --exclude $(cat /tmp/excluded-pkgs.txt) -- \
   $(cat /tmp/spaceros-demo-pkgs.txt) \
   > /tmp/spaceros_demo_generated_pkgs.repos
 
-RUN vcs import src < /tmp/spaceros_demo_generated_pkgs.repos
+# Currently not working:
+#--upstream-development \
 
-COPY spaceros_demo_manual_pkgs.repos /tmp/
+# Get the source for the dependencies
+RUN vcs import src < /tmp/spaceros_demo_generated_pkgs.repos
+COPY --chown=${USERNAME}:${USERNAME} spaceros_demo_manual_pkgs.repos /tmp/
 RUN vcs import src < /tmp/spaceros_demo_manual_pkgs.repos --force
 
-RUN apt-get update -y
+RUN sudo apt-get update -y
 RUN rosdep install --from-paths src --ignore-src -r -y
 
 # Build the demo
-RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
+RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
 
 # Setup the entrypoint
-RUN rm /ros_entrypoint.sh
 COPY ./demo_entrypoint.sh /
 ENTRYPOINT ["/demo_entrypoint.sh"]
 CMD ["bash"]
