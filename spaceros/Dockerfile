@@ -45,10 +45,10 @@ RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/
 
 # Define the username and key locations
 ENV USERNAME spaceros-user
-ARG REPOS_FILE_URL="https://raw.githubusercontent.com/space-ros/space-ros/main/ros2.repos"
-ARG SRC_DIR=/home/${USERNAME}/src
+ENV SRC_DIR=/home/${USERNAME}/src
+ENV SPACEROS_DIR=${SRC_DIR}/spaceros
 ARG IKOS_DIR=${SRC_DIR}/ikos
-ARG SPACEROS_DIR=${SRC_DIR}/spaceros
+ARG REPOS_FILE_URL="https://raw.githubusercontent.com/space-ros/space-ros/main/ros2.repos"
 
 # Update the Ubuntu software repository
 RUN apt-get update
