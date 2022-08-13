@@ -10,4 +10,5 @@ repositories:
   demo:
     type: git
     url: https://github.com/space-ros/demo.git
-    version: main
+    #version: main
+    version: mjeronimo/add-non-root-user
