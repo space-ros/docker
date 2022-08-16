@@ -66,7 +66,7 @@ RUN apt-get update && apt-get install -y curl gnupg lsb-release
 RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
 RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
 
-# Install required software development tools and ROS tools (and vim included for convenience)
+# Install required software development tools and ROS tools (and vim, included for convenience)
 RUN apt-get update && apt-get install -y \
   bison \
   build-essential \
@@ -101,7 +101,7 @@ RUN python3 -m pip install -U \
 RUN useradd -m $USERNAME && \
   echo "$USERNAME:$USERNAME" | chpasswd && \
   usermod --shell /bin/bash $USERNAME && \
-  usermod -aG sudo $USERNAME && \
+  usermod -aG sudo,render $USERNAME && \
   mkdir -p /etc/sudoers.d && \
   echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/$USERNAME && \
   chmod 0440 /etc/sudoers.d/$USERNAME

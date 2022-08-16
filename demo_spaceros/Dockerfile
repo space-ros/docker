@@ -53,14 +53,12 @@ COPY --chown=${USERNAME}:${USERNAME} spaceros-demo-pkgs.txt /tmp/
 COPY --chown=${USERNAME}:${USERNAME} excluded-pkgs.txt /tmp/
 RUN rosinstall_generator \
   --rosdistro ${ROSDISTRO} \
+  --upstream-development \
   --deps \
   --exclude-path ${SPACEROS_DIR}/src \
   --exclude $(cat /tmp/excluded-pkgs.txt) -- \
   $(cat /tmp/spaceros-demo-pkgs.txt) \
   > /tmp/spaceros_demo_generated_pkgs.repos
-
-# Currently not working:
-#--upstream-development \
 
 # Get the source for the dependencies
 RUN vcs import src < /tmp/spaceros_demo_generated_pkgs.repos

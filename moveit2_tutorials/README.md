@@ -32,34 +32,19 @@ nvidia/cudagl           11.4.1-devel-ubuntu20.04   336416dfcbba   1 week ago    
 
 The new image is named **openrobotics/moveit2_tutorials:latest**.
 
-To run the resulting image in a container, run:
+There is a run.sh script provided for convenience that will run the image in a container.
 
 ```
-$ docker run -it --gpus all --net=host -e DISPLAY -v /tmp/.X11-unix openrobotics/moveit2_tutorials
-```
-
-If the previous command fails as follows,
-
-```
-docker: Error response from daemon: could not select device driver "" with capabilities: [[gpu]].
-ERRO[0000] error waiting for container: context canceled
-```
-
-your GPU may not be enabled in the Docker container and you can try again, omiting '--gpus all', as follows:
-
-```
-$ docker run -it --net=host -e DISPLAY -v /tmp/.X11-unix openrobotics/moveit2_tutorials
+$ ./run.sh
 ```
 
 Upon startup, the container automatically runs the moveit2_entrypoint.sh script, which sources the MoveIt2 and Space ROS environment files. You'll now be running inside the container and should see a prompt similar to this:
 
 ```
-root@8e73b41a4e16:/root/src/moveit2_ws#
+spaceros-user@8e73b41a4e16:~/src/moveit2_tutorials#
 ```
 
-Once the container is started, it must also be configured to run GUI applications. See the [docker/moveit2/README](../moveit2/README.md) in this repo for more information.
-
-Once configured, run the following command to launch the MoveIt2 tutorials launch script:
+Run the following command to launch the MoveIt2 tutorials demo launch file:
 
 ```
 ros2 launch moveit2_tutorials demo.launch.py rviz_tutorial:=true
