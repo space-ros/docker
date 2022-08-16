@@ -71,6 +71,9 @@ RUN rosdep install --from-paths src --ignore-src -r -y
 # Build the demo
 RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
 
+# Add the user to the render group
+RUN sudo usermod -aG render $USERNAME
+
 # Setup the entrypoint
 COPY ./demo_entrypoint.sh /
 ENTRYPOINT ["/demo_entrypoint.sh"]
