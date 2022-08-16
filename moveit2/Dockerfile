@@ -98,7 +98,7 @@ COPY --chown=${USERNAME}:${USERNAME} octomap_fix.diff ./src/octomap_msgs
 RUN cd src/octomap_msgs && git apply octomap_fix.diff
 
 # Build MoveIt2
-RUN /bin/bash -c 'source ${SRC_DIR}/spaceros/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --continue-on-error'
+RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
 # Enable the container to run GUI apps and add a couple sample apps for testing
 RUN touch ${HOME}/.Xauthority
