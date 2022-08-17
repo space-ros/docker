@@ -7,7 +7,7 @@ The MoveIt2 Tutorials Docker image uses the MoveIt2 image (*openrobotics/moveit2
 To build the docker image, run:
 
 ```
-$ ./build-image.sh
+$ ./build.sh
 ```
 
 The build process will take about 10 minutes, depending on the host computer.

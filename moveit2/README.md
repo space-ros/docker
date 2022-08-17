@@ -7,7 +7,7 @@ The MoveIt2 Docker image uses the Space ROS docker image (*openrobotics/spaceros
 To build the docker image, run:
 
 ```
-$ ./build-image.sh
+$ ./build.sh
 ```
 
 The build process will take about 30 minutes, depending on the host computer.
