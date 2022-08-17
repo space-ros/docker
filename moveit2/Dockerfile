@@ -114,6 +114,6 @@ RUN apt-get install -y \
   xterm
 
 # Set up the entrypoint
-COPY ./moveit2_entrypoint.sh /
-ENTRYPOINT ["/moveit2_entrypoint.sh"]
+COPY ./entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["bash"]
