@@ -1,4 +1,9 @@
 repositories:
+  ackermann_msgs:
+    type: git
+    url: https://github.com/ros-drivers/ackermann_msgs.git
+    # branch: ros2
+    version: 2.0.2
   angles:
     type: git
     url: https://github.com/ros/angles.git
@@ -133,12 +138,12 @@ repositories:
     type: git
     url: https://github.com/ros-controls/ros2_control.git
     # branch: master
-    version: 2.5.0
+    version: 2.13.0
   ros2_controllers:
     type: git
     url: https://github.com/ros-controls/ros2_controllers.git
     # branch: master
-    version: 2.2.0
+    version: 2.11.0
   ruckig:
     type: git
     url: https://github.com/pantor/ruckig.git
@@ -153,22 +158,12 @@ repositories:
     type: git
     url: https://github.com/ros-planning/srdfdom.git
     # branch: ros2
-    version: 2.0.3
+    version: 2.0.4
   urdf_parser_py:
     type: git
     url: https://github.com/ros/urdf_parser_py.git
     # branch: ros2
     version: 1.2.0
-  urdfdom:
-    type: git
-    url: https://github.com/ros/urdfdom.git
-    # branch: master
-    version: 3.0.2
-  urdfdom_headers:
-    type: git
-    url: https://github.com/ros/urdfdom_headers.git
-    # branch: master
-    version: 1.0.6
   vision_opencv:
     type: git
     url: https://github.com/ros-perception/vision_opencv.git
