@@ -75,11 +75,6 @@ RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash && colcon build --cm
 RUN sudo usermod -aG render $USERNAME
 
 # Setup the entrypoint
-<<<<<<< HEAD
-COPY ./demo_entrypoint.sh /
-ENTRYPOINT ["/demo_entrypoint.sh"]
-=======
 COPY ./entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
->>>>>>> db8380868890f4a8645ac3f8d61589aed9a260dd
 CMD ["bash"]
