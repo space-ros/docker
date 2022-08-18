@@ -18,22 +18,17 @@
 #
 #   VCS_REF     - The git revision of the Space ROS source code (no default value).
 #   VERSION     - The version of Space ROS (default: "preview")
-#   WORKSPACE   - The location for the Space ROS source code in the container (default: /root/src/spaceros_ws)
 
 FROM openrobotics/spaceros:latest
 
+# Define arguments used in the metadata definition
 ARG VCS_REF
 ARG VERSION="preview"
-ARG WORKSPACE=/root/src/spaceros_demo_ws
-ARG ROSDISTRO=rolling
-ENV IGNITION_VERSION fortress
 
-WORKDIR ${WORKSPACE}
-
-# LABEL the image
+# Specify the docker image metadata
 LABEL org.label-schema.schema-version="1.0"
-LABEL org.label-schema.name="Space ROS"
-LABEL org.label-schema.description="Preview demo of the Space ROS platform"
+LABEL org.label-schema.name="Curiosity Rover"
+LABEL org.label-schema.description="Curiosity rover demo on the Space ROS platform"
 LABEL org.label-schema.vendor="Open Robotics"
 LABEL org.label-schema.version=${VERSION}
 LABEL org.label-schema.url="https://github.com/space-ros"
@@ -42,6 +37,12 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
+
+# Define a few key variables
+ARG WORKSPACE=/root/src/spaceros_demo_ws
+ARG ROSDISTRO=rolling
+ENV IGNITION_VERSION fortress
+WORKDIR ${WORKSPACE}
 
 # Get rosinstall_generator
 RUN apt-get update -y && apt-get install -y python3-rosinstall-generator
