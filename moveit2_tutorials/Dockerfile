@@ -55,6 +55,6 @@ RUN vcs import src < moveit2_tutorials.repos
 RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
 
 # Set up the entrypoint
-COPY ./moveit2_tutorials_entrypoint.sh /
-ENTRYPOINT ["/moveit2_tutorials_entrypoint.sh"]
+COPY ./entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["bash"]

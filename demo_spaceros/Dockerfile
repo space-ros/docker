@@ -73,7 +73,6 @@ RUN rosdep install --from-paths src --ignore-src -r -y
 RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
 
 # Setup the entrypoint
-RUN rm /ros_entrypoint.sh
-COPY ./demo_entrypoint.sh /
-ENTRYPOINT ["/demo_entrypoint.sh"]
+COPY ./entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["bash"]
