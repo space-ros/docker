@@ -18,32 +18,17 @@
 #
 #   VCS_REF     - The git revision of the Space ROS source code (no default value).
 #   VERSION     - The version of Space ROS (default: "preview")
-#   WORKSPACE   - The location for the Space ROS source code in the container (default: /root/src/spaceros_ws)
-#
-# Launch the container:
-#   docker run -it --gpus all --net=host -e DISPLAY -v /tmp/.X11-unix openrobotics/moveit2
-#
-# Run xauth add inside the container (get the values from the host system via 'xauth list'):
-#   xauth add <hostname>/unix:1  MIT-MAGIC-COOKIE-1  <cookie-value>
-#
-# Launch the MoveGroup demo in side the container:
-#   ros2 launch run_move_group run_move_group.launch.py
-#
-# Launch another terminal into the same or a new container and run:
-#   ros2 launch run_move_group run_move_group_interface.launch.py
 
 FROM openrobotics/spaceros:latest
 
+# Define arguments used in the metadata definition
 ARG VCS_REF
 ARG VERSION="preview"
-ARG WORKSPACE=/root/src/moveit2_ws
 
-WORKDIR ${WORKSPACE}
-
-# LABEL the image
+# Specify the docker image metadata
 LABEL org.label-schema.schema-version="1.0"
-LABEL org.label-schema.name="Space ROS"
-LABEL org.label-schema.description="Preview version of the Space ROS/MoveIt2 platform"
+LABEL org.label-schema.name="MoveIt2"
+LABEL org.label-schema.description="Preview version of the MoveIt2/Space ROS platform"
 LABEL org.label-schema.vendor="Open Robotics"
 LABEL org.label-schema.version=${VERSION}
 LABEL org.label-schema.url="https://github.com/space-ros"
@@ -52,6 +37,10 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
+
+# Define key locations
+ARG WORKSPACE=/root/src/moveit2_ws
+WORKDIR ${WORKSPACE}
 
 # Make sure the latest versions of packages are installed
 RUN apt-get update
