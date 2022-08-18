@@ -7,7 +7,7 @@ The Space ROS Demo Docker image uses the Space ROS docker image (*openrobotics/s
 To build the docker image, run:
 
 ```
-$ ./build-image.sh
+$ ./build.sh
 ```
 
 ## Running the Demo Docker

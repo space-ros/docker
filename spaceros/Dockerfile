@@ -155,7 +155,7 @@ ENV IKOS_SCAN_NOTIFIER_FILES "yes"
 RUN cd ${IKOS_DIR}/install/lib/python3.8/site-packages && sudo python3 /usr/lib/python3/dist-packages/easy_install.py ./ikos-3.0-py3.8.egg
 
 # Set up the entrypoint
-WORKDIR ${SPACEROS_DIR}
-COPY ./ros_entrypoint.sh /
-ENTRYPOINT ["/ros_entrypoint.sh"]
+WORKDIR ${WORKSPACE}
+COPY ./entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["bash"]

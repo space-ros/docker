@@ -59,6 +59,6 @@ RUN sudo chown -R ${USERNAME}:${USERNAME} ${MOVEIT2_TUTORIALS_DIR}
 RUN /bin/bash -c 'source ${SRC_DIR}/moveit2/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
 
 # Set up the entrypoint
-COPY ./moveit2_tutorials_entrypoint.sh /
-ENTRYPOINT ["/moveit2_tutorials_entrypoint.sh"]
+COPY ./entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["bash"]

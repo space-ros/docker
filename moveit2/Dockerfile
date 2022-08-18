@@ -38,6 +38,10 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
 
+# Define key locations
+ARG WORKSPACE=/root/src/moveit2_ws
+WORKDIR ${WORKSPACE}
+
 # Make sure the latest versions of packages are installed
 RUN sudo apt-get update
 RUN sudo apt-get dist-upgrade -y
@@ -112,6 +116,6 @@ RUN sudo apt-get install -y \
   xterm
 
 # Set up the entrypoint
-COPY ./moveit2_entrypoint.sh /
-ENTRYPOINT ["/moveit2_entrypoint.sh"]
+COPY ./entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["bash"]

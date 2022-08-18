@@ -27,8 +27,8 @@ ARG VERSION="preview"
 
 # Specify the docker image metadata
 LABEL org.label-schema.schema-version="1.0"
-LABEL org.label-schema.name="Space ROS"
-LABEL org.label-schema.description="Preview demo of the Space ROS platform"
+LABEL org.label-schema.name="Curiosity Rover"
+LABEL org.label-schema.description="Curiosity rover demo on the Space ROS platform"
 LABEL org.label-schema.vendor="Open Robotics"
 LABEL org.label-schema.version=${VERSION}
 LABEL org.label-schema.url="https://github.com/space-ros"
@@ -75,6 +75,11 @@ RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash && colcon build --cm
 RUN sudo usermod -aG render $USERNAME
 
 # Setup the entrypoint
+<<<<<<< HEAD
 COPY ./demo_entrypoint.sh /
 ENTRYPOINT ["/demo_entrypoint.sh"]
+=======
+COPY ./entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]
+>>>>>>> db8380868890f4a8645ac3f8d61589aed9a260dd
 CMD ["bash"]
