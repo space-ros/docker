@@ -38,21 +38,17 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Define a few key variables
-ARG WORKSPACE=/root/src/spaceros
-ARG REPOS_FILE_URL="https://raw.githubusercontent.com/space-ros/space-ros/main/ros2.repos"
-
-# https://github.com/NVIDIA/cuda-repo-management/issues/1
-# Use new GPG keys for nvidia apt repositories that have not yet propagated to base images.
-RUN apt-key del 7fa2af80
-RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/3bf863cc.pub
-
 # Define the username and key locations
 ENV USERNAME spaceros-user
 ENV SRC_DIR=/home/${USERNAME}/src
 ENV SPACEROS_DIR=${SRC_DIR}/spaceros
 ARG IKOS_DIR=${SRC_DIR}/ikos
 ARG REPOS_FILE_URL="https://raw.githubusercontent.com/space-ros/space-ros/main/ros2.repos"
+
+# https://github.com/NVIDIA/cuda-repo-management/issues/1
+# Use new GPG keys for nvidia apt repositories that have not yet propagated to base images.
+RUN apt-key del 7fa2af80
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/3bf863cc.pub
 
 # Update the Ubuntu software repository
 RUN apt-get update

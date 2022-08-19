@@ -39,16 +39,12 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Define key locations
-ARG WORKSPACE=/root/src/moveit2
-WORKDIR ${WORKSPACE}
+ENV MOVEIT2_DIR=${SRC_DIR}/moveit2
 
 # Make sure the latest versions of packages are installed
 RUN sudo apt-get update
 RUN sudo apt-get dist-upgrade -y
 RUN rosdep update
-
-# Define key locations
-ENV MOVEIT2_DIR=${SRC_DIR}/moveit2
 
 # Install the various build and test tools
 RUN sudo apt install -y \

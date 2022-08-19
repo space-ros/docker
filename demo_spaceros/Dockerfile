@@ -71,8 +71,8 @@ RUN rosdep install --from-paths src --ignore-src -r -y
 # Build the demo
 RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
 
-# Add the user to the render group
-RUN sudo usermod -aG render $USERNAME
+# Add the user to the kvm group so that the user can access /dev/dri/renderD128
+RUN sudo usermod -aG kvm $USERNAME
 
 # Setup the entrypoint
 COPY ./entrypoint.sh /
