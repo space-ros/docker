@@ -41,7 +41,7 @@ $ ./run.sh
 Upon startup, the container automatically runs the moveit2_entrypoint.sh script, which sources the MoveIt2 and Space ROS environment files. You'll now be running inside the container and should see a prompt similar to this:
 
 ```
-root@8e73b41a4e16:/root/src/moveit2_ws#
+root@8e73b41a4e16:/root/src/moveit2#
 ```
 
 Run the following command to launch the MoveIt2 tutorials demo launch file:

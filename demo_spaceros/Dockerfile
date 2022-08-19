@@ -39,7 +39,7 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Define a few key variables
-ARG WORKSPACE=/root/src/spaceros_demo_ws
+ARG WORKSPACE=/root/src/spaceros_demo
 ARG ROSDISTRO=rolling
 ENV IGNITION_VERSION fortress
 WORKDIR ${WORKSPACE}
@@ -56,7 +56,7 @@ RUN rosinstall_generator \
   --rosdistro ${ROSDISTRO} \
   --deps \
   --upstream-development \
-  --exclude-path /root/src/spaceros_ws/src \
+  --exclude-path /root/src/spaceros/src \
   --exclude $(cat /tmp/excluded-pkgs.txt) -- \
   $(cat /tmp/spaceros-demo-pkgs.txt) \
   > /tmp/spaceros_demo_generated_pkgs.repos
@@ -70,7 +70,7 @@ RUN apt-get update -y
 RUN rosdep install --from-paths src --ignore-src -r -y
 
 # Build the demo
-RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
+RUN /bin/bash -c 'source /root/src/spaceros/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
 
 # Setup the entrypoint
 COPY ./entrypoint.sh /
