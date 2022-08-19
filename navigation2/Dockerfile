@@ -58,7 +58,7 @@ RUN sudo vcs import src < navigation2.repos
 RUN sudo chown -R ${USERNAME}:${USERNAME} ${NAVIGATION2_DIR}
 
 # Install system dependencies
-RUN rosdep install --from-paths ../spaceros/src src --ignore-src --rosdistro rolling -y --skip-keys "console_bridge fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers rmw_connextdds ros_testing rmw_connextdds rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp composition demo_nodes_py lifecycle rosidl_typesupport_fastrtps_cpp rosidl_typesupport_fastrtps_c ikos diagnostic_aggregator diagnostic_updater joy qt_gui rqt_gui rqt_gui_py"
+RUN rosdep install --from-paths ../spaceros/src src --ignore-src --rosdistro rolling -y --skip-keys "composition demo_nodes_py ikos lifecycle rmw_connextdds rmw_fastrtps_dynamic_cpp rmw_fastrtps_cpp rosidl_typesupport_fastrtps_c rosidl_typesupport_fastrtps_cpp urdfdom_headers"
 
 # Build Navigation2
 RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
