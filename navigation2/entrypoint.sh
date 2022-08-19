@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
 
-# Setup the MoveIt2 environment
-source "/home/spaceros-user/src/spaceros/install/setup.bash"
+# Setup the Navigation2 environment
+source "/home/spaceros-user/src/navigation2/install/setup.bash"
 exec "$@"
