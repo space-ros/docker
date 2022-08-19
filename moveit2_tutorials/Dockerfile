@@ -39,7 +39,7 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Define key locations
-ARG WORKSPACE=/root/src/moveit2_ws
+ARG WORKSPACE=/root/src/moveit2
 WORKDIR ${WORKSPACE}
 
 # Get the MoveIt2 Tutorials source code
@@ -52,7 +52,7 @@ RUN cd src/moveit2_tutorials && git checkout c98d7f10aefb8dffde60621ec5b72d1f5d1
 RUN vcs import src < moveit2_tutorials.repos
 
 # Build it
-RUN /bin/bash -c 'source /root/src/spaceros_ws/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
+RUN /bin/bash -c 'source /root/src/spaceros/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
 
 # Set up the entrypoint
 COPY ./entrypoint.sh /

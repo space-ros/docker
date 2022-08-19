@@ -58,47 +58,47 @@ $ source /root/src/spaceros_demo/install/setup.bash
 Drive the rover forward
 
 ```
-$ ros2 service call /move_forward std_srvs/srv/Empty 
+$ ros2 service call /move_forward std_srvs/srv/Empty
 ```
 
 Stop the rover
 
 ```
-$ ros2 service call /move_stop std_srvs/srv/Empty 
+$ ros2 service call /move_stop std_srvs/srv/Empty
 ```
 
 Turn left
 
 ```
-$ ros2 service call /turn_left std_srvs/srv/Empty 
+$ ros2 service call /turn_left std_srvs/srv/Empty
 ```
 
 Turn right
 
 ```
-$ ros2 service call /turn_right std_srvs/srv/Empty 
+$ ros2 service call /turn_right std_srvs/srv/Empty
 ```
 
 Open the tool arm:
 
 ```
-$ ros2 service call /open_arm std_srvs/srv/Empty 
+$ ros2 service call /open_arm std_srvs/srv/Empty
 ```
 
 Close the tool arm:
 
 ```
-$ ros2 service call /close_arm std_srvs/srv/Empty 
+$ ros2 service call /close_arm std_srvs/srv/Empty
 ```
 
 Open the mast (camera arm)
 
 ```
-$ ros2 service call /mast_open std_srvs/srv/Empty 
+$ ros2 service call /mast_open std_srvs/srv/Empty
 ```
 
 Close the mast (camera arm)
 
 ```
-$ ros2 service call /mast_close std_srvs/srv/Empty 
+$ ros2 service call /mast_close std_srvs/srv/Empty
 ```
