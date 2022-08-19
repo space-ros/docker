@@ -1,6 +1,6 @@
 # Space ROS Docker Image
 
-The Dockerfile in this directory builds Space ROS from source code. 
+The Dockerfile in this directory builds Space ROS from source code.
 To include drivers for NVIDIA GPUs, the Space ROS docker image is based on the NVIDIA CudaGL development image, version 11.4.1, which is, in turn, based on Ubuntu 20.04.
 
 ## Building the Docker Image
@@ -38,7 +38,7 @@ There is a run.sh script provided for convenience that will run the spaceros ima
 $ ./run.sh
 ```
 
-Upon startup, the container automatically runs the ros_entrypoint.sh script, which sources the Space ROS environment file (setup.bash). You'll now be running inside the container and should see a prompt similar to this:
+Upon startup, the container automatically runs the entrypoint.sh script, which sources the Space ROS environment file (setup.bash). You'll now be running inside the container and should see a prompt similar to this:
 
 ```
 spaceros-user@d10d85c68f0e:~/src/spaceros#
@@ -159,7 +159,7 @@ The output will look something like this:
 
 ```
 CONTAINER ID   IMAGE                   COMMAND                  CREATED          STATUS          PORTS     NAMES
-d10d85c68f0e   openrobotics/spaceros   "/ros_entrypoint.sh …"   28 minutes ago   Up 28 minutes             inspiring_moser
+d10d85c68f0e   openrobotics/spaceros   "/entrypoint.sh …"   28 minutes ago   Up 28 minutes             inspiring_moser
 ```
 
 The container ID in this case, is *d10d85c68f0e*. So, run the following command in the host terminal:
@@ -209,5 +209,4 @@ The 'colcon test' command runs various tests, including IKOS report generation, 
 spaceros-user@d10d85c68f0e:~/src/spaceros# more build_ikos/rcpputils/test_results/rcpputils/ikos.xunit.xml
 
 ```
-
 

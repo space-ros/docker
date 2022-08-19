@@ -1,6 +1,6 @@
 # MoveIt2 Tutorials Docker Image
 
-The MoveIt2 Tutorials Docker image uses the MoveIt2 image (*openrobotics/moveit2:latest*) as its base image. The MoveIt2 Tutorials Dockerfile downloads the tutorials source code into the MoveIt2 workspace and rebuilds the MoveIt2 source code, which now includes the tutorials.
+The MoveIt2 Tutorials Docker image uses the MoveIt2 image (*openrobotics/moveit2:latest*) as its base image. The MoveIt2 Tutorials Dockerfile downloads and builds the tutorials source code.
 
 ## Building the MoveIt2 Image
 
@@ -38,7 +38,7 @@ There is a run.sh script provided for convenience that will run the image in a c
 $ ./run.sh
 ```
 
-Upon startup, the container automatically runs the moveit2_entrypoint.sh script, which sources the MoveIt2 and Space ROS environment files. You'll now be running inside the container and should see a prompt similar to this:
+Upon startup, the container automatically runs the entrypoint.sh script, which sources the MoveIt2 tutorials, MoveIt2 and Space ROS environment files. You'll now be running inside the container and should see a prompt similar to this:
 
 ```
 spaceros-user@8e73b41a4e16:~/src/moveit2_tutorials#

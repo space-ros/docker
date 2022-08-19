@@ -38,8 +38,12 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Use new GPG keys for NVIDIA apt repositories that have not yet propagated to base images.
-# See: https://github.com/NVIDIA/cuda-repo-management/issues/1
+# Define a few key variables
+ARG WORKSPACE=/root/src/spaceros
+ARG REPOS_FILE_URL="https://raw.githubusercontent.com/space-ros/space-ros/main/ros2.repos"
+
+# https://github.com/NVIDIA/cuda-repo-management/issues/1
+# Use new GPG keys for nvidia apt repositories that have not yet propagated to base images.
 RUN apt-key del 7fa2af80
 RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/3bf863cc.pub
 
@@ -155,7 +159,7 @@ ENV IKOS_SCAN_NOTIFIER_FILES "yes"
 RUN cd ${IKOS_DIR}/install/lib/python3.8/site-packages && sudo python3 /usr/lib/python3/dist-packages/easy_install.py ./ikos-3.0-py3.8.egg
 
 # Set up the entrypoint
-WORKDIR ${WORKSPACE}
+WORKDIR ${SPACEROS_DIR}
 COPY ./entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["bash"]

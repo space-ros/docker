@@ -39,7 +39,7 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Define key locations
-ARG WORKSPACE=/root/src/moveit2_ws
+ARG WORKSPACE=/root/src/moveit2
 WORKDIR ${WORKSPACE}
 
 # Make sure the latest versions of packages are installed
