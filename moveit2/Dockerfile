@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# A Docker configuration script to build the Space ROS image.
+# A Docker configuration script to build the MoveIt2/Space ROS image.
 #
 # The script provides the following build arguments:
 #
@@ -39,15 +39,15 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Define key locations
-ARG WORKSPACE=/root/src/moveit2
-WORKDIR ${WORKSPACE}
+ENV MOVEIT2_DIR=${SRC_DIR}/moveit2
 
 # Make sure the latest versions of packages are installed
-RUN apt-get update
-RUN apt-get dist-upgrade -y
+RUN sudo apt-get update
+RUN sudo apt-get dist-upgrade -y
+RUN rosdep update
 
 # Install the various build and test tools
-RUN apt install -y \
+RUN sudo apt install -y \
   build-essential \
   cmake \
   git \
@@ -78,23 +78,32 @@ RUN python3 -m pip install -U \
   pytest
 
 # Get the MoveIt2 source code
-RUN mkdir -p ${WORKSPACE}/src
-COPY moveit2.repos ./
-RUN git clone https://github.com/ros-planning/moveit2.git -b main src/moveit2
+WORKDIR ${SRC_DIR}
+RUN sudo git clone https://github.com/ros-planning/moveit2.git -b main moveit2/src 
 
 # Get the repositories required by MoveIt2, but not included in Space ROS
-RUN vcs import src < moveit2.repos
+WORKDIR ${MOVEIT2_DIR}
+COPY --chown=${USERNAME}:${USERNAME} moveit2.repos ./
+RUN sudo vcs import src < moveit2.repos
+
+# Update the ownership of the source files (had to use sudo above to work around
+# a possible inherited 'insteadof' from the host that forces use of ssh
+RUN sudo chown -R ${USERNAME}:${USERNAME} ${MOVEIT2_DIR}
 
 # Install system dependencies
-RUN /bin/bash -c 'source /root/src/spaceros/install/setup.bash && rosdep install --from-paths ../spaceros/src src --ignore-src --rosdistro rolling -y --skip-keys "console_bridge fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers rmw_connextdds ros_testing rmw_connextdds rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp composition demo_nodes_py lifecycle rosidl_typesupport_fastrtps_cpp rosidl_typesupport_fastrtps_c ikos diagnostic_aggregator diagnostic_updater joy"'
+RUN rosdep install --from-paths ../spaceros/src src --ignore-src --rosdistro rolling -y --skip-keys "console_bridge fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers rmw_connextdds ros_testing rmw_connextdds rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp composition demo_nodes_py lifecycle rosidl_typesupport_fastrtps_cpp rosidl_typesupport_fastrtps_c ikos diagnostic_aggregator diagnostic_updater joy qt_gui rqt_gui rqt_gui_py"
+
+# Apply a patch to octomap_msgs to work around a build issue
+COPY --chown=${USERNAME}:${USERNAME} octomap_fix.diff ./src/octomap_msgs
+RUN cd src/octomap_msgs && git apply octomap_fix.diff
 
 # Build MoveIt2
-RUN /bin/bash -c 'source /root/src/spaceros/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
+RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
 
 # Enable the container to run GUI apps and add a couple sample apps for testing
-RUN touch /root/.Xauthority
+RUN touch ${HOME}/.Xauthority
 EXPOSE 8887
-RUN apt-get install -y \
+RUN sudo apt-get install -y \
   firefox \
   glmark2 \
   libcanberra-gtk3-0 \

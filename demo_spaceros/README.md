@@ -46,11 +46,11 @@ $ docker exec -it <container-name> bash
 Make sure packages are sourced:
 
 ```
-$ source /root/src/spaceros/install/setup.bash
+$ source ~/src/spaceros/install/setup.bash
 ```
 
 ```
-$ source /root/src/spaceros_demo/install/setup.bash
+$ source ~/src/spaceros_demo/install/setup.bash
 ```
 
 ### Available Commands

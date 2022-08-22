@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
 
-# Setup the MoveIt2 environment
-source "/root/src/moveit2/install/setup.bash"
+# Setup the MoveIt2 Tutorials environment
+source "/home/spaceros-user/src/moveit2_tutorials/install/setup.bash"
 exec "$@"
