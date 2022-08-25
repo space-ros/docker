@@ -22,3 +22,4 @@ set(CMAKE_TOOLCHAIN_FILE ${RTEMS_CONFIG_DIR}/RTEMSToolchain.cmake)
 
 project(Example)
 add_executable(Example main.cpp)
+
