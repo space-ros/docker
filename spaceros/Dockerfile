@@ -113,6 +113,11 @@ WORKDIR ${SPACEROS_DIR}
 ADD --chown=${USERNAME}:${USERNAME} ${REPOS_FILE_URL} ros2.repos
 RUN vcs import src < ros2.repos
 
+RUN cd src && git clone https://github.com/ros2/rosidl_core.git
+RUN cd src && git clone https://github.com/mjeronimo/colcon-sarif.git
+RUN cd src && git clone https://github.com/space-ros/process_sarif.git
+RUN pip3 install matplotlib
+
 # Install system dependencies
 RUN sudo rosdep init && \
   rosdep update && \
