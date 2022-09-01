@@ -40,7 +40,6 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 # Define a few key variables
 ARG SPACEROS_DEMO_DIR=${SRC_DIR}/spaceros_demo
-ARG ROSDISTRO=rolling
 ENV IGNITION_VERSION fortress
 
 # Get rosinstall_generator
