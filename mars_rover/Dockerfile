@@ -39,38 +39,41 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Define a few key variables
-ARG SPACEROS_DEMO_DIR=${SRC_DIR}/spaceros_demo
+ARG MARS_ROVER_DEMO_DIR=${SRC_DIR}/mars_rover
 ENV IGNITION_VERSION fortress
 
 # Get rosinstall_generator
 RUN sudo apt-get update -y && sudo apt-get install -y python3-rosinstall-generator
 
+RUN /bin/bash -c 'echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections' \
+&& sudo apt-get install -y -q
+
 # Generate repos file for demo dependencies, excluding packages from Space ROS core.
-RUN mkdir -p ${SPACEROS_DEMO_DIR}/src
-WORKDIR ${SPACEROS_DEMO_DIR}
-COPY --chown=${USERNAME}:${USERNAME} spaceros-demo-pkgs.txt /tmp/
+RUN mkdir -p ${MARS_ROVER_DEMO_DIR}/src
+WORKDIR ${MARS_ROVER_DEMO_DIR}
+COPY --chown=${USERNAME}:${USERNAME} demo-pkgs.txt /tmp/
 COPY --chown=${USERNAME}:${USERNAME} excluded-pkgs.txt /tmp/
 RUN rosinstall_generator \
   --rosdistro ${ROSDISTRO} \
   --deps \
-  --exclude-path ${SPACEROS_DIR}/src \
+  --exclude-path ${MARS_ROVER_DEMO_DIR}/src \
   --exclude $(cat /tmp/excluded-pkgs.txt) -- \
-  $(cat /tmp/spaceros-demo-pkgs.txt) \
-  > /tmp/spaceros_demo_generated_pkgs.repos
+  $(cat /tmp/demo-pkgs.txt) \
+  > /tmp/demo_generated_pkgs.repos
 
 # Get the source for the dependencies
-RUN vcs import src < /tmp/spaceros_demo_generated_pkgs.repos
-COPY --chown=${USERNAME}:${USERNAME} spaceros_demo_manual_pkgs.repos /tmp/
-RUN vcs import src < /tmp/spaceros_demo_manual_pkgs.repos --force
+RUN vcs import src < /tmp/demo_generated_pkgs.repos
+COPY --chown=${USERNAME}:${USERNAME} demo_manual_pkgs.repos /tmp/
+RUN vcs import src < /tmp/demo_manual_pkgs.repos --force
 
 # Get a version of gz_ros2_control to avoid a gazebo crash (still investigating the root cause)
 RUN cd src/gz_ros2_control/ign_ros2_control && git checkout 48ba51afb20e5a75704e6315f2cfe54b1b572ff4
 
-RUN sudo apt-get update -y
-RUN rosdep install --from-paths src --ignore-src -r -y
+RUN sudo apt-get update -y \
+&& rosdep install --from-paths src --ignore-src -r -y
 
 # Build the demo
-RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
+RUN /bin/bash -c 'source ${MARS_ROVER_DEMO_DIR}/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
 
 # Add the user to the render group so that the user can access /dev/dri/renderD128
 RUN sudo usermod -aG render $USERNAME

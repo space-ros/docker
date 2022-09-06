@@ -7,7 +7,11 @@ repositories:
     type: git
     url: https://github.com/ros-controls/gz_ros2_control.git
     version: main
-  demo:
+  demos:
     type: git
-    url: https://github.com/space-ros/demo.git
+    url: https://github.com/space-ros/demos.git
+    version: main
+  simulation:
+    type: git
+    url: https://github.com/space-ros/simulation.git
     version: main
