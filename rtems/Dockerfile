@@ -38,7 +38,7 @@ RUN git clone https://github.com/robamu-org/rtems-cmake.git
 COPY example example/
 WORKDIR /root/example/build
 RUN cmake ../src/
-RUN cmake --build .
+RUN cmake --entry main --build .
 
 WORKDIR /root
 
