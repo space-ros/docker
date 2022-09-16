@@ -1,4 +1,3 @@
-ros_ign
+ros-controls/control_msgs
 ros2_control
-ros2_controllers
 xacro

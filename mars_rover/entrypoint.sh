@@ -2,5 +2,5 @@
 set -e
 
 # Setup the Demo environment
-source /home/spaceros-user/src/mars_rover/install/setup.bash
+source "${MARS_ROVER_DEMO_DIR}/install/setup.bash"
 exec "$@"

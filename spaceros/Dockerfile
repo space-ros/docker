@@ -40,7 +40,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 # Define the username and key variables
 ENV USERNAME spaceros-user
-ENV SRC_DIR=/home/${USERNAME}/src
+ENV SRC_DIR=/home/${USERNAME}
 ENV SPACEROS_DIR=${SRC_DIR}/spaceros
 ARG IKOS_DIR=${SRC_DIR}/ikos
 ARG REPOS_FILE_URL="https://raw.githubusercontent.com/space-ros/space-ros/main/ros2.repos"
