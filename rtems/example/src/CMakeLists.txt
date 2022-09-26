@@ -20,6 +20,5 @@ rtems_pre_project_config(${RTEMS_PREFIX} ${RTEMS_BSP})
 
 set(CMAKE_TOOLCHAIN_FILE ${RTEMS_CONFIG_DIR}/RTEMSToolchain.cmake)
 
-project(Example)
-add_executable(Example main.cpp)
-
+project(example)
+add_executable(example main.cpp)

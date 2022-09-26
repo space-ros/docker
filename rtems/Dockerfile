@@ -4,17 +4,27 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
     && apt-get install -y \
-        apt-utils build-essential \
-        vim u-boot-tools git cmake \
-        bison flex texinfo bzip2 \
-        xz-utils unzip python \
-        libexpat1-dev curl \
-        python-dev \
-        zlib1g-dev \
+        apt-utils \
+        bison \
+        build-essential \
+        bzip2 \
+        cmake \
+        curl \
+        flex \
+        git \
+        libexpat1-dev \
         libtinfo-dev \
         pax \
-        tree
-
+        pkg-config \
+        python \
+        python-dev \
+        texinfo \
+        tree \
+        u-boot-tools \
+        unzip \
+        vim \
+        xz-utils \
+        zlib1g-dev
 
 RUN mkdir -p development/rtems/5
 ENV PREFIX /root/development/rtems/5
