@@ -72,15 +72,10 @@ setup:
   RUN mkdir /spaceros_ws
   WORKDIR /spaceros_ws
 
-vcs-file:
-  FROM curlimages/curl
-  RUN curl --compressed 'https://raw.githubusercontent.com/space-ros/space-ros/main/ros2.repos' > /tmp/ros2.repos
-  SAVE ARTIFACT /tmp/ros2.repos /ros2.repos AS LOCAL spaceros_ws/ros2.repos
 
 sources:
   FROM +setup
-  BUILD +vcs-file
-  COPY +vcs-file/ros2.repos ros2.repos
+  COPY github.com/space-ros/space-ros:earthly-wrapper+repos-file/ros2.repos ros2.repos
   RUN mkdir src
   RUN vcs import src < ros2.repos
   SAVE ARTIFACT src /src AS LOCAL spaceros_ws/src
