@@ -12,14 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 VERSION 0.6
+FROM ubuntu:focal
 
 setup:
-  FROM nvidia/cudagl:11.4.1-devel-ubuntu20.04
-  # https://github.com/NVIDIA/cuda-repo-management/issues/1
-  # Use new GPG keys for nvidia apt repositories that have not yet propagated to base images.
-  RUN apt-key del 7fa2af80
-  RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/3bf863cc.pub
-  
   # Disable prompting during package installation
   ARG DEBIAN_FRONTEND=noninteractive
   
