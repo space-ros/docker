@@ -46,6 +46,9 @@ WORKDIR /root
 RUN git clone https://github.com/robamu-org/rtems-cmake.git
 
 COPY example example/
+COPY hello hello/
+COPY tinyxml2 tinyxml2/
+
 WORKDIR /root/example/build
 RUN cmake ../src/
 RUN cmake --entry main --build .
