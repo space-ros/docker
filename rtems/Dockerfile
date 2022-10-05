@@ -41,7 +41,7 @@ COPY tinyxml2 tinyxml2/
 
 WORKDIR /root/example/build
 RUN cmake ../src/
-# RUN cmake --build .
+RUN cmake --entry main --build .
 
 WORKDIR /root
 
