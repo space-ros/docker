@@ -7,6 +7,9 @@ To run the simulator in docker container
 renode
 ```
 
+> If you face GTK protocol error then exit the container, run `xhost + local:` and restart the conatiner to allow other users (including root) run programs in the current session.
+
+
 In the renode window, run
 ```
 start
