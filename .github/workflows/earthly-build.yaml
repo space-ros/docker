@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Set up earthly
         run: |
-          sudo wget https://github.com/earthly/earthly/releases/download/latest/earthly-linux-amd64 -O /usr/local/bin/earthly
+          sudo wget https://github.com/earthly/earthly/releases/latest/download/earthly-linux-amd64 -O /usr/local/bin/earthly
           sudo chmod 755 /usr/local/bin/earthly
       - name: Build Space ROS
         id: build
@@ -33,7 +33,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Set up earthly
         run: |
-          sudo wget https://github.com/earthly/earthly/releases/download/latest/earthly-linux-amd64 -O /usr/local/bin/earthly
+          sudo wget https://github.com/earthly/earthly/releases/latest/download/earthly-linux-amd64 -O /usr/local/bin/earthly
           sudo chmod 755 /usr/local/bin/earthly
       - name: Build spaceros image
         run: |
