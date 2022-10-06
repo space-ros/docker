@@ -14,6 +14,10 @@
 VERSION 0.6
 FROM ubuntu:jammy
 
+earthfile:
+  copy Earthfile Earthfile
+  SAVE ARTIFACT Earthfile
+
 setup:
   # Disable prompting during package installation
   ARG DEBIAN_FRONTEND=noninteractive
