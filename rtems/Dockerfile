@@ -44,6 +44,7 @@ RUN ../source-builder/sb-set-builder --prefix=$PREFIX --target=sparc-rtems5 --wi
 WORKDIR /root
 
 RUN git clone https://github.com/robamu-org/rtems-cmake.git
+RUN git clone https://github.com/leethomason/tinyxml2.git
 
 COPY example example/
 COPY hello hello/
@@ -51,9 +52,9 @@ COPY tinyxml2 tinyxml2/
 
 WORKDIR /root/example/build
 RUN cmake ../src/
-RUN cmake --entry main --build .
+RUN cmake --build .
 
-WORKDIR /root
+WORKDIR /root/tinyxml2
 
 RUN echo 'alias sparc-rtems5-gcc="development/rtems/5/bin/sparc-rtems5-gcc"' >> ~/.bashrc
 

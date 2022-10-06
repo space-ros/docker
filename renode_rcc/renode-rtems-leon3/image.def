@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%environment
+    export LANG=en_US.UTF-8
+    export LC_ALL=en_US.UTF-8
+
+%post
+    apt update
+    apt install -y python3-pip wget make
+    pip3 install psutil robotframework==4.0.1 pyyaml
+    apt install -y locales language-pack-en && locale-gen en_US.UTF-8
+
+%runscript
+    if [ ${INSULARITY} != true ]; then
+      echo "# Please use $(tput bold)$(tput setaf 3)insularity$(tput sgr0) to run this image, or set INSULARITY=true to ignore."
+      exit 0
+    fi
+    exec "$@"
