@@ -19,6 +19,7 @@ jobs:
         id: build
         run: |
           cd spaceros
+          earthly --ci +sources
           earthly --ci +build-testing
           printf "::set-output name=archivename::%s\n" $(basename log/build_results_archives/build_results_*.tar.bz2)
       - name: Upload build results archive
@@ -38,4 +39,5 @@ jobs:
       - name: Build spaceros image
         run: |
           cd spaceros
+          earthly --ci +sources
           earthly --ci +image
