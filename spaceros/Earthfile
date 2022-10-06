@@ -15,7 +15,7 @@ VERSION 0.6
 FROM ubuntu:jammy
 
 earthfile:
-  copy Earthfile Earthfile
+  COPY Earthfile Earthfile
   SAVE ARTIFACT Earthfile
 
 setup:
