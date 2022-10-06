@@ -78,16 +78,16 @@ sources:
   COPY github.com/space-ros/space-ros:earthly-wrapper+repos-file/ros2.repos ros2.repos
   RUN mkdir src
   RUN vcs import src < ros2.repos
-  SAVE ARTIFACT src AS LOCAL spaceros_ws/src
+  SAVE ARTIFACT src AS LOCAL src
 
 workspace:
   FROM +setup
-  COPY spaceros_ws/src src
+  COPY src src
 
 vcs-exact:
   FROM +workspace
   RUN vcs export --exact src > exact.repos
-  SAVE ARTIFACT exact.repos /exact.repos AS LOCAL spaceros_ws/exact.repos
+  SAVE ARTIFACT exact.repos AS LOCAL exact.repos
 
 rosdep:
   FROM +workspace
@@ -97,9 +97,9 @@ rosdep:
 
 build:
   FROM +rosdep
-  RUN colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+  RUN colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --no-warn-unused-cli
   COPY +vcs-exact/exact.repos install/exact.repos
-  SAVE ARTIFACT install AS LOCAL spaceros_ws/install
+  SAVE ARTIFACT install AS LOCAL install
 
 build-testing:
   FROM +rosdep
