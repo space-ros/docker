@@ -82,7 +82,7 @@ sources:
 
 workspace:
   FROM +setup
-  COPY src src
+  COPY src src/
 
 vcs-exact:
   FROM +workspace
