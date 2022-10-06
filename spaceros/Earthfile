@@ -116,7 +116,7 @@ build-testing:
 image:
   FROM +rosdep
   COPY +build/install /spaceros_ws/install
-  COPY ros_entrypoint.sh /
+  COPY entrypoint.sh /ros_entrypoint.sh
   ENTRYPOINT ["/ros_entrypoint.sh"]
   CMD ["bash"]
   SAVE IMAGE spaceros
