@@ -48,6 +48,7 @@ RUN git clone https://github.com/leethomason/tinyxml2.git
 
 COPY example example/
 COPY hello hello/
+COPY hello_posix hello_posix/
 COPY tinyxml2 tinyxml2/
 
 WORKDIR /root/example/build
@@ -56,6 +57,7 @@ RUN cmake --build .
 
 WORKDIR /root/tinyxml2
 
-RUN echo 'alias sparc-rtems5-gcc="development/rtems/5/bin/sparc-rtems5-gcc"' >> ~/.bashrc
+RUN echo 'alias sparc-rtems5-gcc="~/development/rtems/5/bin/sparc-rtems5-gcc"' >> ~/.bashrc
+RUN echo 'alias sparc-rtems5-objdump="~/development/rtems/5/bin/sparc-rtems5-objdump"' >> ~/.bashrc
 
 #sparc-rtems5-gcc -Wall -lc --entry main hello.c -o hello
