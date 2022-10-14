@@ -4,17 +4,27 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
     && apt-get install -y \
-        apt-utils build-essential \
-        vim u-boot-tools git cmake \
-        bison flex texinfo bzip2 \
-        xz-utils unzip python \
-        libexpat1-dev curl \
-        python-dev \
-        zlib1g-dev \
+        apt-utils \
+        bison \
+        build-essential \
+        bzip2 \
+        cmake \
+        curl \
+        flex \
+        git \
+        libexpat1-dev \
         libtinfo-dev \
         pax \
-        tree
-
+        pkg-config \
+        python \
+        python-dev \
+        texinfo \
+        tree \
+        u-boot-tools \
+        unzip \
+        vim \
+        xz-utils \
+        zlib1g-dev
 
 RUN mkdir -p development/rtems/5
 ENV PREFIX /root/development/rtems/5
@@ -34,14 +44,20 @@ RUN ../source-builder/sb-set-builder --prefix=$PREFIX --target=sparc-rtems5 --wi
 WORKDIR /root
 
 RUN git clone https://github.com/robamu-org/rtems-cmake.git
+RUN git clone https://github.com/leethomason/tinyxml2.git
 
 COPY example example/
+COPY hello hello/
+COPY hello_posix hello_posix/
+COPY tinyxml2 tinyxml2/
+
 WORKDIR /root/example/build
 RUN cmake ../src/
 RUN cmake --build .
 
-WORKDIR /root
+WORKDIR /root/tinyxml2
 
-RUN echo 'alias sparc-rtems5-gcc="development/rtems/5/bin/sparc-rtems5-gcc"' >> ~/.bashrc
+RUN echo 'alias sparc-rtems5-gcc="~/development/rtems/5/bin/sparc-rtems5-gcc"' >> ~/.bashrc
+RUN echo 'alias sparc-rtems5-objdump="~/development/rtems/5/bin/sparc-rtems5-objdump"' >> ~/.bashrc
 
 #sparc-rtems5-gcc -Wall -lc --entry main hello.c -o hello

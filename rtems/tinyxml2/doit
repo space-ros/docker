@@ -1,0 +1,9 @@
+
+/root/development/rtems/5/bin/sparc-rtems5-g++ -qrtems -B/root/development/rtems/5/sparc-rtems5/lib/ -B/root/development/rtems/5/sparc-rtems5/leon3/lib/ --specs bsp_specs -mcpu=leon3 -ffunction-sections -fdata-sections -MMD -g -O2 tinyxml2.cpp -c -o tinyxml2.o
+
+/root/development/rtems/5/bin/sparc-rtems5-g++ -qrtems -B/root/development/rtems/5/sparc-rtems5/lib/ -B/root/development/rtems/5/sparc-rtems5/leon3/lib/ --specs bsp_specs -mcpu=leon3 -ffunction-sections -fdata-sections -MMD -g -O2 xmltest.cpp -c -o xmltest.o
+
+/root/development/rtems/5/bin/sparc-rtems5-g++ -qrtems -B/root/development/rtems/5/sparc-rtems5/lib/ -B/root/development/rtems/5/sparc-rtems5/leon3/lib/ --specs bsp_specs -mcpu=leon3 -ffunction-sections -fdata-sections -MMD -Wl,--gc-sections tinyxml2.o xmltest.o -oxmltest.exe -Wl,-Bstatic -Wl,-Bdynamic
+
+/root/development/rtems/5/bin/rtems-run --rtems-bsps=leon3-sis xmltest.exe
+
