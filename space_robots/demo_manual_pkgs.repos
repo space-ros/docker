@@ -14,7 +14,7 @@ repositories:
   demos:
     type: git
     url: https://github.com/space-ros/demos.git
-    version: quarkytale/separating_simulation_assets
+    version: main
   gz_ros2_control:
     type: git
     url: https://github.com/ros-controls/gz_ros2_control.git
@@ -42,7 +42,7 @@ repositories:
   simulation:
     type: git
     url: https://github.com/space-ros/simulation.git
-    version: quarkytale/adding_simulation_assets
+    version: main
   yaml_cpp_vendor:
     type: git
     url: https://github.com/ros2/yaml_cpp_vendor.git

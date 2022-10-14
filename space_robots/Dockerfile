@@ -36,7 +36,7 @@ LABEL org.label-schema.vcs-url="https://github.com/space-ros/docker"
 LABEL org.label-schema.vcs-ref=${VCS_REF}
 
 # Define a few key variables
-ARG DEMO_DIR=${SRC_DIR}/demos_ws
+ARG DEMO_DIR=${HOME_DIR}/demos_ws
 ENV IGNITION_VERSION fortress
 ENV GZ_VERSION fortress
 
@@ -63,7 +63,7 @@ WORKDIR ${DEMO_DIR}
 # Get the source for the dependencies
 RUN vcs import src < /tmp/demo_generated_pkgs.repos
 COPY --chown=${USERNAME}:${USERNAME} demo_manual_pkgs.repos /tmp/
-RUN vcs import src < /tmp/demo_manual_pkgs.repos --force && rm -rf src/demos/space_ros_memory_allocation_demo
+RUN vcs import src < /tmp/demo_manual_pkgs.repos --force
 
 # Get a version of gz_ros2_control to avoid a gazebo crash (still investigating the root cause)
 RUN cd ${DEMO_DIR}/src/gz_ros2_control/ign_ros2_control && git checkout 48ba51afb20e5a75704e6315f2cfe54b1b572ff4

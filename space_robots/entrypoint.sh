@@ -2,5 +2,5 @@
 set -e
 
 # Setup the Demo environment
-source "${DEMO_DIR}/install/setup.bash"
+source "${SPACEROS_DIR}/install/setup.bash"
 exec "$@"
