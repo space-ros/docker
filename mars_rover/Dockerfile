@@ -73,7 +73,7 @@ RUN sudo apt-get update -y \
 && rosdep install --from-paths src --ignore-src -r -y
 
 # Build the demo
-RUN /bin/bash -c 'colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
+RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
 
 # Add the user to the render group so that the user can access /dev/dri/renderD128
 RUN sudo usermod -aG render $USERNAME
