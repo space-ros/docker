@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ORG=openrobotics
-IMAGE=mars-rover-demo
+IMAGE=space-robots-demo
 TAG=latest
 
 VCS_REF=""
