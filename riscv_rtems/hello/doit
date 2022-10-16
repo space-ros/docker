@@ -1,0 +1,14 @@
+./waf configure --rtems=/root/development/rtems/6 --rtems-bsp=riscv/rv64imafdc_medany --rtems-version=6 --show-commands
+./waf
+#/root/development/rtems/5/bin/rtems-run --rtems-bsps=riscv build/riscv-rtems5-rv64imafdc/hello.exe
+# currently I've been using scp to copy the executable in build/riscv-rtems6-rv64imafdc_medany/hello.exe out to the host, and running qemu outside docker, but we could instead build QEMU inside this container and run it here
+# on the host (outside this container): ./qemu-system-riscv64 -M virt -kernel ./hello.exe -no-reboot -net none -m 128M -bios none -nographic
+# this produces the desired output:
+#
+# Hello World
+#
+# [ RTEMS shutdown ]
+# RTEMS version: 6.0.0.953b8391c0dc7298005347429912856d4e08517e
+# RTEMS tools: 12.2.1 20220924 (RTEMS 6, RSB 953b8391c0dc7298005347429912856d4e08517e, Newlib 01f6251c0)
+# executing thread ID: 0x08a010001
+# executing thread name: UI1
