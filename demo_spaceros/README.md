@@ -1,6 +1,6 @@
 # Space ROS Demo Docker Image
 
-The Space ROS Demo docker image uses the Space ROS docker image (*openrobotics/spaceros:latest*) as its base image. The Dockerfile installs all of the prerequisite system dependencies along with the demo source code, then builds the Space ROS Demo.
+The Space ROS Demo docker image uses the Space ROS docker image (*openrobotics/spaceros:latest*) as its base image. Build instructions for that image can be found at [docker/spaceros/README.md](https://github.com/space-ros/docker/blob/main/spaceros/README.md). The Dockerfile here installs all of the prerequisite system dependencies along with the demo source code, then builds the Space ROS Demo.
 
 ## Building the Demo Docker
 
