@@ -36,9 +36,19 @@ WORKDIR /root/development/src
 RUN git clone git://git.rtems.org/rtems-source-builder.git rsb
 RUN git clone git://git.rtems.org/rtems.git
 
+RUN git clone git://git.rtems.org/rtems-libbsd.git
+WORKDIR /root/development/src/rsb/rtems-libbsd
+RUN git submodule init
+RUN git submodule update rtems_waf
+
 WORKDIR /root/development/src/rsb/rtems
 RUN ../source-builder/sb-set-builder --prefix=$PREFIX 6/rtems-riscv
 RUN ../source-builder/sb-set-builder --prefix=$PREFIX --target=riscv-rtems6 --with-rtems-bsp=riscv/rv64imafdc_medany --with-rtems-tests=samples 6/rtems-kernel --with-rtems-bspopts="RISCV_MAXIMUM_EXTERNAL_INTERRUPTS=128"
+
+WORKDIR /root/development/src/rsb/rtems-libbsd
+RUN ./waf configure --prefix=$PREFIX --rtems-bsps=riscv/rv64imafdc_medany --buildset=buildset/default.ini
+RUN ./waf
+RUN ./waf install
 
 WORKDIR /root
 COPY hello hello/
