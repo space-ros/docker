@@ -42,17 +42,43 @@ rtems_task Init(
   //   "hostname=\"my_host\"\n"
   //   "")
 
-  //char *ifname = NET_CFG_INTERFACE_0;
-  char *ifcfg[] = {
+  int exit_code = 0;
+
+  char *ifcfg_print[] = {
     "ifconfig",
     NULL
   };
-  int exit_code = rtems_bsd_command_ifconfig(RTEMS_BSD_ARGC(ifcfg), ifcfg);
+  exit_code = rtems_bsd_command_ifconfig(RTEMS_BSD_ARGC(ifcfg_print), ifcfg_print);
   if (exit_code != EX_OK)
   {
     printk("ifconfig exit code: %d\n", exit_code);
     exit(1);
   }
+
+  /*
+  char *ifcfg_set[] = {
+    "ifconfig",
+    "tap0",
+    "inet",
+    "10.0.42.100",
+    "netmask",
+    "255.255.255.0",
+    NULL
+  };
+  exit_code = rtems_bsd_command_ifconfig(RTEMS_BSD_ARGC(ifcfg_set), ifcfg_set);
+  */
+  exit_code = rtems_bsd_ifconfig(
+    "tap0",
+    "10.0.42.100",
+    "255.255.255.0",
+    NULL // gateway address; if NULL, this becomes the gateway
+  );
+  if (exit_code != EX_OK)
+  {
+    printk("ifconfig (set IPv4 address) exit code: %d\n", exit_code);
+    exit(1);
+  }
+
   //assert(exit_code == EX_OK);
 
   /*
