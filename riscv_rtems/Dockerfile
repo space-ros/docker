@@ -45,7 +45,7 @@ WORKDIR /root/development/src/rsb/rtems
 RUN ../source-builder/sb-set-builder --prefix=$PREFIX 6/rtems-riscv
 RUN ../source-builder/sb-set-builder --prefix=$PREFIX --target=riscv-rtems6 --with-rtems-bsp=riscv/rv64imafdc_medany --with-rtems-tests=samples 6/rtems-kernel --with-rtems-bspopts="RISCV_MAXIMUM_EXTERNAL_INTERRUPTS=128"
 
-WORKDIR /root/development/src/rsb/rtems-libbsd
+WORKDIR /root/development/src/rtems-libbsd
 RUN ./waf configure --prefix=$PREFIX --rtems-bsps=riscv/rv64imafdc_medany --buildset=buildset/default.ini
 RUN ./waf
 RUN ./waf install

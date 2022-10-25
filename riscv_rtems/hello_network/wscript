@@ -24,16 +24,13 @@ def options(opt):
     rtems.options(opt)
 
 def configure(conf):
-    rtems.configure(conf, bsp_configure = bsp_configure)
+    rtems.configure(conf, bsp_configure=bsp_configure)
 
 def build(bld):
     rtems.build(bld)
-
     bld(features = 'c cprogram',
         target = 'hello_network.exe',
         cflags = '-g -O2',
-        #libs = ['bsd','foo'],
-        #use = ['bsd'],
-        lflags = '-lbsd',
+        lib = ['bsd', 'm'],
         source = ['hello.c',
                   'init.c'])
