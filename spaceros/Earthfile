@@ -129,7 +129,19 @@ build-testing:
 
 image:
   FROM +rosdep
-  COPY +build/install /spaceros_ws/install
+
+  # Specify the docker image metadata
+  LABEL org.label-schema.schema-version="1.0"
+  LABEL org.label-schema.name="Space ROS"
+  LABEL org.label-schema.description="Preview version of the Space ROS platform"
+  LABEL org.label-schema.vendor="Open Robotics"
+  LABEL org.label-schema.url="https://github.com/space-ros"
+  LABEL org.label-schema.vcs-url="https://github.com/space-ros/docker-images"
+  LABEL org.label-schema.vcs-ref=${VCS_REF}
+
+  COPY +build/install ${SPACEROS_DIR}/install
+  COPY +vcs-exact/exact.repos ${SPACEROS_DIR}/exact.repos
+  RUN rm -r src
   COPY entrypoint.sh /ros_entrypoint.sh
   ENTRYPOINT ["/ros_entrypoint.sh"]
   CMD ["bash"]
