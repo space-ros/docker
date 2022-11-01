@@ -69,8 +69,25 @@ setup:
     wget \
     vim
 
-  RUN mkdir /spaceros_ws
-  WORKDIR /spaceros_ws
+  # Define the username and key variables
+  ENV USERNAME spaceros-user
+  ENV SRC_DIR=/home/${USERNAME}/src
+  ENV SPACEROS_DIR=${SRC_DIR}/spaceros
+  ARG IKOS_DIR=${SRC_DIR}/ikos
+  ARG REPOS_FILE_URL="https://raw.githubusercontent.com/space-ros/space-ros/main/ros2.repos"
+  ENV ROSDISTRO=humble
+
+  # Create a spaceros user
+  RUN useradd -m $USERNAME && \
+    echo "$USERNAME:$USERNAME" | chpasswd && \
+    usermod --shell /bin/bash $USERNAME && \
+    usermod -aG sudo $USERNAME && \
+    mkdir -p /etc/sudoers.d && \
+    echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/$USERNAME && \
+    chmod 0440 /etc/sudoers.d/$USERNAME
+  USER ${USERNAME}
+
+  WORKDIR $SPACEROS_DIR
 
 
 sources:
@@ -92,7 +109,7 @@ vcs-exact:
 rosdep:
   FROM +workspace
   # Install system package dependencies using rosdep
-  RUN rosdep init && rosdep update
+  RUN sudo rosdep init && rosdep update
   RUN rosdep install --from-paths src --ignore-src --rosdistro rolling -y --skip-keys "console_bridge fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers rmw_connextdds ros_testing rmw_connextdds rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp composition demo_nodes_py lifecycle rosidl_typesupport_fastrtps_cpp rosidl_typesupport_fastrtps_c ikos"
 
 build:
