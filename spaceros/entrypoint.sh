@@ -2,5 +2,5 @@
 set -e
 
 # Setup the Space ROS environment
-source "/spaceros_ws/install/setup.bash"
+source "${SPACEROS_DIR}/install/setup.bash"
 exec "$@"
