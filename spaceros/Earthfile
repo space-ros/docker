@@ -73,7 +73,8 @@ setup:
   ENV USERNAME spaceros-user
   ENV SRC_DIR=/home/${USERNAME}/src
   ENV SPACEROS_DIR=${SRC_DIR}/spaceros
-  ENV IKOS_DIR=${SRC_DIR}/ikos
+  ARG IKOS_DIR=${SRC_DIR}/ikos
+  ARG REPOS_FILE_URL="https://raw.githubusercontent.com/space-ros/space-ros/main/ros2.repos"
   ENV ROSDISTRO=humble
 
   # Create a spaceros user
@@ -88,33 +89,6 @@ setup:
 
   WORKDIR $SPACEROS_DIR
 
-ikos:
-  FROM +setup
-  WORKDIR $IKOS_DIR
-  RUN curl -sSL https://raw.githubusercontent.com/space-ros/space-ros/main/ikos.repos -o ikos.repos
-  RUN sudo apt-get update && sudo apt-get install -y \
-    clang-11 \
-    cmake \
-    g++ \
-    gcc \
-    libboost-dev \
-    libboost-filesystem-dev \
-    libboost-test-dev \
-    libboost-thread-dev \
-    libedit-dev \
-    libgmp-dev \
-    libsqlite3-dev \
-    libtbb-dev \
-    llvm-11 \
-    llvm-11-dev \
-    llvm-11-tools \
-    python3 \
-    python3-pygments \
-    zlib1g-dev
-  RUN mkdir src
-  RUN vcs import src < ikos.repos
-  RUN colcon build
-  SAVE ARTIFACT install
 
 sources:
   FROM +setup
@@ -146,9 +120,8 @@ build:
 
 build-testing:
   FROM +rosdep
-  COPY +ikos/install ${IKOS_DIR}/install
-  RUN . ${IKOS_DIR}/install/setup.sh && colcon build --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --no-warn-unused-cli
-  RUN . ${IKOS_DIR}/install/setup.sh && colcon test --retest-until-pass 2 --ctest-args -LE "(ikos|xfail)" --pytest-args -m "not xfail"
+  RUN colcon build --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --no-warn-unused-cli
+  RUN colcon test --retest-until-pass 2 --ctest-args -LE "(ikos|xfail)" --pytest-args -m "not xfail"
   RUN . install/setup.sh && ros2 run process_sarif make_build_archive
   COPY +vcs-exact/exact.repos install/exact.repos
   SAVE ARTIFACT log/build_results_archives/build_results*.tar.bz2 AS LOCAL spaceros_ws/log/build_results_archives/
