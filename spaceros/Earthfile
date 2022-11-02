@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 VERSION 0.6
-FROM ubuntu:jammy
+FROM ubuntu:focal
 
 earthfile:
   COPY Earthfile Earthfile
@@ -50,24 +50,25 @@ setup:
     git \
     python3-colcon-common-extensions \
     python3-flake8 \
-    python3-flake8-blind-except \
-    python3-flake8-builtins \
-    python3-flake8-class-newline \
-    python3-flake8-comprehensions \
-    python3-flake8-deprecated \
     python3-flake8-docstrings \
-    python3-flake8-import-order \
-    python3-flake8-quotes \
     python3-pip \
     python3-pytest \
     python3-pytest-cov \
-    python3-pytest-repeat \
-    python3-pytest-rerunfailures \
     python3-rosdep \
     python3-setuptools \
     python3-vcstool \
     wget \
     vim
+  RUN pip install \
+    flake8-blind-except \
+    flake8-builtins \
+    flake8-class-newline \
+    flake8-comprehensions \
+    flake8-deprecated \
+    flake8-import-order \
+    flake8-quotes \
+    pytest-repeat \
+    pytest-rerunfailures
 
   # Define the username and key variables
   ENV USERNAME spaceros-user
@@ -93,7 +94,7 @@ ikos:
   WORKDIR $IKOS_DIR
   RUN curl -sSL https://raw.githubusercontent.com/space-ros/space-ros/main/ikos.repos -o ikos.repos
   RUN sudo apt-get update && sudo apt-get install -y \
-    clang-11 \
+    clang-9 \
     cmake \
     g++ \
     gcc \
@@ -105,15 +106,15 @@ ikos:
     libgmp-dev \
     libsqlite3-dev \
     libtbb-dev \
-    llvm-11 \
-    llvm-11-dev \
-    llvm-11-tools \
+    llvm-9 \
+    llvm-9-dev \
+    llvm-9-tools \
     python3 \
     python3-pygments \
     zlib1g-dev
   RUN mkdir src
   RUN vcs import src < ikos.repos
-  RUN colcon build
+  RUN colcon build --cmake-args -DLLVM_CONFIG_EXECUTABLE=/usr/bin/llvm-config-9
   SAVE ARTIFACT install
 
 sources:
@@ -144,11 +145,40 @@ build:
   COPY +vcs-exact/exact.repos install/exact.repos
   SAVE ARTIFACT install AS LOCAL install
 
+ikos-build-testing:
+  FROM +rosdep
+  # Copy ikos installation and install ikos dependencies
+  COPY +ikos/install ${IKOS_DIR}/install
+  RUN sudo apt-get update && sudo apt-get install -y \
+    clang-9 \
+    cmake \
+    g++ \
+    gcc \
+    libboost-dev \
+    libboost-filesystem-dev \
+    libboost-test-dev \
+    libboost-thread-dev \
+    libedit-dev \
+    libgmp-dev \
+    libsqlite3-dev \
+    libtbb-dev \
+    llvm-9 \
+    llvm-9-dev \
+    llvm-9-tools \
+    python3 \
+    python3-pygments \
+    zlib1g-dev
+
+  RUN . ${IKOS_DIR}/install/setup.sh && \
+    env PATH=$PATH:${IKOS_DIR}/install/ikos/bin CC=ikos-scan-cc CXX=ikos-scan-c++ LD=ikos-scan-cc IKOS_SCAN_NOTIFIER_FILES=yes \
+    colcon build --cmake-args -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --no-warn-unused-cli --packages-ignore cobra_vendor ament_cobra ament_cmake_cobra
+  RUN . ${IKOS_DIR}/install/setup.sh && colcon test --retest-until-pass 2 --ctest-args -LE "(xfail)" --pytest-args -m "not xfail" --packages-ignore cobra_vendor ament_cmake_cobra
+  RUN . install/setup.sh && ros2 run process_sarif make_build_archive
+
 build-testing:
   FROM +rosdep
-  COPY +ikos/install ${IKOS_DIR}/install
-  RUN . ${IKOS_DIR}/install/setup.sh && colcon build --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --no-warn-unused-cli
-  RUN . ${IKOS_DIR}/install/setup.sh && colcon test --retest-until-pass 2 --ctest-args -LE "(ikos|xfail)" --pytest-args -m "not xfail"
+  RUN colcon build --cmake-args -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --no-warn-unused-cli
+  RUN colcon test --retest-until-pass 2 --ctest-args -LE "(ikos|xfail)" --pytest-args -m "not xfail"
   RUN . install/setup.sh && ros2 run process_sarif make_build_archive
   COPY +vcs-exact/exact.repos install/exact.repos
   SAVE ARTIFACT log/build_results_archives/build_results*.tar.bz2 AS LOCAL spaceros_ws/log/build_results_archives/
