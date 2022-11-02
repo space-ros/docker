@@ -55,10 +55,14 @@ cd hello_network
 
 You should see the following output, which shows that an emulated network interface on the emulated Zynq SoC is able to `ping` the virtual network segment provided by the host machine's Linux kernel:
 ```
-PING 192.168.1.21 (192.168.1.21): 56 data bytes
-64 bytes from 192.168.1.21: icmp_seq=0 ttl=64 time=5.935 ms
-64 bytes from 192.168.1.21: icmp_seq=1 ttl=64 time=0.477 ms
-64 bytes from 192.168.1.21: icmp_seq=2 ttl=64 time=0.371 ms
+PING 10.0.42.1 (10.0.42.1): 56 data bytes
+64 bytes from 10.0.42.1: icmp_seq=0 ttl=64 time=5.846 ms
+64 bytes from 10.0.42.1: icmp_seq=1 ttl=64 time=0.598 ms
+64 bytes from 10.0.42.1: icmp_seq=2 ttl=64 time=0.484 ms
+
+--- 10.0.42.1 ping statistics ---
+3 packets transmitted, 3 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 0.484/2.309/5.846/2.501 ms
 ```
 
 After that output, the RTEMS shutdown will display the various RTEMS threads running and their memory usage.

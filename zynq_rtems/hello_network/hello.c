@@ -6,7 +6,6 @@
 #include <sysexits.h>
 #include <rtems/bsd/bsd.h>
 #include <rtems/bsd/iface.h>
-//#include <rtems/bsd/modules.h>
 #include <rtems/printer.h>
 #include <rtems/stackchk.h>
 #include <rtems/bspIo.h>
@@ -59,10 +58,6 @@ rtems_task Init(
 
   sc = rtems_task_wake_after(2); // not sure of the units... maybe 10ms ticks?
   rtems_bsd_ifconfig_lo0();
-  // rtems_bsd_run_rc_conf_script(
-  //   "my_tap_script",
-  //   "hostname=\"my_host\"\n"
-  //   "")
 
   int exit_code = 0;
 
@@ -77,7 +72,6 @@ rtems_task Init(
     exit(1);
   }
   const char *iface_name = "cgem3";
-  //default_wait_for_link_up(iface_name);
 
   char *ifcfg_set[] = {
     "ifconfig",
@@ -89,19 +83,6 @@ rtems_task Init(
     NULL
   };
   exit_code = rtems_bsd_command_ifconfig(RTEMS_BSD_ARGC(ifcfg_set), ifcfg_set);
-  /*
-  exit_code = rtems_bsd_ifconfig(
-    "cgem3",
-    "10.0.42.100",
-    "255.255.255.0",
-    NULL // gateway address; if NULL, this becomes the gateway
-  );
-  if (exit_code != EX_OK)
-  {
-    printk("ifconfig (set IPv4 address) exit code: %d\n", exit_code);
-    exit(1);
-  }
-  */
   exit_code = rtems_bsd_command_ifconfig(RTEMS_BSD_ARGC(ifcfg_print), ifcfg_print);
   if (exit_code != EX_OK)
   {
@@ -149,32 +130,11 @@ rtems_task Init(
     "ping",
     "-c",
     "3",
-    "192.168.1.21",
-    //"10.0.42.1",
-    //"198.49.23.145",
+    "10.0.42.1",
     NULL
   };
   exit_code = rtems_bsd_command_ping(RTEMS_BSD_ARGC(ping), ping);
   assert(exit_code == EXIT_SUCCESS);
-
-  /*
-  exit_code = rtems_bsd_ifconfig_lo0();
-  assert(exit_code == EX_OK);
-  */
-
-  /*
-  int exit_code;
-  char *ping[] = {
-    "ping",
-    "-c",
-    "1",
-    "127.0.0.1",
-    NULL
-  };
-
-  exit_code = rtems_bsd_command_ping(RTEMS_BSD_ARGC(ping), ping);
-  assert(exit_code == EXIT_SUCCESS);
-  */
 
   exit(0);
 }
