@@ -130,6 +130,8 @@ build-testing:
 image:
   FROM +rosdep
 
+  ARG VCS_REF
+
   # Specify the docker image metadata
   LABEL org.label-schema.schema-version="1.0"
   LABEL org.label-schema.name="Space ROS"
