@@ -39,7 +39,7 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Define key locations
-ENV MOVEIT2_DIR=${SRC_DIR}/moveit2
+ENV MOVEIT2_DIR=${HOME_DIR}/moveit2
 
 # Make sure the latest versions of packages are installed
 RUN sudo apt-get update
@@ -78,7 +78,7 @@ RUN python3 -m pip install -U \
   pytest
 
 # Get the MoveIt2 source code
-WORKDIR ${SRC_DIR}
+WORKDIR ${HOME_DIR}
 RUN sudo git clone https://github.com/ros-planning/moveit2.git -b main moveit2/src 
 
 # Get the repositories required by MoveIt2, but not included in Space ROS

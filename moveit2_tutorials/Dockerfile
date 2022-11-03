@@ -39,10 +39,10 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Define key locations
-ENV MOVEIT2_TUTORIALS_DIR=${SRC_DIR}/moveit2_tutorials
+ENV MOVEIT2_TUTORIALS_DIR=${HOME_DIR}/moveit2_tutorials
 
 # Get the MoveIt2 Tutorials source code
-WORKDIR ${SRC_DIR}
+WORKDIR ${HOME_DIR}
 RUN sudo git clone https://github.com/ros-planning/moveit2_tutorials.git -b main moveit2_tutorials/src/moveit2_tutorials
 WORKDIR ${MOVEIT2_TUTORIALS_DIR}
 RUN cd src/moveit2_tutorials && sudo git checkout c98d7f10aefb8dffde60621ec5b72d1f5d17caaf
@@ -56,7 +56,7 @@ RUN sudo vcs import src < moveit2_tutorials.repos
 RUN sudo chown -R ${USERNAME}:${USERNAME} ${MOVEIT2_TUTORIALS_DIR}
 
 # Build it
-RUN /bin/bash -c 'source ${SRC_DIR}/moveit2/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
+RUN /bin/bash -c 'source ${HOME_DIR}/moveit2/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
 
 # Set up the entrypoint
 COPY ./entrypoint.sh /

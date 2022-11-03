@@ -4,7 +4,7 @@ Building [RTEMS Cross Compilation System (RCC)](https://www.gaisler.com/index.ph
 ## Usage
 To run the simulator in docker container
 ```
-renode
+$ renode
 ```
 
 > If you face GTK protocol error then exit the container, run `xhost + local:` and restart the conatiner to allow other users (including root) run programs in the current session.

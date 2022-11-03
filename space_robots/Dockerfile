@@ -36,24 +36,24 @@ LABEL org.label-schema.vcs-url="https://github.com/space-ros/docker"
 LABEL org.label-schema.vcs-ref=${VCS_REF}
 
 # Define a few key variables
-ARG DEMO_DIR=${HOME_DIR}/demos_ws
+ENV DEMO_DIR=${HOME_DIR}/demos_ws
 ENV IGNITION_VERSION fortress
 ENV GZ_VERSION fortress
 
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
-RUN /bin/bash -c 'echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections' \
-&& sudo apt-get install -y -q
 
 # Get rosinstall_generator
 RUN sudo apt-get update -y && sudo apt-get install -y python3-rosinstall-generator
 
 # Generate repos file for demo dependencies, excluding packages from Space ROS core.
 COPY --chown=${USERNAME}:${USERNAME} demo-pkgs.txt /tmp/
+COPY --chown=${USERNAME}:${USERNAME} excluded-pkgs.txt /tmp/
 RUN rosinstall_generator \
   --rosdistro ${ROSDISTRO} \
   --deps \
   --exclude-path ${SPACEROS_DIR}/src \
+  --exclude $(cat /tmp/excluded-pkgs.txt) -- \
   -- $(cat /tmp/demo-pkgs.txt) \
   > /tmp/demo_generated_pkgs.repos
 
@@ -64,9 +64,6 @@ WORKDIR ${DEMO_DIR}
 RUN vcs import src < /tmp/demo_generated_pkgs.repos
 COPY --chown=${USERNAME}:${USERNAME} demo_manual_pkgs.repos /tmp/
 RUN vcs import src < /tmp/demo_manual_pkgs.repos --force
-
-# Get a version of gz_ros2_control to avoid a gazebo crash (still investigating the root cause)
-RUN cd ${DEMO_DIR}/src/gz_ros2_control/ign_ros2_control && git checkout 48ba51afb20e5a75704e6315f2cfe54b1b572ff4
 
 RUN sudo apt-get update -y \
 && /bin/bash -c 'source "${SPACEROS_DIR}/install/setup.bash"' \
