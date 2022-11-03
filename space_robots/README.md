@@ -1,6 +1,6 @@
 # Space ROS Space Robots Demo Docker Image
 
-The Space ROS Space Robots Demo docker image uses the Space ROS docker image (*openrobotics/spaceros:latest*) as its base image. The Dockerfile installs all of the prerequisite system dependencies along with the demos source code, then builds the Space ROS Space Robots Demo.
+The Space ROS Space Robots Demo docker image uses the Space ROS docker image (*openrobotics/spaceros:latest*) as its base image. Build instructions for that image can be found at [docker/spaceros/README.md](https://github.com/space-ros/docker/blob/main/spaceros/README.md). The Dockerfile installs all of the prerequisite system dependencies along with the demos source code, then builds the Space ROS Space Robots Demo.
 
 This is for Curiosity Mars rover and Canadarm demos.
 
