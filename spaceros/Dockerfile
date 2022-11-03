@@ -69,7 +69,6 @@ RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/r
 
 # Install required software development tools and ROS tools (and vim, included for convenience)
 RUN apt-get update && apt-get install -y \
-  apt-utils \
   bison \
   build-essential \
   cmake \
