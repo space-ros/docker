@@ -1,6 +1,8 @@
-# Space ROS Demo Docker Image
+# Space ROS Space Robots Demo Docker Image
 
-The Space ROS Demo docker image uses the Space ROS docker image (*openrobotics/spaceros:latest*) as its base image. Build instructions for that image can be found at [docker/spaceros/README.md](https://github.com/space-ros/docker/blob/main/spaceros/README.md). The Dockerfile here installs all of the prerequisite system dependencies along with the demo source code, then builds the Space ROS Demo.
+The Space ROS Space Robots Demo docker image uses the Space ROS docker image (*openrobotics/spaceros:latest*) as its base image. Build instructions for that image can be found at [docker/spaceros/README.md](https://github.com/space-ros/docker/blob/main/spaceros/README.md). The Dockerfile installs all of the prerequisite system dependencies along with the demos source code, then builds the Space ROS Space Robots Demo.
+
+This is for Curiosity Mars rover and Canadarm demos.
 
 ## Building the Demo Docker
 
@@ -24,8 +26,9 @@ $ ./run.sh
 
 Depending on the host computer, you might need to remove ```--gpus all``` flag in ```run.sh```, which uses your GPUs.
 
-## Running the Demo
+## Running the Demos
 
+### Curiosity Mars rover demo
 Launch the demo:
 ```
 $ ros2 launch mars_rover mars_rover.launch.py
@@ -33,9 +36,9 @@ $ ros2 launch mars_rover mars_rover.launch.py
 
 On the top left corner, click on the refresh button to show camera feed.
 
-## Perform Tasks
+### Perform Tasks
 
-### Setup
+#### Setup
 
 Open a new terminal and attach to the currently running container:
 
@@ -46,14 +49,14 @@ $ docker exec -it <container-name> bash
 Make sure packages are sourced:
 
 ```
-$ source ~/src/spaceros/install/setup.bash
+$ source ~/spaceros/install/setup.bash
 ```
 
 ```
-$ source ~/src/spaceros_demo/install/setup.bash
+$ source ~/demos_ws/install/setup.bash
 ```
 
-### Available Commands
+#### Available Commands
 
 Drive the rover forward
 
@@ -101,4 +104,10 @@ Close the mast (camera arm)
 
 ```
 $ ros2 service call /mast_close std_srvs/srv/Empty
+```
+
+#### Canadarm demo
+
+```
+$ ros2 launch canadarm canadarm.launch.py
 ```

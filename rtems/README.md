@@ -11,15 +11,15 @@ tinyxml2 is modified to work with RTEMS build using `sparc-rtems5-gcc` tool..
 
 ## Compile
 ```
-cd /root/tinxyxml2
-./doit
+$ cd /root/tinxyxml2
+$ ./doit
 ```
 
 ## Save build artefacts
 After compiling the binaries for the target, save the binaries and test payload for later use in renode.
 
 ```
-docker cp containerId:/root/tinyxml2/tinyxml2.o <path to spaceros_ws>/docker/renode_rcc/build/
+$ docker cp containerId:/root/tinyxml2/tinyxml2.o <path to spaceros_ws>/docker/renode_rcc/build/
 
-docker cp containerId:/root/tinyxml2/xmltest.exe <path to spaceros_ws>/docker/renode_rcc/build/
+$ docker cp containerId:/root/tinyxml2/xmltest.exe <path to spaceros_ws>/docker/renode_rcc/build/
 ```
