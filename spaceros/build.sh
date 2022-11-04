@@ -11,9 +11,8 @@ echo ""
 echo "##### Building Space ROS Docker Image #####"
 echo ""
 
-docker build -t $ORG/$IMAGE:$TAG \
-    --build-arg VCS_REF="$VCS_REF" \
-    --build-arg VERSION="$VERSION" .
+earthly +image \
+    --VCS_REF="$VCS_REF"
 
 echo ""
 echo "##### Done! #####"
