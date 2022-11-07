@@ -41,3 +41,10 @@ jobs:
           cd spaceros
           earthly --ci --output +sources
           earthly --ci +image
+      - name: Push spaceros image
+        env:
+          DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_RW_TOKEN }}
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: |
+          echo $DOCKER_HUB_TOKEN | docker login --username osrfbot --password-stdin
+          earthly --ci --push +image
