@@ -61,3 +61,6 @@ WORKDIR /root/rtems/rtems-libbsd
 RUN ./waf configure --prefix=$PREFIX --rtems-archs=aarch64 --rtems-bsps=aarch64/xilinx_zynqmp_lp64_qemu --buildset=buildset/default.ini
 RUN ./waf
 RUN ./waf install
+
+WORKDIR /root
+RUN git clone https://github.com/eclipse-zenoh/zenoh-pico
