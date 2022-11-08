@@ -77,21 +77,48 @@ RUN python3 -m pip install -U \
   pytest-rerunfailures \
   pytest
 
+# TODO: Temporary CMake Update
+RUN wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | sudo apt-key add -
+RUN sudo apt-add-repository 'deb https://apt.kitware.com/ubuntu/ focal main'
+RUN sudo apt-get update && sudo apt-get install \
+    cmake-data=3.22.2-0kitware1ubuntu20.04.1 \
+    cmake=3.22.2-0kitware1ubuntu20.04.1 \
+    -y --allow-downgrades
+
 # Get the MoveIt2 source code
 WORKDIR ${HOME_DIR}
 RUN sudo git clone https://github.com/ros-planning/moveit2.git -b main moveit2/src 
 
+# Update the ownership of the source files (had to use sudo above to work around
+# a possible inherited 'insteadof' from the host that forces use of ssh
+RUN sudo chown -R ${USERNAME}:${USERNAME} ${MOVEIT2_DIR}
+
+# Get rosinstall_generator
+RUN sudo apt-get update -y && sudo apt-get install -y python3-rosinstall-generator
+
+# Generate repos file for moveit2 dependencies, excluding packages from Space ROS core.
+COPY --chown=${USERNAME}:${USERNAME} moveit2-pkgs.txt /tmp/
+COPY --chown=${USERNAME}:${USERNAME} excluded-pkgs.txt /tmp/
+RUN rosinstall_generator \
+  --rosdistro ${ROSDISTRO} \
+  --deps \
+  --exclude-path ${SPACEROS_DIR}/src \
+  --exclude $(cat /tmp/excluded-pkgs.txt) -- \
+  -- $(cat /tmp/moveit2-pkgs.txt) \
+  > /tmp/moveit2_generated_pkgs.repos
+
 # Get the repositories required by MoveIt2, but not included in Space ROS
 WORKDIR ${MOVEIT2_DIR}
 COPY --chown=${USERNAME}:${USERNAME} moveit2.repos ./
-RUN sudo vcs import src < moveit2.repos
+RUN vcs import src < /tmp/moveit2_generated_pkgs.repos
 
 # Update the ownership of the source files (had to use sudo above to work around
 # a possible inherited 'insteadof' from the host that forces use of ssh
 RUN sudo chown -R ${USERNAME}:${USERNAME} ${MOVEIT2_DIR}
 
 # Install system dependencies
-RUN rosdep install --from-paths ../spaceros/src src --ignore-src --rosdistro ${ROSDISTRO} -y --skip-keys "console_bridge fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers rmw_connextdds ros_testing rmw_connextdds rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp composition demo_nodes_py lifecycle rosidl_typesupport_fastrtps_cpp rosidl_typesupport_fastrtps_c ikos diagnostic_aggregator diagnostic_updater joy qt_gui rqt_gui rqt_gui_py"
+RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash'
+RUN rosdep install --from-paths ../spaceros/src src --ignore-src --rosdistro ${ROSDISTRO} -r -y --skip-keys "console_bridge generate_parameter_library fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers rmw_connextdds ros_testing rmw_connextdds rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp composition demo_nodes_py lifecycle rosidl_typesupport_fastrtps_cpp rosidl_typesupport_fastrtps_c ikos diagnostic_aggregator diagnostic_updater joy qt_gui rqt_gui rqt_gui_py"
 
 # Apply a patch to octomap_msgs to work around a build issue
 COPY --chown=${USERNAME}:${USERNAME} octomap_fix.diff ./src/octomap_msgs
