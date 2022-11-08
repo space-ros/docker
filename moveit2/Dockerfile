@@ -109,7 +109,6 @@ RUN rosinstall_generator \
 
 # Get the repositories required by MoveIt2, but not included in Space ROS
 WORKDIR ${MOVEIT2_DIR}
-COPY --chown=${USERNAME}:${USERNAME} moveit2.repos ./
 RUN vcs import src < /tmp/moveit2_generated_pkgs.repos
 
 # Update the ownership of the source files (had to use sudo above to work around
