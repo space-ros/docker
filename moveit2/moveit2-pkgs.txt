@@ -1,5 +1,6 @@
 ackermann_msgs
-anglesbackward_ros
+angles
+backward_ros
 control_msgs
 control_toolbox
 eigen_stl_containers
@@ -14,6 +15,7 @@ laser_geometry
 launch_param_builder
 moveit_msgs
 moveit_resources
+moveit_task_constructor
 navigation_msgs
 object_recognition_msgs
 octomap

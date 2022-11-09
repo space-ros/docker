@@ -87,7 +87,8 @@ RUN sudo apt-get update && sudo apt-get install \
 
 # Get the MoveIt2 source code
 WORKDIR ${HOME_DIR}
-RUN sudo git clone https://github.com/ros-planning/moveit2.git -b main moveit2/src 
+RUN sudo git clone https://github.com/ros-planning/moveit2.git -b ${ROSDISTRO} moveit2/src
+RUN cd ${MOVEIT2_DIR}/src && sudo git clone https://github.com/ros-planning/moveit2_tutorials.git -b ${ROSDISTRO}
 
 # Update the ownership of the source files (had to use sudo above to work around
 # a possible inherited 'insteadof' from the host that forces use of ssh
@@ -110,6 +111,8 @@ RUN rosinstall_generator \
 # Get the repositories required by MoveIt2, but not included in Space ROS
 WORKDIR ${MOVEIT2_DIR}
 RUN vcs import src < /tmp/moveit2_generated_pkgs.repos
+COPY --chown=${USERNAME}:${USERNAME} moveit2_tutorials.repos /tmp/
+RUN vcs import src < /tmp/moveit2_tutorials.repos
 
 # Update the ownership of the source files (had to use sudo above to work around
 # a possible inherited 'insteadof' from the host that forces use of ssh
@@ -126,9 +129,7 @@ RUN cd src/octomap_msgs && git apply octomap_fix.diff
 # Build MoveIt2
 RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
 
-# Enable the container to run GUI apps and add a couple sample apps for testing
-RUN touch ${HOME}/.Xauthority
-EXPOSE 8887
+# Add a couple sample GUI apps for testing
 RUN sudo apt-get install -y \
   firefox \
   glmark2 \

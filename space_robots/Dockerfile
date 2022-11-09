@@ -19,7 +19,7 @@
 #   VCS_REF     - The git revision of the Space ROS source code (no default value).
 #   VERSION     - The version of Space ROS (default: "preview")
 
-FROM openrobotics/spaceros:latest
+FROM openrobotics/moveit2:latest
 
 # Define arguments used in the metadata definition
 ARG VCS_REF
@@ -46,31 +46,35 @@ ARG DEBIAN_FRONTEND=noninteractive
 # Get rosinstall_generator
 RUN sudo apt-get update -y && sudo apt-get install -y python3-rosinstall-generator
 
+# TODO: no packages left after exclusions
 # Generate repos file for demo dependencies, excluding packages from Space ROS core.
-COPY --chown=${USERNAME}:${USERNAME} demo-pkgs.txt /tmp/
-COPY --chown=${USERNAME}:${USERNAME} excluded-pkgs.txt /tmp/
-RUN rosinstall_generator \
-  --rosdistro ${ROSDISTRO} \
-  --deps \
-  --exclude-path ${SPACEROS_DIR}/src \
-  --exclude $(cat /tmp/excluded-pkgs.txt) -- \
-  -- $(cat /tmp/demo-pkgs.txt) \
-  > /tmp/demo_generated_pkgs.repos
+# COPY --chown=${USERNAME}:${USERNAME} demo-pkgs.txt /tmp/
+# COPY --chown=${USERNAME}:${USERNAME} excluded-pkgs.txt /tmp/
+# RUN rosinstall_generator \
+#   --rosdistro ${ROSDISTRO} \
+#   --deps \
+#   --exclude-path ${SPACEROS_DIR}/src \
+#   --exclude-path ${MOVEIT2_DIR}/src \
+#   --exclude $(cat /tmp/excluded-pkgs.txt) -- \
+#   -- $(cat /tmp/demo-pkgs.txt) \
+#   > /tmp/demo_generated_pkgs.repos
 
 RUN mkdir -p ${DEMO_DIR}/src
 WORKDIR ${DEMO_DIR}
 
 # Get the source for the dependencies
-RUN vcs import src < /tmp/demo_generated_pkgs.repos
+# RUN vcs import src < /tmp/demo_generated_pkgs.repos
 COPY --chown=${USERNAME}:${USERNAME} demo_manual_pkgs.repos /tmp/
-RUN vcs import src < /tmp/demo_manual_pkgs.repos --force
+RUN vcs import src < /tmp/demo_manual_pkgs.repos
 
 RUN sudo apt-get update -y \
 && /bin/bash -c 'source "${SPACEROS_DIR}/install/setup.bash"' \
-&& rosdep install --from-paths src --ignore-src -r -y
+&& /bin/bash -c 'source "${MOVEIT2_DIR}/install/setup.bash"' \
+&& rosdep install --from-paths src --ignore-src -r -y --rosdistro ${ROSDISTRO}
 
 # Build the demo
-RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
+RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash && source ${MOVEIT2_DIR}/install/setup.bash \
+  && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
 
 # Add the user to the render group so that the user can access /dev/dri/renderD128
 RUN sudo usermod -aG render $USERNAME
