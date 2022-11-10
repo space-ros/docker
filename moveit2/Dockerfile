@@ -88,7 +88,8 @@ RUN sudo apt-get update && sudo apt-get install \
 # Get the MoveIt2 source code
 WORKDIR ${HOME_DIR}
 RUN sudo git clone https://github.com/ros-planning/moveit2.git -b ${ROSDISTRO} moveit2/src
-RUN cd ${MOVEIT2_DIR}/src && sudo git clone https://github.com/ros-planning/moveit2_tutorials.git -b ${ROSDISTRO}
+RUN cd ${MOVEIT2_DIR}/src \
+  && sudo git clone https://github.com/ros-planning/moveit2_tutorials.git -b ${ROSDISTRO}
 
 # Update the ownership of the source files (had to use sudo above to work around
 # a possible inherited 'insteadof' from the host that forces use of ssh
@@ -114,20 +115,27 @@ RUN vcs import src < /tmp/moveit2_generated_pkgs.repos
 COPY --chown=${USERNAME}:${USERNAME} moveit2_tutorials.repos /tmp/
 RUN vcs import src < /tmp/moveit2_tutorials.repos
 
+# TODO: temp fix for qt compatibility in focal
+RUN cd src/moveit_task_constructor \
+  && sudo git remote add other https://github.com/ubi-agni/moveit_task_constructor.git \
+  && sudo git fetch other \
+  && sudo git checkout fix-qt-compat
+
 # Update the ownership of the source files (had to use sudo above to work around
 # a possible inherited 'insteadof' from the host that forces use of ssh
 RUN sudo chown -R ${USERNAME}:${USERNAME} ${MOVEIT2_DIR}
 
 # Install system dependencies
-RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash'
-RUN rosdep install --from-paths ../spaceros/src src --ignore-src --rosdistro ${ROSDISTRO} -r -y --skip-keys "console_bridge generate_parameter_library fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers rmw_connextdds ros_testing rmw_connextdds rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp composition demo_nodes_py lifecycle rosidl_typesupport_fastrtps_cpp rosidl_typesupport_fastrtps_c ikos diagnostic_aggregator diagnostic_updater joy qt_gui rqt_gui rqt_gui_py"
+RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash' \
+ && rosdep install --from-paths ../spaceros/src src --ignore-src --rosdistro ${ROSDISTRO} -r -y --skip-keys "console_bridge generate_parameter_library fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers rmw_connextdds ros_testing rmw_connextdds rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp composition demo_nodes_py lifecycle rosidl_typesupport_fastrtps_cpp rosidl_typesupport_fastrtps_c ikos diagnostic_aggregator diagnostic_updater joy qt_gui rqt_gui rqt_gui_py"
 
 # Apply a patch to octomap_msgs to work around a build issue
 COPY --chown=${USERNAME}:${USERNAME} octomap_fix.diff ./src/octomap_msgs
 RUN cd src/octomap_msgs && git apply octomap_fix.diff
 
 # Build MoveIt2
-RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
+RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash \
+  && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --event-handlers desktop_notification- status- --parallel-workers 1'
 
 # Add a couple sample GUI apps for testing
 RUN sudo apt-get install -y \

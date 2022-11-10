@@ -43,6 +43,14 @@ ENV GZ_VERSION fortress
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
 
+# TODO: Temporary CMake Update
+RUN wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | sudo apt-key add -
+RUN sudo apt-add-repository 'deb https://apt.kitware.com/ubuntu/ focal main'
+RUN sudo apt-get update && sudo apt-get install \
+    cmake-data=3.22.2-0kitware1ubuntu20.04.1 \
+    cmake=3.22.2-0kitware1ubuntu20.04.1 \
+    -y --allow-downgrades
+
 # Get rosinstall_generator
 RUN sudo apt-get update -y && sudo apt-get install -y python3-rosinstall-generator
 

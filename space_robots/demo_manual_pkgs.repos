@@ -2,7 +2,7 @@ repositories:
   demos:
     type: git
     url: https://github.com/space-ros/demos.git
-    version: main
+    version: quarkytale/canadarm_demo
   gz_ros2_control:
     type: git
     url: https://github.com/ros-controls/gz_ros2_control.git
@@ -11,6 +11,10 @@ repositories:
     type: git
     url: https://github.com/ros-visualization/qt_gui_core.git
     version: humble
+  ros2_controllers:
+    type: git
+    url: https://github.com/tonylitianyu/ros2_controllers.git
+    version: effort_group_position_controller_2
   ros_gz:
     type: git
     url: https://github.com/gazebosim/ros_gz.git
