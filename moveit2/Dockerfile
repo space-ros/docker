@@ -59,8 +59,8 @@ RUN sudo apt install -y \
   python3-rosdep \
   python3-setuptools \
   python3-vcstool \
-  wget \
-  clang-format-10
+  wget
+  # clang-format-10
 
 # Install some pip packages needed for testing
 RUN python3 -m pip install -U \
@@ -78,12 +78,12 @@ RUN python3 -m pip install -U \
   pytest
 
 # TODO: Temporary CMake Update
-RUN wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | sudo apt-key add -
-RUN sudo apt-add-repository 'deb https://apt.kitware.com/ubuntu/ focal main'
-RUN sudo apt-get update && sudo apt-get install \
-    cmake-data=3.22.2-0kitware1ubuntu20.04.1 \
-    cmake=3.22.2-0kitware1ubuntu20.04.1 \
-    -y --allow-downgrades
+# RUN wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | sudo apt-key add -
+# RUN sudo apt-add-repository 'deb https://apt.kitware.com/ubuntu/ focal main'
+# RUN sudo apt-get update && sudo apt-get install \
+#     cmake-data=3.22.2-0kitware1ubuntu20.04.1 \
+#     cmake=3.22.2-0kitware1ubuntu20.04.1 \
+#     -y --allow-downgrades
 
 # Get the MoveIt2 source code
 WORKDIR ${HOME_DIR}
@@ -116,10 +116,10 @@ COPY --chown=${USERNAME}:${USERNAME} moveit2_tutorials.repos /tmp/
 RUN vcs import src < /tmp/moveit2_tutorials.repos
 
 # TODO: temp fix for qt compatibility in focal
-RUN cd src/moveit_task_constructor \
-  && sudo git remote add other https://github.com/ubi-agni/moveit_task_constructor.git \
-  && sudo git fetch other \
-  && sudo git checkout fix-qt-compat
+# RUN cd src/moveit_task_constructor \
+#   && sudo git remote add other https://github.com/ubi-agni/moveit_task_constructor.git \
+#   && sudo git fetch other \
+#   && sudo git checkout fix-qt-compat
 
 # Update the ownership of the source files (had to use sudo above to work around
 # a possible inherited 'insteadof' from the host that forces use of ssh

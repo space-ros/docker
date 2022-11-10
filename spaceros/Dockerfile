@@ -19,7 +19,7 @@
 #   VCS_REF     - The git revision of the Space ROS source code (no default value).
 #   VERSION     - The version of Space ROS (default: "preview")
 
-FROM nvidia/cudagl:11.4.1-devel-ubuntu20.04
+FROM ubuntu:jammy
 
 # Define arguments used in the metadata definition
 ARG VCS_REF
@@ -48,8 +48,8 @@ ENV ROSDISTRO=humble
 
 # https://github.com/NVIDIA/cuda-repo-management/issues/1
 # Use new GPG keys for nvidia apt repositories that have not yet propagated to base images.
-RUN apt-key del 7fa2af80
-RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/3bf863cc.pub
+# RUN apt-key del 7fa2af80
+# RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/3bf863cc.pub
 
 # Update the Ubuntu software repository
 RUN apt-get update
@@ -75,8 +75,19 @@ RUN apt-get update && apt-get install -y \
   git \
   python3-colcon-common-extensions \
   python3-flake8 \
+  python3-flake8-blind-except \
+  python3-flake8-builtins \
+  python3-flake8-class-newline \
+  python3-flake8-comprehensions \
+  python3-flake8-deprecated \
+  python3-flake8-docstrings \
+  python3-flake8-import-order \
+  python3-flake8-quotes \
   python3-pip \
+  python3-pytest \
   python3-pytest-cov \
+  python3-pytest-repeat \
+  python3-pytest-rerunfailures \
   python3-rosdep \
   python3-setuptools \
   python3-vcstool \
@@ -84,19 +95,19 @@ RUN apt-get update && apt-get install -y \
   vim
 
 # Install the required pip packages
-RUN python3 -m pip install -U \
-  flake8-blind-except \
-  flake8-builtins \
-  flake8-class-newline \
-  flake8-comprehensions \
-  flake8-deprecated \
-  flake8-docstrings \
-  flake8-import-order \
-  flake8-quotes \
-  pytest-repeat \
-  pytest-rerunfailures \
-  pytest \
-  setuptools
+# RUN python3 -m pip install -U \
+#   flake8-blind-except \
+#   flake8-builtins \
+#   flake8-class-newline \
+#   flake8-comprehensions \
+#   flake8-deprecated \
+#   flake8-docstrings \
+#   flake8-import-order \
+#   flake8-quotes \
+#   pytest-repeat \
+#   pytest-rerunfailures \
+#   pytest \
+#   setuptools
 
 # Create a spaceros user
 RUN useradd -m $USERNAME && \
@@ -123,37 +134,37 @@ RUN sudo rosdep init && \
 RUN colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
 # Install dependencies needed by the IKOS static analyzer
-RUN sudo apt-get install -y \
-  clang-9 \
-  cmake \
-  g++ \
-  gcc \
-  libboost-dev \
-  libboost-filesystem-dev \
-  libboost-test-dev \
-  libboost-thread-dev \
-  libedit-dev \
-  libgmp-dev \
-  libsqlite3-dev \
-  libtbb-dev \
-  llvm-9 \
-  llvm-9-dev \
-  llvm-9-tools \
-  python3 \
-  python3-pygments \
-  zlib1g-dev
+# RUN sudo apt-get install -y \
+#   clang-9 \
+#   cmake \
+#   g++ \
+#   gcc \
+#   libboost-dev \
+#   libboost-filesystem-dev \
+#   libboost-test-dev \
+#   libboost-thread-dev \
+#   libedit-dev \
+#   libgmp-dev \
+#   libsqlite3-dev \
+#   libtbb-dev \
+#   llvm-9 \
+#   llvm-9-dev \
+#   llvm-9-tools \
+#   python3 \
+#   python3-pygments \
+#   zlib1g-dev
 
 # Get the IKOS source and build it
 WORKDIR ${HOME_DIR}
-RUN git clone https://github.com/NASA-SW-VnV/ikos.git && cd ikos && git checkout 8b0bab34846b72777cca2a60d473282971806cfc
-ENV PYTHONPATH "$PYTHONPATH:${IKOS_DIR}/install/lib/python3.8/site-packages"
-WORKDIR ${IKOS_DIR}
-RUN mkdir build && cd build && cmake .. -DLLVM_CONFIG_EXECUTABLE=/usr/bin/llvm-config-9 --no-warn-unused-cli && make && sudo make install
-ENV PATH "$PATH:${IKOS_DIR}/install/bin"
-ENV IKOS_SCAN_NOTIFIER_FILES "yes"
+# RUN git clone https://github.com/NASA-SW-VnV/ikos.git && cd ikos && git checkout 8b0bab34846b72777cca2a60d473282971806cfc
+# ENV PYTHONPATH "$PYTHONPATH:${IKOS_DIR}/install/lib/python3.8/site-packages"
+# WORKDIR ${IKOS_DIR}
+# RUN mkdir build && cd build && cmake .. -DLLVM_CONFIG_EXECUTABLE=/usr/bin/llvm-config-9 --no-warn-unused-cli && make && sudo make install
+# ENV PATH "$PATH:${IKOS_DIR}/install/bin"
+# ENV IKOS_SCAN_NOTIFIER_FILES "yes"
 
 # The IKOS installation doesn't install the IKOS egg file, so do it manually (https://github.com/NASA-SW-VnV/ikos/issues/185)
-RUN cd ${IKOS_DIR}/install/lib/python3.8/site-packages && sudo python3 /usr/lib/python3/dist-packages/easy_install.py ./ikos-3.0-py3.8.egg
+# RUN cd ${IKOS_DIR}/install/lib/python3.8/site-packages && sudo python3 /usr/lib/python3/dist-packages/easy_install.py ./ikos-3.0-py3.8.egg
 
 # Set up the entrypoint
 WORKDIR ${SPACEROS_DIR}
