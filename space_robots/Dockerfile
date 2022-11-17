@@ -19,7 +19,7 @@
 #   VCS_REF     - The git revision of the Space ROS source code (no default value).
 #   VERSION     - The version of Space ROS (default: "preview")
 
-FROM osrf/space-ros:latest
+FROM openrobotics/moveit2:latest
 
 # Define arguments used in the metadata definition
 ARG VCS_REF
@@ -43,22 +43,10 @@ ENV GZ_VERSION fortress
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
 
-# TODO: Temporary CMake Update
-# RUN wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | sudo apt-key add -
-# RUN sudo apt-add-repository 'deb https://apt.kitware.com/ubuntu/ focal main'
-# RUN sudo apt-get update && sudo apt-get install \
-#     cmake-data=3.22.2-0kitware1ubuntu20.04.1 \
-#     cmake=3.22.2-0kitware1ubuntu20.04.1 \
-#     -y --allow-downgrades
-
-# Clone all space-ros sources
-RUN mkdir ${SPACEROS_DIR}/src \
-  && vcs import ${SPACEROS_DIR}/src < ${SPACEROS_DIR}/exact.repos
-
 # Get rosinstall_generator
 RUN sudo apt-get update -y && sudo apt-get install -y python3-rosinstall-generator
 
-# TODO: no packages left after exclusions
+# TODO(anyone): remove demo-pkgs.txt, no packages left after exclusions
 # Generate repos file for demo dependencies, excluding packages from Space ROS core.
 # COPY --chown=${USERNAME}:${USERNAME} demo-pkgs.txt /tmp/
 # COPY --chown=${USERNAME}:${USERNAME} excluded-pkgs.txt /tmp/

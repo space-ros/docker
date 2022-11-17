@@ -2,7 +2,7 @@ repositories:
   demos:
     type: git
     url: https://github.com/space-ros/demos.git
-    version: quarkytale/canadarm_demo
+    version: main
   gz_ros2_control:
     type: git
     url: https://github.com/ros-controls/gz_ros2_control.git
