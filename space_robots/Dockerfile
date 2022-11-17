@@ -43,6 +43,10 @@ ENV GZ_VERSION fortress
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
 
+# Clone all space-ros sources
+RUN mkdir ${SPACEROS_DIR}/src \
+  && vcs import ${SPACEROS_DIR}/src < ${SPACEROS_DIR}/exact.repos
+
 # Get rosinstall_generator
 RUN sudo apt-get update -y && sudo apt-get install -y python3-rosinstall-generator
 
