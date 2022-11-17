@@ -19,7 +19,7 @@
 #   VCS_REF     - The git revision of the Space ROS source code (no default value).
 #   VERSION     - The version of Space ROS (default: "preview")
 
-FROM openrobotics/spaceros:latest
+FROM osrf/space-ros:latest
 
 # Define arguments used in the metadata definition
 ARG VCS_REF
@@ -38,6 +38,10 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
 
+# Clone all space-ros sources
+RUN mkdir ${SPACEROS_DIR}/src \
+  && vcs import ${SPACEROS_DIR}/src < ${SPACEROS_DIR}/exact.repos
+
 # Define key locations
 ENV MOVEIT2_DIR=${HOME_DIR}/moveit2
 
@@ -49,6 +53,7 @@ RUN rosdep update
 # Install the various build and test tools
 RUN sudo apt install -y \
   build-essential \
+  clang-format \
   cmake \
   git \
   libbullet-dev \
@@ -59,8 +64,7 @@ RUN sudo apt install -y \
   python3-rosdep \
   python3-setuptools \
   python3-vcstool \
-  wget \
-  clang-format-10
+  wget
 
 # Install some pip packages needed for testing
 RUN python3 -m pip install -U \

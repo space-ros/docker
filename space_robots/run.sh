@@ -1,5 +1,21 @@
-# Start the container
-docker run --rm --gpus all --net=host -e DISPLAY=$DISPLAY --device=/dev/dri:/dev/dri --volume="$HOME/.Xauthority:/home/spaceros-user/.Xauthority:rw" -it openrobotics/space_robots_demo:latest
+#!/usr/bin/env bash
 
-# Launch the demo inside the container
-#   ros2 launch mars_rover mars_rover.launch.py
+# Runs a docker container with the image created by build.bash
+# Requires:
+#   docker
+#   an X server
+#   rocker
+
+
+ROCKER_ARGS="--devices /dev/dri/ --dev-helpers --x11 --user-override-name spaceros-user --network host"
+
+IMG_NAME=openrobotics/space_robots_demo
+
+# Replace `/` with `_` to comply with docker container naming
+# And append `_runtime`
+CONTAINER_NAME="$(tr '/' '_' <<< "$IMG_NAME")"
+ROCKER_ARGS="${ROCKER_ARGS} --name $CONTAINER_NAME"
+echo "Using image <$IMG_NAME> to start container <$CONTAINER_NAME>"
+
+# Start the container
+rocker ${ROCKER_ARGS} $IMG_NAME
