@@ -19,7 +19,7 @@
 #   VCS_REF     - The git revision of the Space ROS source code (no default value).
 #   VERSION     - The version of Space ROS (default: "preview")
 
-FROM openrobotics/moveit2:latest
+FROM osrf/space-ros:latest
 
 # Define arguments used in the metadata definition
 ARG VCS_REF
@@ -50,6 +50,10 @@ ARG DEBIAN_FRONTEND=noninteractive
 #     cmake-data=3.22.2-0kitware1ubuntu20.04.1 \
 #     cmake=3.22.2-0kitware1ubuntu20.04.1 \
 #     -y --allow-downgrades
+
+# Clone all space-ros sources
+RUN mkdir ${SPACEROS_DIR}/src \
+  && vcs import ${SPACEROS_DIR}/src < ${SPACEROS_DIR}/exact.repos
 
 # Get rosinstall_generator
 RUN sudo apt-get update -y && sudo apt-get install -y python3-rosinstall-generator
