@@ -53,10 +53,18 @@ WORKDIR /root/qemu/qemu-7.1.0/build
 RUN ../configure --target-list=aarch64-softmmu
 RUN make -j8
 
+# build the cross-compile toolchain
 WORKDIR /root/rtems/rsb/rtems
 RUN ../source-builder/sb-set-builder --prefix=$PREFIX 6/rtems-aarch64
-RUN ../source-builder/sb-set-builder --prefix=$PREFIX --target=aarch64-rtems6 --with-rtems-bsp=aarch64/xilinx_zynqmp_lp64_qemu 6/rtems-kernel --with-rtems-tests=samples
 
+# build the RTEMS kernel
+WORKDIR /root/rtems/rtems
+RUN echo "[aarch64/xilinx_zynqmp_lp64_qemu]" > config.ini
+RUN ./waf configure --prefix=$PREFIX
+RUN ./waf
+RUN ./waf install
+
+# build the BSD kernel library for networking
 WORKDIR /root/rtems/rtems-libbsd
 RUN ./waf configure --prefix=$PREFIX --rtems-archs=aarch64 --rtems-bsps=aarch64/xilinx_zynqmp_lp64_qemu --buildset=buildset/default.ini
 RUN ./waf
