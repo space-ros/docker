@@ -59,7 +59,7 @@ RUN ../source-builder/sb-set-builder --prefix=$PREFIX 6/rtems-aarch64
 
 # build the RTEMS kernel
 WORKDIR /root/rtems/rtems
-RUN echo -e "[aarch64/xilinx_zynqmp_lp64_qemu]" > config.ini
+RUN echo "[aarch64/xilinx_zynqmp_lp64_qemu]" > config.ini
 RUN ./waf configure --prefix=$PREFIX
 RUN ./waf
 RUN ./waf install
