@@ -1,0 +1,11 @@
+VERSION 0.6
+
+mcdc:
+  FROM registry.gitlab.com/gtd-gmbh/mcdc-checker/mcdc-checker
+  #COPY mcdc_checker-patched.py /app/src/mcdc_checker.py
+  COPY mcdc_checker.patch /tmp/mcdc_checker.patch
+  RUN pacman -Sy --noconfirm patch
+  RUN patch /app/src/mcdc_checker.py < /tmp/mcdc_checker.patch
+
+
+
