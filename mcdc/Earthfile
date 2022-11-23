@@ -6,6 +6,23 @@ mcdc:
   COPY mcdc_checker.patch /tmp/mcdc_checker.patch
   RUN pacman -Sy --noconfirm patch
   RUN patch /app/src/mcdc_checker.py < /tmp/mcdc_checker.patch
+  # Clean up the modified patch file and pacman cache.
+  RUN pacman -Rsscn --noconfirm patch && pacman -Scc --noconfirm
+
+package-list:
+  FROM ../spaceros+workspace
+  RUN colcon list | grep 'cmake)' | awk '{print $2}' > workspace-packages.txt
+  SAVE ARTIFACT workspace-packages.txt
+
+
+mcdc-run:
+  FROM +mcdc
+  COPY ../spaceros+workspace/src src
+  COPY +package-list/workspace-packages.txt workspace-packages.txt
+  COPY mcdc-workspace.sh mcdc-workspace.sh
+  RUN bash mcdc-workspace.sh $(cat workspace-packages.txt | head -1)
+  SAVE ARTIFACT src/**/mcdc-results.txt AS LOCAL src
+
 
 
 
