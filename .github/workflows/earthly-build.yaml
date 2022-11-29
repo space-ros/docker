@@ -27,6 +27,7 @@ jobs:
         with:
           name: ${{steps.build.outputs.archivename}}
           path: spaceros/log/build_results_archives/${{steps.build.outputs.archivename}}
+          if-no-files-found: error
   space-ros-image:
     runs-on: ubuntu-latest
     steps:
