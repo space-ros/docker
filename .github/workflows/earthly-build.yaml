@@ -20,7 +20,7 @@ jobs:
         run: |
           cd spaceros
           earthly --ci --output +sources
-          earthly --ci +build-testing
+          earthly --ci --output +build-testing
           ls -R log
           echo "archivename=$(basename log/build_results_archives/build_results_*.tar.bz2)"
       - name: Upload build results archive
