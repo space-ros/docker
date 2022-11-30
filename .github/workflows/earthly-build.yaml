@@ -42,7 +42,7 @@ jobs:
         run: |
           cd spaceros
           earthly --ci --output +sources
-          earthly --ci --push +image
+          earthly --ci +image
       - name: Push spaceros image
         env:
           DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_RW_TOKEN }}
