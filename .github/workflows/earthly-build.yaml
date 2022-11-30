@@ -22,7 +22,7 @@ jobs:
           earthly --ci --output +sources
           earthly --ci --output +build-testing
           ls -R log
-          echo "archivename=$(basename log/build_results_archives/build_results_*.tar.bz2)"
+          echo "archivename=$(basename log/build_results_archives/build_results_*.tar.bz2)" >> $GITHUB_ENV
       - name: Upload build results archive
         uses: actions/upload-artifact@v3
         with:
