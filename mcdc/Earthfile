@@ -20,6 +20,8 @@ mcdc-run:
   COPY ../spaceros+workspace/src src
   COPY +package-list/workspace-packages.txt workspace-packages.txt
   COPY mcdc-workspace.sh mcdc-workspace.sh
+  COPY run_mcdc_checker.py run_mcdc_checker.py
+  COPY mcdc_checker_output_parser.py mcdc_checker_output_parser.py
   RUN bash mcdc-workspace.sh $(cat workspace-packages.txt | head -1)
   SAVE ARTIFACT src/**/mcdc-results.txt AS LOCAL src
 
