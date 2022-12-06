@@ -42,12 +42,14 @@ The emulated system that will run inside QEMU needs to have a way to talk to a v
 We'll create a TAP device for this.
 The following script will set this up, creating a virtual `10.0.42.x` subnet for a device named `tap0`:
 ```
-zynq_rtems/start_network_tap.sh
+./start_network_tap.sh
 ```
 
 Next, we will start a Zenoh router, which was built inside the container:
 ```
-zynq_rtems/hello_zenoh/run_zenoh_router
+cd /path/to/zynq_rtems
+cd hello_zenoh
+./run_zenoh_router
 ```
 This will print a bunch of startup information and then continue running silently, waiting for inbound Zenoh traffic. Leave this terminal running.
 
