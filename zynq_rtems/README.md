@@ -45,7 +45,12 @@ The following script will set this up, creating a virtual `10.0.42.x` subnet for
 ./start_network_tap.sh
 ```
 
-Next, we will start a Zenoh router, which was built inside the container:
+We will need three terminals for this demo:
+ * Zenoh router
+ * Zenoh subscriber
+ * Zenoh-Pico publisher (in RTEMS in QEMU)
+
+First, we will start a Zenoh router:
 ```
 cd /path/to/zynq_rtems
 cd hello_zenoh
@@ -53,8 +58,14 @@ cd hello_zenoh
 ```
 This will print a bunch of startup information and then continue running silently, waiting for inbound Zenoh traffic. Leave this terminal running.
 
-Now, start a new terminal.
-In this new terminal, we will run the RTEMS-based application, which will communicate with the Zenoh router.
+In the second terminal, we'll run the Zenoh subscriber example:
+```
+cd /path/to/zynq_rtems
+cd hello_zenoh
+./run_zenoh_subscriber
+```
+
+In the third terminal, we will run the RTEMS-based application, which will communicate with the Zenoh router and thence to the Zenoh subscriber.
 The following script will run QEMU inside the container, with a volume-mount of the `hello_zenoh` demo application so that the build products from the previous step are made available to the QEMU that was built inside the container.
 ```
 cd /path/to/zynq_rtems
@@ -72,8 +83,39 @@ Routers IDs:
  B2FE444C3B454E27BCB11DF83120D927
 Peers IDs:
 Stopping read and lease tasks...
+sending a few messages...
+publishing: Hello, world! 0
+publishing: Hello, world! 1
+publishing: Hello, world! 2
+publishing: Hello, world! 3
+publishing: Hello, world! 4
+publishing: Hello, world! 5
+publishing: Hello, world! 6
+publishing: Hello, world! 7
+publishing: Hello, world! 8
+publishing: Hello, world! 9
 Closing zenoh session...
 Done. Goodbye.
+```
+
+The second terminal, running a Zenoh example subscriber, should print something like this:
+```
+Declaring Subscriber on 'example'...
+[2022-12-06T21:41:11Z DEBUG zenoh::net::routing::resource] Register resource example
+[2022-12-06T21:41:11Z DEBUG zenoh::net::routing::pubsub] Register client subscription
+[2022-12-06T21:41:11Z DEBUG zenoh::net::routing::pubsub] Register client subscription example
+[2022-12-06T21:41:11Z DEBUG zenoh::net::routing::pubsub] Register subscription example for Face{0, 5F6D54C4366D42EDB367F17A5A2CACCD}
+Enter 'q' to quit...
+>> [Subscriber] Received PUT ('example': 'Hello, world! 0')
+>> [Subscriber] Received PUT ('example': 'Hello, world! 1')
+>> [Subscriber] Received PUT ('example': 'Hello, world! 2')
+>> [Subscriber] Received PUT ('example': 'Hello, world! 3')
+>> [Subscriber] Received PUT ('example': 'Hello, world! 4')
+>> [Subscriber] Received PUT ('example': 'Hello, world! 5')
+>> [Subscriber] Received PUT ('example': 'Hello, world! 6')
+>> [Subscriber] Received PUT ('example': 'Hello, world! 7')
+>> [Subscriber] Received PUT ('example': 'Hello, world! 8')
+>> [Subscriber] Received PUT ('example': 'Hello, world! 9')
 ```
 
 After that output, the RTEMS shutdown will display the various RTEMS threads running and their memory usage.
