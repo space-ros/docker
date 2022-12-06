@@ -1,4 +1,4 @@
-set(CMAKE_SYSTEM_NAME Linux)
+set(CMAKE_SYSTEM_NAME FreeBSD)
 set(CMAKE_C_COMPILER /root/rtems/6/bin/aarch64-rtems6-gcc)
 set(CMAKE_CXX_COMPILER /root/rtems/6/bin/aarch64-rtems6-gcc)
 set(CMAKE_FIND_ROOT_PATH /root/rtems/6)
