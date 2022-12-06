@@ -157,7 +157,7 @@ rtems_task Init(
   // Start read and lease tasks for zenoh-pico
   if (zp_start_read_task(z_session_loan(&s), NULL) < 0 || zp_start_lease_task(z_session_loan(&s), NULL) < 0) {
       printf("Unable to start read and lease tasks");
-      return -1;
+      exit(1);
   }
   z_id_t self_id = z_info_zid(z_session_loan(&s));
   printf("Own ID:");
