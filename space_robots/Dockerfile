@@ -19,7 +19,7 @@
 #   VCS_REF     - The git revision of the Space ROS source code (no default value).
 #   VERSION     - The version of Space ROS (default: "preview")
 
-FROM openrobotics/spaceros:latest
+FROM osrf/space-ros:latest
 
 # Define arguments used in the metadata definition
 ARG VCS_REF
@@ -32,42 +32,46 @@ LABEL org.label-schema.description="Curiosity rover demo on the Space ROS platfo
 LABEL org.label-schema.vendor="Open Robotics"
 LABEL org.label-schema.version=${VERSION}
 LABEL org.label-schema.url="https://github.com/space-ros"
-LABEL org.label-schema.vcs-url="https://github.com/space-ros/docker-images"
+LABEL org.label-schema.vcs-url="https://github.com/space-ros/docker"
 LABEL org.label-schema.vcs-ref=${VCS_REF}
+
+# Define a few key variables
+ENV DEMO_DIR=${HOME_DIR}/demos_ws
+ENV IGNITION_VERSION fortress
+ENV GZ_VERSION fortress
 
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Define a few key variables
-ARG SPACEROS_DEMO_DIR=${SRC_DIR}/spaceros_demo
-ENV IGNITION_VERSION fortress
+# Clone all space-ros sources
+RUN mkdir ${SPACEROS_DIR}/src \
+  && vcs import ${SPACEROS_DIR}/src < ${SPACEROS_DIR}/exact.repos
 
 # Get rosinstall_generator
 RUN sudo apt-get update -y && sudo apt-get install -y python3-rosinstall-generator
 
 # Generate repos file for demo dependencies, excluding packages from Space ROS core.
-RUN mkdir -p ${SPACEROS_DEMO_DIR}/src
-WORKDIR ${SPACEROS_DEMO_DIR}
-COPY --chown=${USERNAME}:${USERNAME} spaceros-demo-pkgs.txt /tmp/
+COPY --chown=${USERNAME}:${USERNAME} demo-pkgs.txt /tmp/
 COPY --chown=${USERNAME}:${USERNAME} excluded-pkgs.txt /tmp/
 RUN rosinstall_generator \
   --rosdistro ${ROSDISTRO} \
   --deps \
   --exclude-path ${SPACEROS_DIR}/src \
   --exclude $(cat /tmp/excluded-pkgs.txt) -- \
-  $(cat /tmp/spaceros-demo-pkgs.txt) \
-  > /tmp/spaceros_demo_generated_pkgs.repos
+  -- $(cat /tmp/demo-pkgs.txt) \
+  > /tmp/demo_generated_pkgs.repos
+
+RUN mkdir -p ${DEMO_DIR}/src
+WORKDIR ${DEMO_DIR}
 
 # Get the source for the dependencies
-RUN vcs import src < /tmp/spaceros_demo_generated_pkgs.repos
-COPY --chown=${USERNAME}:${USERNAME} spaceros_demo_manual_pkgs.repos /tmp/
-RUN vcs import src < /tmp/spaceros_demo_manual_pkgs.repos --force
+RUN vcs import src < /tmp/demo_generated_pkgs.repos
+COPY --chown=${USERNAME}:${USERNAME} demo_manual_pkgs.repos /tmp/
+RUN vcs import src < /tmp/demo_manual_pkgs.repos --force
 
-# Get a version of gz_ros2_control to avoid a gazebo crash (still investigating the root cause)
-RUN cd src/gz_ros2_control/ign_ros2_control && git checkout 48ba51afb20e5a75704e6315f2cfe54b1b572ff4
-
-RUN sudo apt-get update -y
-RUN rosdep install --from-paths src --ignore-src -r -y
+RUN sudo apt-get update -y \
+&& /bin/bash -c 'source "${SPACEROS_DIR}/install/setup.bash"' \
+&& rosdep install --from-paths src --ignore-src -r -y
 
 # Build the demo
 RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'

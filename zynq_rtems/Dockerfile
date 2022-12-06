@@ -43,8 +43,7 @@ RUN git clone git://git.rtems.org/rtems.git --depth 1
 
 RUN git clone git://git.rtems.org/rtems-libbsd.git -b 6-freebsd-12
 WORKDIR /root/rtems/rtems-libbsd
-RUN git submodule init
-RUN git submodule update rtems_waf
+RUN git submodule init && git submodule update rtems_waf
 
 WORKDIR /root/qemu
 RUN wget -q https://download.qemu.org/qemu-7.1.0.tar.xz

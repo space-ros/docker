@@ -9,7 +9,7 @@
 
 ROCKER_ARGS="--devices /dev/dri/ --dev-helpers --x11 --user-override-name spaceros-user --network host"
 
-IMG_NAME=openrobotics/moveit2
+IMG_NAME=openrobotics/space_robots_demo
 
 # Replace `/` with `_` to comply with docker container naming
 # And append `_runtime`
