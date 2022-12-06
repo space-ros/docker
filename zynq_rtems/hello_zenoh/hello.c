@@ -173,6 +173,29 @@ rtems_task Init(
   z_owned_closure_zid_t callback2 = z_closure(print_zid);
   z_info_peers_zid(z_loan(s), z_move(callback2));
 
+  z_owned_publisher_t pub = z_declare_publisher(z_loan(s), z_keyexpr("example"), NULL);
+  if (!z_check(pub)) {
+    printf("Unable to declare publisher\n");
+    exit(1);
+  }
+
+  // wait a bit for our publisher registration to take effect
+  // (we need to let some kernel switches happen)
+  sleep(1);
+
+  printf("sending a few messages...\n");
+  char msg_buf[100] = {};
+  for (int i = 0; i < 10; i++) {
+    snprintf(msg_buf, sizeof(msg_buf), "Hello, world! %d", i);
+    z_publisher_put_options_t options = z_publisher_put_options_default();
+    options.encoding = z_encoding(Z_ENCODING_PREFIX_TEXT_PLAIN, NULL);
+    z_publisher_put(z_loan(pub), (const uint8_t *)msg_buf, strlen(msg_buf), &options);
+    printf("publishing: %s\n", msg_buf);
+    usleep(100000);
+  }
+
+  z_undeclare_publisher(z_move(pub));
+
   // Stop read and lease tasks for zenoh-pico
   printf("Stopping read and lease tasks...\n");
   zp_stop_read_task(z_session_loan(&s));
