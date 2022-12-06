@@ -39,6 +39,15 @@ default_wait_for_link_up( const char *name )
   }
 }
 
+void print_zid(const z_id_t *id, void *ctx) {
+    (void)(ctx);
+    printf(" ");
+    for (int i = 15; i >= 0; i--) {
+        printf("%02X", id->id[i]);
+    }
+    printf("\n");
+}
+
 rtems_task Init(
   rtems_task_argument ignored
 )
@@ -127,58 +136,50 @@ rtems_task Init(
   }
 
   z_owned_config_t config = z_config_default();
-#if 0
-    zp_config_insert(z_loan(config), Z_CONFIG_MODE_KEY, z_string_make(mode));
-    if (locator != NULL) {
-        zp_config_insert(z_loan(config), Z_CONFIG_PEER_KEY, z_string_make(locator));
-    }
+  zp_config_insert(
+    z_config_loan(&config),
+    Z_CONFIG_MODE_KEY,
+    z_string_make("client"));
 
-    printf("Opening session...\n");
-    z_owned_session_t s = z_open(z_move(config));
-    if (!z_check(s)) {
-        printf("Unable to open session!\n");
-        return -1;
-    }
+  zp_config_insert(
+    z_config_loan(&config),
+    Z_CONFIG_PEER_KEY,
+    z_string_make("tcp/10.0.42.1:7447"));
 
-    // Start read and lease tasks for zenoh-pico
-    if (zp_start_read_task(z_loan(s), NULL) < 0 || zp_start_lease_task(z_loan(s), NULL) < 0) {
-        printf("Unable to start read and lease tasks");
-        return -1;
-    }
+  printk("Opening zenoh session...\n");
+  z_owned_session_t s = z_open(z_move(config));
+  if (!z_check(s)) {
+    printk("Unable to open session!\n");
+    exit(2);
+  }
+  printk("Zenoh session opened.\n");
 
-    z_id_t self_id = z_info_zid(z_loan(s));
-    printf("Own ID:");
-    print_zid(&self_id, NULL);
+  // Start read and lease tasks for zenoh-pico
+  if (zp_start_read_task(z_session_loan(&s), NULL) < 0 || zp_start_lease_task(z_session_loan(&s), NULL) < 0) {
+      printf("Unable to start read and lease tasks");
+      return -1;
+  }
+  z_id_t self_id = z_info_zid(z_session_loan(&s));
+  printf("Own ID:");
+  print_zid(&self_id, NULL);
 
-    printf("Routers IDs:\n");
-    z_owned_closure_zid_t callback = z_closure(print_zid);
-    z_info_routers_zid(z_loan(s), z_move(callback));
+  printf("Routers IDs:\n");
+  z_owned_closure_zid_t callback = z_closure(print_zid);
+  z_info_routers_zid(z_loan(s), z_move(callback));
 
-    // `callback` has been `z_move`d just above, so it's safe to reuse the variable,
-    // we'll just have to make sure we `z_move` it again to avoid mem-leaks.
-    printf("Peers IDs:\n");
-    z_owned_closure_zid_t callback2 = z_closure(print_zid);
-    z_info_peers_zid(z_loan(s), z_move(callback2));
+  // `callback` has been `z_move`d just above, so it's safe to reuse the variable,
+  // we'll just have to make sure we `z_move` it again to avoid mem-leaks.
+  printf("Peers IDs:\n");
+  z_owned_closure_zid_t callback2 = z_closure(print_zid);
+  z_info_peers_zid(z_loan(s), z_move(callback2));
 
-    // Stop read and lease tasks for zenoh-pico
-    zp_stop_read_task(z_loan(s));
-    zp_stop_lease_task(z_loan(s));
+  // Stop read and lease tasks for zenoh-pico
+  printf("Stopping read and lease tasks...\n");
+  zp_stop_read_task(z_session_loan(&s));
+  zp_stop_lease_task(z_session_loan(&s));
 
-    z_close(z_move(s));
-#endif
-
-
-  /*
-  char *ping[] = {
-    "ping",
-    "-c",
-    "3",
-    "10.0.42.1",
-    NULL
-  };
-  exit_code = rtems_bsd_command_ping(RTEMS_BSD_ARGC(ping), ping);
-  assert(exit_code == EXIT_SUCCESS);
-  */
-
+  printf("Closing zenoh session...\n");
+  z_close(z_move(s));
+  printf("Done. Goodbye.\n");
   exit(0);
 }

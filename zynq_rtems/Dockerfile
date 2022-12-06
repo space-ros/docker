@@ -69,6 +69,23 @@ RUN ./waf configure --prefix=$PREFIX --rtems-archs=aarch64 --rtems-bsps=aarch64/
 RUN ./waf
 RUN ./waf install
 
-# build our application
+RUN date
+# build Zenoh Pico, using a CMake toolchain file to cross-compile
 WORKDIR /root
 RUN git clone https://github.com/eclipse-zenoh/zenoh-pico
+RUN mkdir /root/zenoh-pico/build
+RUN wget -q https://raw.githubusercontent.com/space-ros/docker/zynq_rtems_zenoh_pico/zynq_rtems/toolchain.cmake -O /root/toolchain.cmake
+WORKDIR /root/zenoh-pico/build
+RUN cmake -DCMAKE_TOOLCHAIN_FILE=/root/toolchain.cmake -DBUILD_SHARED_LIBS=OFF -DBUILD_EXAMPLES=OFF -DBUILD_TOOLS=OFF -DBUILD_TESTING=OFF ..
+RUN make
+
+# install Rust and Cargo, and add to the Docker build path
+WORKDIR /root
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# build "normal" (non-Pico) Zenoh
+WORKDIR /root
+RUN git clone https://github.com/eclipse-zenoh/zenoh
+WORKDIR /root/zenoh
+RUN cargo build

@@ -24,9 +24,9 @@ def options(opt):
     rtems.options(opt)
 
 def configure(conf):
-    conf.env.LIB_zenohpico = ['zenohpico']
-    conf.env.INCLUDES_zenohpico = [conf.path.abspath() + '/../zenoh-pico/include']
-    conf.env.LIBPATH_zenohpico = [conf.path.abspath() + '/zenoh_build/lib']
+    conf.env.LIB_zenohpico = ['zenohpico', 'bsd', 'm']
+    conf.env.INCLUDES_zenohpico = ['/root/zenoh-pico/include']
+    conf.env.LIBPATH_zenohpico = ['/root/zenoh-pico/build/lib']
     conf.env.DEFINES_zenohpico = ['ZENOH_BSD=1']
     rtems.configure(conf, bsp_configure=bsp_configure)
 
@@ -36,7 +36,7 @@ def build(bld):
         target = 'hello_zenoh.exe',
         cflags = '-g',
         #includes = 'foo',
-        lib = ['bsd', 'm'], #, 'zenohpico'],
+        #lib = ['bsd', 'm'],
         use = ['zenohpico'],
         source = ['hello.c',
                   'init.c'])

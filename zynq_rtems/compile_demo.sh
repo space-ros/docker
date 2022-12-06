@@ -4,7 +4,7 @@ set -o verbose
 docker run --rm --net=host -e DISPLAY=$DISPLAY \
   --device=/dev/dri:/dev/dri \
   --volume="$HOME/.Xauthority:/root/.Xauthority:rw" \
-  --volume="$PWD/hello_network:/root/hello_network" \
-  -w /root/hello_network \
+  --volume="$PWD/hello_zenoh:/root/hello_zenoh" \
+  -w /root/hello_zenoh \
   openrobotics/zynq_rtems:latest \
-  /root/hello_network/compile.sh
+  /root/hello_zenoh/compile.sh
