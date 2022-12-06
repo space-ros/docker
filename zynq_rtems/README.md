@@ -23,7 +23,7 @@ cd /path/to/zynq_rtems
 ./build_dependencies.sh
 ```
 
-This will build the [zynq_rtems Dockerfile](https://github.com/space-ros/docker/blob/zynq_rtems/zynq_rtems/Dockerfile), which builds QEMU, a cross-compile toolchain for the ARMv8 processor inside the Zynq SoC, and RTEMS from source in the container.
+This will build the [zynq_rtems Dockerfile](https://github.com/space-ros/docker/blob/zynq_rtems_zenoh_pico/zynq_rtems/Dockerfile), which builds QEMU, a cross-compile toolchain for the ARMv8 processor inside the Zynq SoC, and RTEMS from source in the container.
 This will typically take at least 10 minutes, and can take much longer if either your network connection or compute resources is limited.
 
 Next, we will use this "container full of dependencies" to compile a sample application.
