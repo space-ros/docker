@@ -34,7 +34,7 @@ cd /path/to/zynq_rtems
 ```
 
 The demo application and its cross-compiled RTEMS kernel will be accessible both "inside" and "outside" the container for ease of source control, editing cycles, and debugging.
-The build products will land in `zynq_rtems/hello_network/build`.
+The build products will land in `zynq_rtems/hello_zenoh/build`.
 
 # Run
 
@@ -56,7 +56,7 @@ In this new terminal, we will run the RTEMS-based application, which will commun
 The following script will run QEMU inside the container, with a volume-mount of the `hello_zenoh` demo application so that the build products from the previous step are made available to the QEMU that was built inside the container.
 ```
 cd /path/to/zynq_rtems
-cd hello_network
+cd hello_zenoh
 ./run_rtems.sh
 ```
 
