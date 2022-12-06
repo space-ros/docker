@@ -69,7 +69,6 @@ RUN ./waf configure --prefix=$PREFIX --rtems-archs=aarch64 --rtems-bsps=aarch64/
 RUN ./waf
 RUN ./waf install
 
-RUN date
 # build Zenoh Pico, using a CMake toolchain file to cross-compile
 WORKDIR /root
 RUN git clone https://github.com/eclipse-zenoh/zenoh-pico

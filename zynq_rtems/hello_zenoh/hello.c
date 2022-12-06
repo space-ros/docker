@@ -179,7 +179,7 @@ rtems_task Init(
   zp_stop_lease_task(z_session_loan(&s));
 
   printf("Closing zenoh session...\n");
-  z_close(z_move(s));
+  //z_close(z_move(s)); // not sure why, but this hangs...
   printf("Done. Goodbye.\n");
   exit(0);
 }
