@@ -4,6 +4,8 @@ docker run --rm -e DISPLAY=$DISPLAY \
   --device=/dev/net/tun --cap-add=NET_ADMIN \
   --volume="$PWD/hello_network:/root/hello_network" \
   --volume="$PWD/hello_zenoh:/root/hello_zenoh" \
+  --volume="$PWD/diagnostics_pub:/root/diagnostics_pub" \
+  --volume="$PWD/static_ros2:/root/static_ros2" \
   --network=host \
   -w /root \
   -it \

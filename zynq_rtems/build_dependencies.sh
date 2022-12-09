@@ -1,4 +1,5 @@
 #! /usr/bin/env bash
+set -o errexit
 
 ORG=openrobotics
 IMAGE=zynq_rtems

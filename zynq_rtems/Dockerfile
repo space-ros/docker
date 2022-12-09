@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 WORKDIR /root
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -19,8 +19,10 @@ RUN apt-get update \
         ninja-build \
         pax \
         pkg-config \
-        python \
-        python-dev \
+        python2 \
+        python2-dev \
+	python-is-python3 \
+	python3 \
         python3-dev \
         texinfo \
         tree \
@@ -88,3 +90,30 @@ WORKDIR /root
 RUN git clone https://github.com/eclipse-zenoh/zenoh
 WORKDIR /root/zenoh
 RUN cargo build
+
+RUN locale  # check for UTF-8
+RUN apt-get install locales
+RUN locale-gen en_US en_US.UTF-8
+RUN update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+ENV LANG=en_US.UTF-8
+
+RUN apt-get install curl
+RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
+RUN apt-get update
+RUN apt install -y \
+	python3-colcon-common-extensions \
+	python3-lark \
+	libyaml-cpp-dev
+#RUN apt install -y libgtest-dev
+
+# build CycloneDDS for its IDL generator
+# WORKDIR /root
+# RUN git clone https://github.com/eclipse-cyclonedds/cyclonedds
+# #RUN mkdir build
+# WORKDIR /root/cyclonedds/build
+# RUN cmake -DBUILD_EXAMPLES=NO -DBUILD_TESTING=NO -DBUILD_IDLC=YES -DENABLE_IPV6=NO -DBUILD_SHARED_LIBS=NO -DENABLE_SECURITY=NO ..
+# #cmake -DCMAKE_TOOLCHAIN_FILE=/root/toolchain.cmake -DBUILD_EXAMPLES=NO -DBUILD_TESTING=NO -DBUILD_IDLC=YES -DENABLE_IPV6=NO -DBUILD_SHARED_LIBS=NO -DENABLE_SSL=NO -DENABLE_SECURITY=NO ..
+# ENV VERBOSE 1
+# RUN make -j4 && make install
+#RUN apt install libasio-dev

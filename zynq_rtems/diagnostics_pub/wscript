@@ -1,0 +1,80 @@
+
+#
+# Hello world Waf script
+#
+from __future__ import print_function
+
+rtems_version = "6"
+
+try:
+    import rtems_waf.rtems as rtems
+except:
+    print('error: no rtems_waf git submodule')
+    import sys
+    sys.exit(1)
+
+def init(ctx):
+    rtems.init(ctx, version = rtems_version, long_commands = True)
+
+def bsp_configure(conf, arch_bsp):
+    # Add BSP specific configuration checks
+    pass
+
+def options(opt):
+    rtems.options(opt)
+
+def configure(conf):
+    conf.env.LIB_zenohpico = ['zenohpico', 'bsd', 'm']
+    conf.env.INCLUDES_zenohpico = ['/root/zenoh-pico/include']
+    conf.env.LIBPATH_zenohpico = ['/root/zenoh-pico/build/lib']
+    conf.env.DEFINES_zenohpico = ['ZENOH_BSD=1']
+
+    conf.env.LIB_ros2msgs = [
+        'diagnostic_msgs__rosidl_typesupport_c',
+        'diagnostic_msgs__rosidl_typesupport_cpp',
+        'diagnostic_msgs__rosidl_typesupport_introspection_c',
+        'diagnostic_msgs__rosidl_typesupport_introspection_cpp',
+        'diagnostic_msgs__rosidl_generator_c',
+        'std_msgs__rosidl_typesupport_c',
+        'std_msgs__rosidl_typesupport_cpp',
+        'std_msgs__rosidl_typesupport_introspection_c',
+        'std_msgs__rosidl_typesupport_introspection_cpp',
+        'std_msgs__rosidl_generator_c',
+        'builtin_interfaces__rosidl_typesupport_c',
+        'builtin_interfaces__rosidl_typesupport_cpp',
+        'builtin_interfaces__rosidl_typesupport_introspection_c',
+        'builtin_interfaces__rosidl_typesupport_introspection_cpp',
+        'builtin_interfaces__rosidl_generator_c',
+        'rosidl_typesupport_introspection_c',
+        'rosidl_typesupport_c',
+        'rosidl_runtime_c',
+        'rcutils',
+    ]
+    conf.env.INCLUDES_ros2msgs = [
+        '/root/static_ros2/install/include/rmw',
+        '/root/static_ros2/install/include/rcutils',
+        '/root/static_ros2/install/include/diagnostic_msgs',
+        '/root/static_ros2/install/include/std_msgs',
+        '/root/static_ros2/install/include/builtin_interfaces',
+        '/root/static_ros2/install/include/rosidl_runtime_c',
+        '/root/static_ros2/install/include/rosidl_runtime_cpp',
+        '/root/static_ros2/install/include/rosidl_typesupport_interface',
+        '/root/static_ros2/install/include/rosidl_typesupport_introspection_c',
+        '/root/static_ros2/install/include/rosidl_typesupport_introspection_cpp',
+        '/root/static_ros2/install/include',
+        '.',
+    ]
+    conf.env.LIBPATH_ros2msgs = ['/root/static_ros2/install/lib']
+    conf.env.DEFINES_ros2msgs = []
+    rtems.configure(conf, bsp_configure=bsp_configure)
+
+def build(bld):
+    rtems.build(bld)
+    bld(features = 'c cprogram',
+        target = 'diagnostics_pub.exe',
+        cflags = '-g',
+        #includes = 'foo',
+        #lib = ['bsd', 'm'],
+        use = ['ros2msgs', 'zenohpico'], #, 'ros2msgs'],
+        source = ['hello.c',
+                  'init.c'])
