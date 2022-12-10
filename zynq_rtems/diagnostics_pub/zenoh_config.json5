@@ -1,0 +1,15 @@
+{
+  mode: "peer",
+  listen: {
+    endpoints: [
+      "tcp/10.0.42.1:7447",
+    ],
+  },
+  plugins: {
+    dds: {
+      __path__: [
+        "/root/zenoh-plugin-dds/target/release/libzplugin_dds.so",
+      ],
+    },
+  },
+}

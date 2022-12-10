@@ -85,11 +85,19 @@ WORKDIR /root
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
 
+RUN date
 # build "normal" (non-Pico) Zenoh
 WORKDIR /root
 RUN git clone https://github.com/eclipse-zenoh/zenoh
 WORKDIR /root/zenoh
-RUN cargo build
+RUN cargo build --release
+
+# build Zenoh-DDS bridge
+RUN apt-get install -y llvm-dev libclang-dev
+WORKDIR /root
+RUN git clone https://github.com/eclipse-zenoh/zenoh-plugin-dds.git
+WORKDIR /root/zenoh-plugin-dds
+RUN cargo build --release -p zplugin-dds
 
 RUN locale  # check for UTF-8
 RUN apt-get install locales
@@ -101,7 +109,7 @@ RUN apt-get install curl
 RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
 RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
 RUN apt-get update
-RUN apt install -y \
+RUN apt-get install -y \
 	python3-colcon-common-extensions \
 	python3-lark \
 	libyaml-cpp-dev

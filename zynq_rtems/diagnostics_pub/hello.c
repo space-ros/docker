@@ -16,12 +16,12 @@
 #include "diagnostic_msgs/msg/key_value.h"
 #include "rosidl_runtime_c/string_functions.h"
 
-static void my_on_exit(int exit_code, void *arg)
+static void my_on_exit(int exit_code, void * /*arg*/)
 {
-  rtems_printer printer;
-  (void)arg; // suppress warning
-  rtems_print_printer_printf(&printer);
-  rtems_stack_checker_report_usage_with_plugin(&printer);
+  //(void)arg; // suppress warning
+  //rtems_printer printer;
+  //rtems_print_printer_printf(&printer);
+  //rtems_stack_checker_report_usage_with_plugin(&printer);
 }
 
 static void
@@ -43,7 +43,8 @@ default_wait_for_link_up( const char *name )
   }
 }
 
-void print_zid(const z_id_t *id, void *ctx) {
+void print_zid(const z_id_t *id, void *ctx)
+{
     (void)(ctx);
     printf(" ");
     for (int i = 15; i >= 0; i--) {
@@ -52,9 +53,98 @@ void print_zid(const z_id_t *id, void *ctx) {
     printf("\n");
 }
 
-rtems_task Init(
-  rtems_task_argument ignored
-)
+bool cdr_align(uint8_t **wptr, const uint8_t * const buf_end, const int alignment)
+{
+  printf("cdr_align(%d)\n", alignment);
+  printf("  wptr = 0x%08x\n", (uint32_t)wptr);
+  printf("  *wptr = 0x%08x\n", (uint32_t)*wptr);
+  const int offset = ((uint64_t)(*wptr)) % alignment;
+  if (offset == 0)
+  {
+    printf("  already aligned!\n");
+    // hooray, we're already aligned!
+    return true;
+  }
+  const int padding_length = alignment - offset;
+  printf("  offset = %d, padding_length = %d\n", offset, padding_length);
+  if ((*wptr) + padding_length >= buf_end)
+  {
+    printf("woah! padding of %d tried to overflow a buffer.\n", padding_length);
+    // this would overflow...
+    return false;
+  }
+  printf("adding padding %d to 0x%08x to align to %d\n",
+    padding_length,
+    (unsigned)**wptr,
+    alignment);
+  for (int i = 0; i < padding_length; i++)
+    **(wptr++) = 0;
+  return true;
+}
+
+bool cdr_serialize_u8(uint8_t **wptr, const uint8_t * const buf_end, const uint8_t u)
+{
+  if (!wptr || !(*wptr))
+    return false;
+
+  if (*(wptr) >= buf_end)
+    return false;
+
+  // first, copy in the string length, including the terminator
+  **wptr = u;
+  *wptr++;
+}
+
+bool cdr_serialize_u32(uint8_t **wptr, const uint8_t * const buf_end, const uint32_t u)
+{
+  if (!wptr || !(*wptr))
+    return false;
+
+  // check for worst-case alignment
+  if (*(wptr) + 8 >= buf_end)
+    return false;
+
+  if (!cdr_align(wptr, buf_end, 4))
+    return false;
+
+  // first, copy in the string length, including the terminator
+  **((uint32_t **)wptr) = u;
+  *wptr += 4;
+}
+
+bool cdr_serialize_string(uint8_t **wptr, const uint8_t * const buf_end, const char *s)
+{
+  if (!wptr || !(*wptr))
+    return false;
+
+  if (!cdr_align(wptr, buf_end, 4))
+    return false;
+
+  const int32_t len = s ? (int32_t)strlen(s) : 0;
+  // add 4 to overflow estimate, to assume worst-case alignment happened
+  if (*(wptr) + len + 4 + 4 >= buf_end)
+    return false;
+
+  // first, copy in the string length, including the terminator
+  **((uint32_t **)wptr) = len + 1;
+  *wptr += 4;
+
+  // if it's an empty string, just write a NULL and bail
+  if (!s)
+  {
+    **wptr = 0;
+    **(wptr++);
+    return true;
+  }
+
+  // now copy in the string
+  memcpy(*wptr, s, len + 1);
+  *wptr += len + 1;
+
+  return true;
+}
+
+rtems_task Init(rtems_task_argument ignored)
 {
   rtems_bsd_setlogpriority("debug");
   printk("\nInit() start\n\n");
@@ -75,18 +165,7 @@ rtems_task Init(
 
   int exit_code = 0;
 
-  char *ifcfg_print[] = {
-    "ifconfig",
-    NULL
-  };
-  exit_code = rtems_bsd_command_ifconfig(RTEMS_BSD_ARGC(ifcfg_print), ifcfg_print);
-  if (exit_code != EX_OK)
-  {
-    printk("ifconfig exit code: %d\n", exit_code);
-    exit(1);
-  }
   char *iface_name = "cgem3";
-
   char *ifcfg_set[] = {
     "ifconfig",
     iface_name,
@@ -97,14 +176,8 @@ rtems_task Init(
     NULL
   };
   exit_code = rtems_bsd_command_ifconfig(RTEMS_BSD_ARGC(ifcfg_set), ifcfg_set);
-  exit_code = rtems_bsd_command_ifconfig(RTEMS_BSD_ARGC(ifcfg_print), ifcfg_print);
-  if (exit_code != EX_OK)
-  {
-    printk("ifconfig exit code: %d\n", exit_code);
-    exit(1);
-  }
   assert(exit_code == EX_OK);
-
+  /*
   sc = rtems_task_wake_after(100); // not sure of the units... maybe 10ms ticks?
   char *route_print[] = {
     "netstat",
@@ -117,6 +190,7 @@ rtems_task Init(
     printk("print routes exit code: %d\n", exit_code);
     exit(1);
   }
+  */
 
   char *route_default[] = {
     "route",
@@ -129,13 +203,6 @@ rtems_task Init(
   if (exit_code != EX_OK)
   {
     printk("set routes exit code: %d\n", exit_code);
-    exit(1);
-  }
-
-  exit_code = rtems_bsd_command_netstat(RTEMS_BSD_ARGC(route_print), route_print);
-  if (exit_code != EX_OK)
-  {
-    printk("print routes exit code: %d\n", exit_code);
     exit(1);
   }
 
@@ -177,7 +244,7 @@ rtems_task Init(
   z_owned_closure_zid_t callback2 = z_closure(print_zid);
   z_info_peers_zid(z_loan(s), z_move(callback2));
 
-  z_owned_publisher_t pub = z_declare_publisher(z_loan(s), z_keyexpr("example"), NULL);
+  z_owned_publisher_t pub = z_declare_publisher(z_loan(s), z_keyexpr("rt/diagnostics"), NULL);
   if (!z_check(pub)) {
     printf("Unable to declare publisher\n");
     exit(1);
@@ -192,7 +259,7 @@ rtems_task Init(
   //   - Docked Status: Undocked
   //   - Hazard Detection: No hazards detected
   diag_msg.header.stamp.sec = 42;
-  diag_msg.header.stamp.sec = 43;
+  diag_msg.header.stamp.nanosec = 43;
   rosidl_runtime_c__String__assign(&diag_msg.header.frame_id, "/foo/bar");
   diagnostic_msgs__msg__DiagnosticStatus__Sequence__init(&diag_msg.status, 1);
   rosidl_runtime_c__String__assign(&diag_msg.status.data[0].name, "Create3");
@@ -209,24 +276,62 @@ rtems_task Init(
   rosidl_runtime_c__String__assign(&diag_msg.status.data[0].values.data[4].key, "Hazard Detection");
   rosidl_runtime_c__String__assign(&diag_msg.status.data[0].values.data[4].value, "No hazards detected");
 
-  //const rosidl_message_type_support_t *type_support = ROSIDL_GET_MSG_TYPE_SUPPORT(diagnostic_msgs, status_msg, DiagnosticStatus);
-
-  //size_t max_data_length = type_support->getEstimatedSerializedSize(ros_message);
-  //printf("serialized length: %d\n", (int)max_data_length);
-
   // wait a bit for our publisher registration to take effect
   // (we need to let some kernel switches happen)
   sleep(1);
 
   printf("sending a few messages...\n");
-  char msg_buf[100] = {};
-  for (int i = 0; i < 10; i++) {
-    snprintf(msg_buf, sizeof(msg_buf), "Hello, world! %d", i);
+  uint8_t msg_buf[512] = {0};
+  const int num_pub = 100;
+  struct timeval tv;
+  for (int i = 0; i < num_pub; i++) {
+    printf("publishing %d / %d\n", i, num_pub);
+
+    gettimeofday(&tv, NULL);
+    diag_msg.header.stamp.sec = tv.tv_sec;
+    diag_msg.header.stamp.nanosec = tv.tv_usec * 1000;
+    // todo: this time starts ticking on 00:00 UTC+0 January 1, 1988.
+    // we need to get the real time somehow on startup.
+
+    // stuff the header. I can't remember the fields. Version or endian, maybe?
+    uint8_t *wptr = msg_buf;
+    const uint8_t *buf_end = msg_buf + sizeof(msg_buf);
+    *(wptr++) = 0;
+    *(wptr++) = 1;
+    *(wptr++) = 0;
+    *(wptr++) = 0;
+
+    // first i32 is the timestamp seconds
+    // next u32 is the timestamp nanosec
+    // String frame_id
+    cdr_serialize_u32(&wptr, buf_end, (uint32_t)diag_msg.header.stamp.sec);
+    cdr_serialize_u32(&wptr, buf_end, diag_msg.header.stamp.nanosec);
+    cdr_serialize_string(&wptr, buf_end, NULL);  // empty header frame_id
+
+    cdr_serialize_u32(&wptr, buf_end, 1);  // diag_msg status sequence count
+
+    for (int status_idx = 0; status_idx < 1; status_idx++)
+    {
+      // now we serialize our status
+      cdr_serialize_u8(&wptr, buf_end, 0);  // diagnostic status = OK
+      cdr_serialize_string(&wptr, buf_end, "name_FOO");
+      cdr_serialize_string(&wptr, buf_end, "message_FOO");
+      cdr_serialize_string(&wptr, buf_end, "hardware_id_FOO");
+      // serialize the KeyValue sequence
+      cdr_serialize_u32(&wptr, buf_end, 0);  // KeyValue sequence count
+    }
+
+    int msg_len = (int)(wptr - msg_buf);
+    printf("msg_len: %d\n", msg_len);
+
+    for (int j = 0; j < msg_len; j++) {
+      printf("  %04d: 0x%02x\n", j, msg_buf[j]);
+    }
+
     z_publisher_put_options_t options = z_publisher_put_options_default();
     options.encoding = z_encoding(Z_ENCODING_PREFIX_TEXT_PLAIN, NULL);
-    z_publisher_put(z_loan(pub), (const uint8_t *)msg_buf, strlen(msg_buf), &options);
-    printf("publishing: %s\n", msg_buf);
-    usleep(100000);
+    z_publisher_put(z_loan(pub), msg_buf, msg_len, &options);
+    usleep(1000000);
   }
 
   z_undeclare_publisher(z_move(pub));
