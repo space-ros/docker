@@ -89,7 +89,7 @@ RUN ./waf install
 WORKDIR /root
 RUN git clone https://github.com/eclipse-zenoh/zenoh-pico
 #RUN mkdir /root/zenoh-pico/build
-RUN wget -q https://raw.githubusercontent.com/space-ros/docker/zynq_rtems_zenoh_pico/zynq_rtems/toolchain.cmake -O /root/toolchain.cmake
+RUN wget -q https://raw.githubusercontent.com/space-ros/docker/rtems_ros_diagnostics/zynq_rtems/toolchain.cmake -O /root/toolchain.cmake
 WORKDIR /root/zenoh-pico/build
 RUN cmake -DCMAKE_TOOLCHAIN_FILE=/root/toolchain.cmake -DBUILD_SHARED_LIBS=OFF -DBUILD_EXAMPLES=OFF -DBUILD_TOOLS=OFF -DBUILD_TESTING=OFF ..
 RUN make
