@@ -51,20 +51,20 @@ def configure(conf):
         'rcutils',
     ]
     conf.env.INCLUDES_ros2msgs = [
-        '/root/static_ros2/install/include/rmw',
-        '/root/static_ros2/install/include/rcutils',
-        '/root/static_ros2/install/include/diagnostic_msgs',
-        '/root/static_ros2/install/include/std_msgs',
-        '/root/static_ros2/install/include/builtin_interfaces',
-        '/root/static_ros2/install/include/rosidl_runtime_c',
-        '/root/static_ros2/install/include/rosidl_runtime_cpp',
-        '/root/static_ros2/install/include/rosidl_typesupport_interface',
-        '/root/static_ros2/install/include/rosidl_typesupport_introspection_c',
-        '/root/static_ros2/install/include/rosidl_typesupport_introspection_cpp',
-        '/root/static_ros2/install/include',
+        '/root/ros2/install/include/rmw',
+        '/root/ros2/install/include/rcutils',
+        '/root/ros2/install/include/diagnostic_msgs',
+        '/root/ros2/install/include/std_msgs',
+        '/root/ros2/install/include/builtin_interfaces',
+        '/root/ros2/install/include/rosidl_runtime_c',
+        '/root/ros2/install/include/rosidl_runtime_cpp',
+        '/root/ros2/install/include/rosidl_typesupport_interface',
+        '/root/ros2/install/include/rosidl_typesupport_introspection_c',
+        '/root/ros2/install/include/rosidl_typesupport_introspection_cpp',
+        '/root/ros2/install/include',
         '.',
     ]
-    conf.env.LIBPATH_ros2msgs = ['/root/static_ros2/install/lib']
+    conf.env.LIBPATH_ros2msgs = ['/root/ros2/install/lib']
     conf.env.DEFINES_ros2msgs = []
     rtems.configure(conf, bsp_configure=bsp_configure)
 

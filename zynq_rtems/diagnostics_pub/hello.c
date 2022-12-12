@@ -55,30 +55,39 @@ void print_zid(const z_id_t *id, void *ctx)
 
 bool cdr_align(uint8_t **wptr, const uint8_t * const buf_end, const int alignment)
 {
+  /*
   printf("cdr_align(%d)\n", alignment);
-  printf("  wptr = 0x%08x\n", (uint32_t)wptr);
-  printf("  *wptr = 0x%08x\n", (uint32_t)*wptr);
+  printf("  wptr = 0x%08x\n", (unsigned)wptr);
+  printf("  *wptr = 0x%08x\n", (unsigned)*wptr);
+  */
   const int offset = ((uint64_t)(*wptr)) % alignment;
   if (offset == 0)
   {
-    printf("  already aligned!\n");
+    //printf("  already aligned!\n");
     // hooray, we're already aligned!
     return true;
   }
   const int padding_length = alignment - offset;
-  printf("  offset = %d, padding_length = %d\n", offset, padding_length);
+  //printf("  offset = %d, padding_length = %d\n", offset, padding_length);
   if ((*wptr) + padding_length >= buf_end)
   {
     printf("woah! padding of %d tried to overflow a buffer.\n", padding_length);
     // this would overflow...
     return false;
   }
+  /*
   printf("adding padding %d to 0x%08x to align to %d\n",
     padding_length,
-    (unsigned)**wptr,
+    (unsigned)*wptr,
     alignment);
+  */
   for (int i = 0; i < padding_length; i++)
-    **(wptr++) = 0;
+  {
+    //printf("  writing padding byte %d, *wptr = 0x%08x\n", i, (unsigned)*wptr);
+    // let's do this in two steps so it's easier to follow:
+    **wptr = 0;  // write a zero to the buffer
+    (*wptr)++;  // advance the write pointer
+  }
   return true;
 }
 
@@ -92,7 +101,8 @@ bool cdr_serialize_u8(uint8_t **wptr, const uint8_t * const buf_end, const uint8
 
   // first, copy in the string length, including the terminator
   **wptr = u;
-  *wptr++;
+  (*wptr)++;
+  return true;
 }
 
 bool cdr_serialize_u32(uint8_t **wptr, const uint8_t * const buf_end, const uint32_t u)
@@ -110,6 +120,7 @@ bool cdr_serialize_u32(uint8_t **wptr, const uint8_t * const buf_end, const uint
   // first, copy in the string length, including the terminator
   **((uint32_t **)wptr) = u;
   *wptr += 4;
+  return true;
 }
 
 bool cdr_serialize_string(uint8_t **wptr, const uint8_t * const buf_end, const char *s)
@@ -123,7 +134,10 @@ bool cdr_serialize_string(uint8_t **wptr, const uint8_t * const buf_end, const c
   const int32_t len = s ? (int32_t)strlen(s) : 0;
   // add 4 to overflow estimate, to assume worst-case alignment happened
   if (*(wptr) + len + 4 + 4 >= buf_end)
+  {
+    printf("not enough space to serialize the string\n");
     return false;
+  }
 
   // first, copy in the string length, including the terminator
   **((uint32_t **)wptr) = len + 1;
@@ -133,7 +147,7 @@ bool cdr_serialize_string(uint8_t **wptr, const uint8_t * const buf_end, const c
   if (!s)
   {
     **wptr = 0;
-    **(wptr++);
+    (*wptr)++;
     return true;
   }
 
@@ -141,6 +155,42 @@ bool cdr_serialize_string(uint8_t **wptr, const uint8_t * const buf_end, const c
   memcpy(*wptr, s, len + 1);
   *wptr += len + 1;
 
+  return true;
+}
+
+bool cdr_serialize_diagnostic_array(
+  uint8_t **wptr,
+  const uint8_t *buf_end,
+  const diagnostic_msgs__msg__DiagnosticArray * const diag_msg)
+{
+  // first i32 is the timestamp seconds
+  // next u32 is the timestamp nanosec
+  // String frame_id
+  cdr_serialize_u32(wptr, buf_end, (uint32_t)diag_msg->header.stamp.sec);
+  cdr_serialize_u32(wptr, buf_end, diag_msg->header.stamp.nanosec);
+  cdr_serialize_string(wptr, buf_end, diag_msg->header.frame_id.data);
+
+  cdr_serialize_u32(wptr, buf_end, diag_msg->status.size);  // sequence length
+  for (int status_idx = 0; status_idx < diag_msg->status.size; status_idx++)
+  {
+    const diagnostic_msgs__msg__DiagnosticStatus * const status =
+      &diag_msg->status.data[status_idx];
+
+    // serialize the status summary strings
+    cdr_serialize_u8(wptr, buf_end, status->level);
+    cdr_serialize_string(wptr, buf_end, status->name.data);
+    cdr_serialize_string(wptr, buf_end, status->message.data);
+    cdr_serialize_string(wptr, buf_end, status->hardware_id.data);
+
+    // serialize the KeyValue sequence
+    cdr_serialize_u32(wptr, buf_end, status->values.size);
+    for (int kv_idx = 0; kv_idx < status->values.size; kv_idx++)
+    {
+      const diagnostic_msgs__msg__KeyValue * const kv = &status->values.data[kv_idx];
+      cdr_serialize_string(wptr, buf_end, kv->key.data);
+      cdr_serialize_string(wptr, buf_end, kv->value.data);
+    }
+  }
   return true;
 }
 
@@ -260,9 +310,11 @@ rtems_task Init(rtems_task_argument ignored)
   //   - Hazard Detection: No hazards detected
   diag_msg.header.stamp.sec = 42;
   diag_msg.header.stamp.nanosec = 43;
-  rosidl_runtime_c__String__assign(&diag_msg.header.frame_id, "/foo/bar");
+  rosidl_runtime_c__String__assign(&diag_msg.header.frame_id, "/robot");
   diagnostic_msgs__msg__DiagnosticStatus__Sequence__init(&diag_msg.status, 1);
   rosidl_runtime_c__String__assign(&diag_msg.status.data[0].name, "Create3");
+  rosidl_runtime_c__String__assign(&diag_msg.status.data[0].message, "Everything is great");
+  rosidl_runtime_c__String__assign(&diag_msg.status.data[0].hardware_id, "12345678");
   diag_msg.status.data[0].level = diagnostic_msgs__msg__DiagnosticStatus__OK;
   diagnostic_msgs__msg__KeyValue__Sequence__init(&diag_msg.status.data[0].values, 5);
   rosidl_runtime_c__String__assign(&diag_msg.status.data[0].values.data[0].key, "Battery Percentage");
@@ -282,54 +334,38 @@ rtems_task Init(rtems_task_argument ignored)
 
   printf("sending a few messages...\n");
   uint8_t msg_buf[512] = {0};
+  const uint8_t *buf_end = msg_buf + sizeof(msg_buf);
   const int num_pub = 100;
   struct timeval tv;
   for (int i = 0; i < num_pub; i++) {
     printf("publishing %d / %d\n", i, num_pub);
 
+    // todo: this time starts ticking on 00:00 UTC+0 January 1, 1988.
+    // we need to get the real time somehow on startup.
     gettimeofday(&tv, NULL);
     diag_msg.header.stamp.sec = tv.tv_sec;
     diag_msg.header.stamp.nanosec = tv.tv_usec * 1000;
-    // todo: this time starts ticking on 00:00 UTC+0 January 1, 1988.
-    // we need to get the real time somehow on startup.
 
-    // stuff the header. I can't remember the fields. Version or endian, maybe?
+    // CDR header (little-endian encoding flag)
     uint8_t *wptr = msg_buf;
-    const uint8_t *buf_end = msg_buf + sizeof(msg_buf);
     *(wptr++) = 0;
     *(wptr++) = 1;
     *(wptr++) = 0;
     *(wptr++) = 0;
 
-    // first i32 is the timestamp seconds
-    // next u32 is the timestamp nanosec
-    // String frame_id
-    cdr_serialize_u32(&wptr, buf_end, (uint32_t)diag_msg.header.stamp.sec);
-    cdr_serialize_u32(&wptr, buf_end, diag_msg.header.stamp.nanosec);
-    cdr_serialize_string(&wptr, buf_end, NULL);  // empty header frame_id
-
-    cdr_serialize_u32(&wptr, buf_end, 1);  // diag_msg status sequence count
-
-    for (int status_idx = 0; status_idx < 1; status_idx++)
-    {
-      // now we serialize our status
-      cdr_serialize_u8(&wptr, buf_end, 0);  // diagnostic status = OK
-      cdr_serialize_string(&wptr, buf_end, "name_FOO");
-      cdr_serialize_string(&wptr, buf_end, "message_FOO");
-      cdr_serialize_string(&wptr, buf_end, "hardware_id_FOO");
-      // serialize the KeyValue sequence
-      cdr_serialize_u32(&wptr, buf_end, 0);  // KeyValue sequence count
-    }
+    cdr_serialize_diagnostic_array(&wptr, buf_end, &diag_msg);
 
     int msg_len = (int)(wptr - msg_buf);
     printf("msg_len: %d\n", msg_len);
 
+    /*
     for (int j = 0; j < msg_len; j++) {
       printf("  %04d: 0x%02x\n", j, msg_buf[j]);
     }
+    */
 
     z_publisher_put_options_t options = z_publisher_put_options_default();
-    options.encoding = z_encoding(Z_ENCODING_PREFIX_TEXT_PLAIN, NULL);
+    options.encoding = z_encoding(Z_ENCODING_PREFIX_APP_OCTET_STREAM, NULL);
     z_publisher_put(z_loan(pub), msg_buf, msg_len, &options);
     usleep(1000000);
   }
