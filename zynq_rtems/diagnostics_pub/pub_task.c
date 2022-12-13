@@ -212,7 +212,8 @@ rtems_task PubTask(rtems_task_argument ignored)
   zp_config_insert(
     z_config_loan(&config),
     Z_CONFIG_PEER_KEY,
-    z_string_make("tcp/10.0.42.1:7447"));
+    z_string_make("udp/10.0.42.1:12345"));
+    //z_string_make("tcp/10.0.42.1:7447"));
 
   printf("Opening zenoh session...\n");
   z_owned_session_t s = z_open(z_move(config));
@@ -282,12 +283,12 @@ rtems_task PubTask(rtems_task_argument ignored)
   printf("sending a few messages...\n");
   uint8_t msg_buf[512] = {0};
   const uint8_t *buf_end = msg_buf + sizeof(msg_buf);
-  const int num_pub = 100;
+  const int num_pub = 10;
 
   for (int i = 0; i < num_pub; i++)
   {
     // set the interval in units of 1ms ticks
-    status = rtems_rate_monotonic_period(RM_period_id, 100);
+    status = rtems_rate_monotonic_period(RM_period_id, 500);
     if (status == RTEMS_TIMEOUT)
     {
       printf("timeout\n");
