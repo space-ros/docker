@@ -16,12 +16,16 @@
 #include "diagnostic_msgs/msg/key_value.h"
 #include "rosidl_runtime_c/string_functions.h"
 
+static rtems_id task_ids[1];
+rtems_task PubTask(rtems_task_argument ignored);
+
 static void my_on_exit(int exit_code, void * /*arg*/)
 {
   //(void)arg; // suppress warning
-  //rtems_printer printer;
-  //rtems_print_printer_printf(&printer);
-  //rtems_stack_checker_report_usage_with_plugin(&printer);
+  rtems_printer printer;
+  rtems_print_printer_printf(&printer);
+  rtems_stack_checker_report_usage_with_plugin(&printer);
+  rtems_cpu_usage_report();
 }
 
 static void
@@ -313,7 +317,7 @@ rtems_task Init(rtems_task_argument ignored)
   rosidl_runtime_c__String__assign(&diag_msg.header.frame_id, "/robot");
   diagnostic_msgs__msg__DiagnosticStatus__Sequence__init(&diag_msg.status, 1);
   rosidl_runtime_c__String__assign(&diag_msg.status.data[0].name, "Create3");
-  rosidl_runtime_c__String__assign(&diag_msg.status.data[0].message, "Everything is great");
+  rosidl_runtime_c__String__assign(&diag_msg.status.data[0].message, "Everything is awesome");
   rosidl_runtime_c__String__assign(&diag_msg.status.data[0].hardware_id, "12345678");
   diag_msg.status.data[0].level = diagnostic_msgs__msg__DiagnosticStatus__OK;
   diagnostic_msgs__msg__KeyValue__Sequence__init(&diag_msg.status.data[0].values, 5);
@@ -332,10 +336,33 @@ rtems_task Init(rtems_task_argument ignored)
   // (we need to let some kernel switches happen)
   sleep(1);
 
+  // start the rate-monotonic (periodic) task
+  rtems_status_code status;
+  status = rtems_task_create(
+    rtems_build_name('P', 'U', 'B', '1'),
+    2, // task priority
+    32 * 1024, // stack size
+    RTEMS_DEFAULT_MODES,
+    RTEMS_DEFAULT_ATTRIBUTES,
+    &task_ids[0]
+  );
+  if (status != RTEMS_SUCCESSFUL)
+  {
+    printk("unexpected task_create status code: %d\n", status);
+    exit(1);
+  }
+
+  status = rtems_task_start(task_ids[0], PubTask, 0);
+  if (status != RTEMS_SUCCESSFUL)
+  {
+    printk("unexpected task_start status code: %d\n", status);
+    exit(1);
+  }
+
   printf("sending a few messages...\n");
   uint8_t msg_buf[512] = {0};
   const uint8_t *buf_end = msg_buf + sizeof(msg_buf);
-  const int num_pub = 100;
+  const int num_pub = 10;
   struct timeval tv;
   for (int i = 0; i < num_pub; i++) {
     printf("publishing %d / %d\n", i, num_pub);

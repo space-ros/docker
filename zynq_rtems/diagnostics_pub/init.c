@@ -1,8 +1,3 @@
-
-/*
- * Simple RTEMS configuration
- */
-
 // not sure if this is necessary, since we're not starting any of the
 // BSD-provided services like PF, telnet, etc.
 #define RTEMS_BSD_CONFIG_BSP_CONFIG
@@ -32,7 +27,10 @@
 
 #define CONFIGURE_STACK_CHECKER_ENABLED
 
+// currently we're only using 1, but perhaps another will be used sometime
+#define CONFIGURE_MAXIMUM_PERIODS 2
+#define CONFIGURE_MICROSECONDS_PER_TICK 1000
+
 #define CONFIGURE_INIT
 
 #include <rtems/confdefs.h>
-
