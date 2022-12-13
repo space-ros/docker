@@ -7,6 +7,36 @@
 #include "diagnostic_msgs/msg/key_value.h"
 #include "rosidl_runtime_c/string_functions.h"
 
+static rtems_id pub_task_id;
+rtems_task PubTask(rtems_task_argument ignored);
+
+void pub_init()
+{
+  // start the rate-monotonic (periodic) task
+  rtems_status_code status;
+  status = rtems_task_create(
+    rtems_build_name('P', 'U', 'B', '1'),
+    2, // task priority
+    32 * 1024, // stack size
+    RTEMS_DEFAULT_MODES,
+    RTEMS_DEFAULT_ATTRIBUTES,
+    &pub_task_id
+  );
+  if (status != RTEMS_SUCCESSFUL)
+  {
+    printf("unexpected task_create status code: %d\n", status);
+    exit(1);
+  }
+
+  status = rtems_task_start(pub_task_id, PubTask, 0);
+  if (status != RTEMS_SUCCESSFUL)
+  {
+    printf("unexpected task_start status code: %d\n", status);
+    exit(1);
+  }
+
+}
+
 void print_zid(const z_id_t *id, void *ctx)
 {
     (void)(ctx);

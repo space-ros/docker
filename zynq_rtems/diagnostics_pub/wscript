@@ -76,6 +76,8 @@ def build(bld):
         #includes = 'foo',
         #lib = ['bsd', 'm'],
         use = ['ros2msgs', 'zenohpico'], #, 'ros2msgs'],
-        source = ['startup.c',
-                  'init.c',
-                  'pub_task.c'])
+        source = [
+          'init.c',
+          'network.c',
+          'pub_task.c',
+        ])
