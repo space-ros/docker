@@ -16,7 +16,7 @@ void pub_init()
   rtems_status_code status;
   status = rtems_task_create(
     rtems_build_name('P', 'U', 'B', '1'),
-    2, // task priority
+    123, // task priority
     32 * 1024, // stack size
     RTEMS_DEFAULT_MODES,
     RTEMS_DEFAULT_ATTRIBUTES,
@@ -212,8 +212,7 @@ rtems_task PubTask(rtems_task_argument ignored)
   zp_config_insert(
     z_config_loan(&config),
     Z_CONFIG_PEER_KEY,
-    z_string_make("udp/10.0.42.1:12345"));
-    //z_string_make("tcp/10.0.42.1:7447"));
+    z_string_make("udp/10.0.42.1:7447"));
 
   printf("Opening zenoh session...\n");
   z_owned_session_t s = z_open(z_move(config));
