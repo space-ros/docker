@@ -16,9 +16,10 @@ void pub_init()
   rtems_status_code status;
   status = rtems_task_create(
     rtems_build_name('P', 'U', 'B', '1'),
-    123, // task priority
+    1, // task priority
     32 * 1024, // stack size
-    RTEMS_DEFAULT_MODES,
+    //RTEMS_DEFAULT_MODES,
+    RTEMS_PREEMPT | RTEMS_TIMESLICE | RTEMS_ASR | RTEMS_INTERRUPT_LEVEL(0),
     RTEMS_DEFAULT_ATTRIBUTES,
     &pub_task_id
   );
@@ -34,7 +35,6 @@ void pub_init()
     printf("unexpected task_start status code: %d\n", status);
     exit(1);
   }
-
 }
 
 void print_zid(const z_id_t *id, void *ctx)
@@ -282,12 +282,12 @@ rtems_task PubTask(rtems_task_argument ignored)
   printf("sending a few messages...\n");
   uint8_t msg_buf[512] = {0};
   const uint8_t *buf_end = msg_buf + sizeof(msg_buf);
-  const int num_pub = 10;
+  const int num_pub = 10000;
 
   for (int i = 0; i < num_pub; i++)
   {
-    // set the interval in units of 1ms ticks
-    status = rtems_rate_monotonic_period(RM_period_id, 500);
+    // set the interval in units of ticks (1ms or 100us or whatever in init.c)
+    status = rtems_rate_monotonic_period(RM_period_id, 100);
     if (status == RTEMS_TIMEOUT)
     {
       printf("timeout\n");
@@ -300,12 +300,14 @@ rtems_task PubTask(rtems_task_argument ignored)
 
     struct timespec ts;
     rtems_clock_get_monotonic(&ts);
-    printf("%d.%09d\n", ts.tv_sec, ts.tv_nsec);
+    //printf("   %d.%09d\n", ts.tv_sec, ts.tv_nsec);
     diag_msg.header.stamp.sec = ts.tv_sec;
-    diag_msg.header.stamp.nanosec = ts.tv_nsec * 1000;
+    diag_msg.header.stamp.nanosec = ts.tv_nsec;
 
     //rtems_interval t = rtems_clock_get_ticks_since_boot();
-    //printk("PubTask ready: %d\n", t);
+    //printf("PubTask ready: %d\n", t);
+    //uint64_t ns = rtems_clock_get_uptime_nanoseconds();
+    //printf("sec: %d \tns: %lld\n", ns/1000000000, ns);
 
     /*
     status = rtems_clock_get_tod( &time );

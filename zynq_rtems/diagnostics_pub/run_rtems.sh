@@ -19,6 +19,7 @@ docker run --rm -e DISPLAY=$DISPLAY \
     -M xlnx-zcu102 \
     -m 2G \
     -no-reboot \
+    -icount shift=1,align=off,sleep=on -rtc clock=vm \
     -nographic \
     -serial mon:stdio \
     -bios none \

@@ -13,7 +13,7 @@ docker run --rm -e DISPLAY=$DISPLAY \
   --device=/dev/net/tun --cap-add=NET_ADMIN \
   --volume="$PWD:/root/$APP_NAME" \
   --env RUST_LOG=info \
-  --env ROS_DOMAIN_ID=42 \
+  --env ROS_DOMAIN_ID=44 \
   --env RMW_IMPLEMENTATION=rmw_cyclonedds_cpp \
   --network=host \
   -w /root \

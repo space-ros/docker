@@ -80,4 +80,5 @@ def build(bld):
           'init.c',
           'network.c',
           'pub_task.c',
+          'daq_task.c',
         ])

@@ -11,6 +11,7 @@
 // forward declarations
 void network_init();
 void pub_init();
+void daq_init();
 
 static void my_on_exit(int exit_code, void * /*arg*/)
 {
@@ -34,6 +35,7 @@ rtems_task Init(rtems_task_argument ignored)
 
   network_init();
   pub_init();
+  daq_init();
 
   rtems_task_exit();
 }
@@ -68,6 +70,7 @@ rtems_task Init(rtems_task_argument ignored)
 // currently we're only using 1, but perhaps another will be used sometime
 #define CONFIGURE_MAXIMUM_PERIODS 2
 #define CONFIGURE_MICROSECONDS_PER_TICK 1000
+#define CONFIGURE_TICKS_PER_TIME_SLICE 10
 
 #define CONFIGURE_INIT
 
