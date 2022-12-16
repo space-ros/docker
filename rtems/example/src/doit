@@ -1,7 +1,0 @@
-
-/root/development/rtems/5/bin/sparc-rtems5-gcc -qrtems -B/root/development/rtems/5/sparc-rtems5/lib/ -B/root/development/rtems/5/sparc-rtems5/leon3/lib/ --specs bsp_specs -mcpu=leon3 -ffunction-sections -fdata-sections -MMD -g -O2 main.cpp -c -o main.o
-
-/root/development/rtems/5/bin/sparc-rtems5-gcc -qrtems -B/root/development/rtems/5/sparc-rtems5/lib/ -B/root/development/rtems/5/sparc-rtems5/leon3/lib/ --specs bsp_specs -mcpu=leon3 -ffunction-sections -fdata-sections -MMD -Wl,--gc-sections main.o -omain.exe -Wl,-Bstatic -Wl,-Bdynamic
-
-/root/development/rtems/5/bin/rtems-run --rtems-bsps=leon3-sis main.exe
-

@@ -1,3 +1,0 @@
-./waf configure --rtems=/root/development/rtems/5 --rtems-bsp=sparc/leon3 --rtems-version=5 --show-commands
-./waf
-/root/development/rtems/5/bin/rtems-run --rtems-bsps=leon3-sis build/sparc-rtems5-leon3/hello.exe
