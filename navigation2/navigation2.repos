@@ -2,11 +2,11 @@ repositories:
    BehaviorTree/BehaviorTree.CPP:
      type: git
      url: https://github.com/BehaviorTree/BehaviorTree.CPP.git
-     version: master
+     version: v3.8
    diagnostics:
      type: git
      url: https://github.com/ros/diagnostics.git
-     version: ros2-devel
+     version: ros2
    ignition/ignition_cmake2_vendor:
      type: git
      url: https://github.com/ignition-release/ignition_cmake2_vendor.git
@@ -42,7 +42,7 @@ repositories:
    ros-perception/vision_opencv:
      type: git
      url: https://github.com/ros-perception/vision_opencv.git
-     version: ros2
+     version: humble
    ros-simulation/gazebo_ros_pkgs:
      type: git
      url: https://github.com/ros-simulation/gazebo_ros_pkgs.git
@@ -66,5 +66,5 @@ repositories:
    yaml_cpp_vendor:
      type: git
      url: https://github.com/ros2/yaml_cpp_vendor.git
-     version: rolling
+     version: humble
 

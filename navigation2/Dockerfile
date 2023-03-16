@@ -19,7 +19,7 @@
 #   VCS_REF     - The git revision of the Space ROS source code (no default value).
 #   VERSION     - The version of Space ROS (default: "preview")
 
-FROM openrobotics/spaceros:latest
+FROM osrf/space-ros:latest
 
 # Define arguments used in the metadata definition
 ARG VCS_REF
@@ -38,30 +38,66 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Define key locations
-ENV NAVIGATION2_DIR=${SRC_DIR}/navigation2
-
-# Make sure the latest versions of packages are installed
-RUN sudo apt-get update
-RUN sudo apt-get dist-upgrade -y
-RUN rosdep update
+# Define workspace locations
+ENV NAVIGATION2_WS=${HOME_DIR}/nav2_ws
+ENV NAV2_DEPS_WS=${HOME_DIR}/nav2_deps_ws
 
 # Get the Navigation2 source code
-WORKDIR ${NAVIGATION2_DIR}
-RUN sudo git clone https://github.com/ros-planning/navigation2.git src
+RUN mkdir -p ${NAVIGATION2_WS}/src
+WORKDIR ${NAVIGATION2_WS}/src
+ARG NAV2_BRANCH=humble
+RUN sudo git clone --branch $NAV2_BRANCH https://github.com/ros-planning/navigation2.git
+
+# Get keys for Nav2 dependencies
+WORKDIR ${NAVIGATION2_WS}/
+SHELL ["/bin/bash", "-c"]
+RUN source ${SPACEROS_DIR}/install/setup.bash && sudo apt update && rosdep keys --from-paths src --ignore-src --rosdistro humble -y > ${NAVIGATION2_WS}/nav2_dep_keys.txt
+
+# Get rosinstall_generator
+RUN sudo apt-get update -y && sudo apt-get install -y python3-rosinstall-generator
+
+# Clone Space ROS sources temporarily as input to rosinstall_generator
+RUN mkdir ${SPACEROS_DIR}/src \
+  && vcs import ${SPACEROS_DIR}/src < ${SPACEROS_DIR}/exact.repos
+
+# Generate repos file for nav2 dependencies, exclude packages from Space ROS src
+RUN rosinstall_generator \
+  --rosdistro ${ROSDISTRO} \
+  --deps \
+  --exclude-path ${SPACEROS_DIR}/src -- \
+  -- $(cat ${NAVIGATION2_WS}/nav2_dep_keys.txt) \
+  > ${NAVIGATION2_WS}/nav2_deps.repos
+
+# Remove unneeded src files now that repos are generated
+RUN rm -rf ${SPACEROS_DIR}/src
 
 # Get the repositories required by Nav2
-COPY --chown=${USERNAME}:${USERNAME} navigation2.repos ./
-RUN sudo vcs import src < navigation2.repos
+RUN mkdir -p ${NAV2_DEPS_WS}/src
+WORKDIR ${NAV2_DEPS_WS}
+RUN sudo vcs import src < ${NAVIGATION2_WS}/nav2_deps.repos
 
 # Update the ownership of the source files
-RUN sudo chown -R ${USERNAME}:${USERNAME} ${NAVIGATION2_DIR}
+RUN sudo chown -R ${USERNAME}:${USERNAME} ${NAV2_DEPS_WS}
 
-# Install system dependencies
-RUN rosdep install --from-paths ../spaceros/src src --ignore-src --rosdistro rolling -y --skip-keys "composition demo_nodes_py ikos lifecycle rmw_connextdds rmw_fastrtps_dynamic_cpp rmw_fastrtps_cpp rosidl_typesupport_fastrtps_c rosidl_typesupport_fastrtps_cpp urdfdom_headers"
+# Install nav2_deps_ws dependencies
+SHELL ["/bin/bash", "-c"]
+RUN source ${SPACEROS_DIR}/install/setup.bash && sudo apt update && rosdep install --from-paths src --ignore-src --rosdistro humble -y \
+      --skip-keys "composition demo_nodes_py ikos lifecycle rmw_connextdds rmw_fastrtps_dynamic_cpp rmw_fastrtps_cpp \
+                   rosidl_typesupport_fastrtps_c rosidl_typesupport_fastrtps_cpp urdfdom_headers"
+
+# Build dependencies
+RUN source ${SPACEROS_DIR}/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+# Install remaining nav2 dependencies (not in rosdistro)
+WORKDIR ${NAVIGATION2_WS}
+SHELL ["/bin/bash", "-c"]
+RUN source ${NAV2_DEPS_WS}/install/setup.bash && sudo apt update && rosdep install --from-paths src --ignore-src --rosdistro humble -y \
+      --skip-keys "composition demo_nodes_py ikos lifecycle rmw_connextdds rmw_fastrtps_dynamic_cpp rmw_fastrtps_cpp \
+                   rosidl_typesupport_fastrtps_c rosidl_typesupport_fastrtps_cpp urdfdom_headers"
 
 # Build Navigation2
-RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
+SHELL ["/bin/bash", "-c"]
+RUN source ${NAV2_DEPS_WS}/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
 # Set up the entrypoint
 COPY ./entrypoint.sh /
