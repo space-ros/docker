@@ -84,8 +84,12 @@ RUN python3 -m pip install -U \
 # Get the MoveIt2 source code
 WORKDIR ${HOME_DIR}
 RUN sudo git clone https://github.com/ros-planning/moveit2.git -b ${ROSDISTRO} moveit2/src
-RUN cd ${MOVEIT2_DIR}/src \
-  && sudo git clone https://github.com/ros-planning/moveit2_tutorials.git -b ${ROSDISTRO}
+
+# Move pre-downloaded MoveIt2 tutorials into the source tree
+COPY --chown=${USERNAME}:${USERNAME} moveit2_tutorials ${MOVEIT2_DIR}/src/moveit2_tutorials
+# Original way of getting tutorials, but it's slow when doing development
+#RUN cd ${MOVEIT2_DIR}/src \
+#  && sudo git clone https://github.com/ros-planning/moveit2_tutorials.git -b ${ROSDISTRO}
 
 # Update the ownership of the source files (had to use sudo above to work around
 # a possible inherited 'insteadof' from the host that forces use of ssh
