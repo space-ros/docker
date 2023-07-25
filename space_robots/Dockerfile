@@ -62,10 +62,23 @@ RUN sudo apt-get update -y && sudo apt-get install -y python3-rosinstall-generat
 RUN mkdir -p ${DEMO_DIR}/src
 WORKDIR ${DEMO_DIR}
 
+
+# Install libmongoc for development
+#RUN wget https://github.com/mongodb/mongo-c-driver/releases/download/1.2.1/mongo-c-driver-1.2.1.tar.gz
+#RUN tar -xzf mongo-c-driver-1.2.1.tar.gz
+#RUN cd mongo-c-driver-1.2.1 && ./configure && make && sudo make install
+RUN sudo apt install libmongoc-dev -y
+
+# Compile mongo cxx driver https://mongocxx.org/mongocxx-v3/installation/linux/
+RUN sudo apt install libssl-dev build-essential devscripts debian-keyring fakeroot debhelper cmake libboost-dev libsasl2-dev libicu-dev libzstd-dev doxygen -y
+RUN wget https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.6.7/mongo-cxx-driver-r3.6.7.tar.gz
+RUN tar -xzf mongo-cxx-driver-r3.6.7.tar.gz
+RUN cd mongo-cxx-driver-r3.6.7/build && cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local && sudo cmake --build . --target EP_mnmlstc_core && cmake --build . && sudo cmake --build . --target install
+
 # Get the source for the dependencies
 # RUN vcs import src < /tmp/demo_generated_pkgs.repos
 COPY --chown=${USERNAME}:${USERNAME} demo_manual_pkgs.repos /tmp/
-RUN vcs import src < /tmp/demo_manual_pkgs.repos
+RUN vcs import src < /tmp/demo_manual_pkgs.repos && /bin/bash -c 'source "${SPACEROS_DIR}/install/setup.bash"' 
 
 RUN sudo apt-get update -y \
 && /bin/bash -c 'source "${SPACEROS_DIR}/install/setup.bash"' \
