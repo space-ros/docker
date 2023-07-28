@@ -11,6 +11,15 @@ jobs:
   space_robots:
     runs-on: ubuntu-20.04
     steps:
+      - name: "Free up disk space"
+        run: |
+          sudo apt-get -qq purge "ghc*"
+          sudo apt-get clean
+          # cleanup docker images not used by us
+          docker system prune -af
+          # free up a lot of stuff from /usr/local
+          sudo rm -rf /usr/local
+          df -h
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up buildx
