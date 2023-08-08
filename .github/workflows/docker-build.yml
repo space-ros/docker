@@ -32,7 +32,7 @@ jobs:
           tags: openrobotics/moveit2:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          no-cache: true
+          no-cache: false
       - name: Build space robots demo image
         uses: docker/build-push-action@v2
         with:
