@@ -29,7 +29,7 @@ jobs:
         with:
           context: moveit2
           push: false
-          tags: openrobotics/moveit2
+          tags: openrobotics/moveit2:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
           no-cache: true
