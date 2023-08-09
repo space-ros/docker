@@ -33,12 +33,8 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           no-cache: false
+          outputs: type=docker,dest=/tmp/moveit2.tar
       - name: Build space robots demo image
-        uses: docker/build-push-action@v2
-        with:
-          context: space_robots
-          push: false
-          tags: space_robots
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          no-cache: true
+        run: |
+          docker images
+          cd space_robots && build.sh
