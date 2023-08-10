@@ -29,16 +29,13 @@ jobs:
         with:
           context: moveit2
           push: false
-          tags: openrobotics/moveit2
+          tags: openrobotics/moveit2:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          no-cache: true
+          no-cache: false
+          outputs: type=docker,dest=/tmp/moveit2.tar
       - name: Build space robots demo image
-        uses: docker/build-push-action@v2
-        with:
-          context: space_robots
-          push: false
-          tags: space_robots
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          no-cache: true
+        run: |
+          docker load --input /tmp/moveit2.tar
+          docker images
+          cd space_robots && ./build.sh
