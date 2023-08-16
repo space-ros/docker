@@ -16,14 +16,14 @@ We selected [RTEMS](https://www.rtems.org/) because it is fully open-source and 
 
 To simplify collecting and compiling dependencies on a wide range of systems, we have created a Docker container that contains everything.
 You will need to install Docker on your system first, for example, using `sudo apt install docker.io`
-Then, run this [script](https://github.com/space-ros/docker/blob/zynq_rtems/zynq_rtems/build_dependencies.sh):
+Then, run this [script](https://github.com/space-ros/docker/blob/main/zynq_rtems/build_dependencies.sh):
 
 ```
 cd /path/to/zynq_rtems
 ./build_dependencies.sh
 ```
 
-This will build the [zynq_rtems Dockerfile](https://github.com/space-ros/docker/blob/zynq_rtems_zenoh_pico/zynq_rtems/Dockerfile), which builds QEMU, a cross-compile toolchain for the ARMv8 processor inside the Zynq SoC, and RTEMS from source in the container.
+This will build the [zynq_rtems Dockerfile](https://github.com/space-ros/docker/blob/main/zynq_rtems/Dockerfile), which builds QEMU, a cross-compile toolchain for the ARMv8 processor inside the Zynq SoC, and RTEMS from source in the container.
 This will typically take at least 10 minutes, and can take much longer if either your network connection or compute resources is limited.
 
 Next, we will use this "container full of dependencies" to compile a sample application.
