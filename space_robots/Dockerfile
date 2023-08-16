@@ -64,9 +64,6 @@ WORKDIR ${DEMO_DIR}
 
 
 # Install libmongoc for development
-#RUN wget https://github.com/mongodb/mongo-c-driver/releases/download/1.2.1/mongo-c-driver-1.2.1.tar.gz
-#RUN tar -xzf mongo-c-driver-1.2.1.tar.gz
-#RUN cd mongo-c-driver-1.2.1 && ./configure && make && sudo make install
 RUN sudo apt install libmongoc-dev -y
 
 # Compile mongo cxx driver https://mongocxx.org/mongocxx-v3/installation/linux/
