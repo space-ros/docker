@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-ORG=openrobotics
-IMAGE=navigation2
+ORG=osrf
+IMAGE=space_nav2
 TAG=latest
 
 VCS_REF=""
