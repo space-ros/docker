@@ -7,6 +7,9 @@ TAG=latest
 VCS_REF=""
 VERSION=preview
 
+# Exit script with failure if build fails
+set -eo pipefail
+
 echo ""
 echo "##### Building Navigation2/Space ROS Docker Image #####"
 echo ""
