@@ -99,6 +99,9 @@ RUN source ${NAV2_DEPS_WS}/install/setup.bash && sudo apt update && rosdep insta
 SHELL ["/bin/bash", "-c"]
 RUN source ${NAV2_DEPS_WS}/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
+# Install rviz2 to send goals to Nav2
+RUN sudo apt update && sudo apt install -y ros-humble-rviz2
+
 # Set up the entrypoint
 COPY ./entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
