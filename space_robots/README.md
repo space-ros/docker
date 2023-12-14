@@ -8,25 +8,25 @@ This is for Curiosity Mars rover and Canadarm demos.
 
 The demo image builds on top of the `spaceros` and `moveit2` images. To build the docker image, first build both required images, then the `space_robots` demo image:
 
-```
-$ cd docker/spaceros
-$ ./build.sh
-$ cd ../moveit2
-$ ./build.sh
-$ cd ../space_robots
-$ ./build.sh
+```bash
+cd docker/spaceros
+./build.sh
+cd ../moveit2
+./build.sh
+cd ../space_robots
+./build.sh
 ```
 
 ## Running the Demo Docker
 
 run the following to allow GUI passthrough:
-```
-$ xhost +local:docker
+```bash
+xhost +local:docker
 ```
 
 Then run:
-```
-$ ./run.sh
+```bash
+./run.sh
 ```
 
 Depending on the host computer, you might need to remove ```--gpus all``` flag in ```run.sh```, which uses your GPUs.
@@ -35,8 +35,8 @@ Depending on the host computer, you might need to remove ```--gpus all``` flag i
 
 ### Curiosity Mars rover demo
 Launch the demo:
-```
-$ ros2 launch mars_rover mars_rover.launch.py
+```bash
+ros2 launch mars_rover mars_rover.launch.py
 ```
 
 On the top left corner, click on the refresh button to show camera feed.
@@ -47,72 +47,72 @@ On the top left corner, click on the refresh button to show camera feed.
 
 Open a new terminal and attach to the currently running container:
 
-```
-$ docker exec -it <container-name> bash
+```bash
+docker exec -it <container-name> bash
 ```
 
 Make sure packages are sourced:
 
-```
-$ source ~/spaceros/install/setup.bash
+```bash
+source ~/spaceros/install/setup.bash
 ```
 
-```
-$ source ~/demos_ws/install/setup.bash
+```bash
+source ~/demos_ws/install/setup.bash
 ```
 
 #### Available Commands
 
 Drive the rover forward
 
-```
-$ ros2 service call /move_forward std_srvs/srv/Empty
+```bash
+ros2 service call /move_forward std_srvs/srv/Empty
 ```
 
 Stop the rover
 
-```
-$ ros2 service call /move_stop std_srvs/srv/Empty
+```bash
+ros2 service call /move_stop std_srvs/srv/Empty
 ```
 
 Turn left
 
-```
-$ ros2 service call /turn_left std_srvs/srv/Empty
+```bash
+ros2 service call /turn_left std_srvs/srv/Empty
 ```
 
 Turn right
 
-```
-$ ros2 service call /turn_right std_srvs/srv/Empty
+```bash
+ros2 service call /turn_right std_srvs/srv/Empty
 ```
 
 Open the tool arm:
 
-```
-$ ros2 service call /open_arm std_srvs/srv/Empty
+```bash
+ros2 service call /open_arm std_srvs/srv/Empty
 ```
 
 Close the tool arm:
 
-```
-$ ros2 service call /close_arm std_srvs/srv/Empty
+```bash
+ros2 service call /close_arm std_srvs/srv/Empty
 ```
 
 Open the mast (camera arm)
 
-```
-$ ros2 service call /mast_open std_srvs/srv/Empty
+```bash
+ros2 service call /mast_open std_srvs/srv/Empty
 ```
 
 Close the mast (camera arm)
 
-```
-$ ros2 service call /mast_close std_srvs/srv/Empty
+```bash
+ros2 service call /mast_close std_srvs/srv/Empty
 ```
 
 #### Canadarm demo
 
-```
-$ ros2 launch canadarm canadarm.launch.py
+```bash
+ros2 launch canadarm canadarm.launch.py
 ```

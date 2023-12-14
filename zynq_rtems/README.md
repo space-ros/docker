@@ -18,7 +18,7 @@ To simplify collecting and compiling dependencies on a wide range of systems, we
 You will need to install Docker on your system first, for example, using `sudo apt install docker.io`
 Then, run this [script](https://github.com/space-ros/docker/blob/main/zynq_rtems/build_dependencies.sh):
 
-```
+```bash
 cd /path/to/zynq_rtems
 ./build_dependencies.sh
 ```
@@ -28,7 +28,7 @@ This will typically take at least 10 minutes, and can take much longer if either
 
 Next, we will use this "container full of dependencies" to compile a sample application.
 
-```
+```bash
 cd /path/to/zynq_rtems
 ./compile_demos.sh
 ```
@@ -41,7 +41,8 @@ The build products will land in `zynq_rtems/hello_zenoh/build`.
 The emulated system that will run inside QEMU needs to have a way to talk to a virtual network segment on the host machine.
 We'll create a TAP device for this.
 The following script will set this up, creating a virtual `10.0.42.x` subnet for a device named `tap0`:
-```
+
+```bash
 ./start_network_tap.sh
 ```
 
@@ -51,7 +52,8 @@ We will need three terminals for this demo:
  * Zenoh-Pico publisher (in RTEMS in QEMU)
 
 First, we will start a Zenoh router:
-```
+
+```bash
 cd /path/to/zynq_rtems
 cd hello_zenoh
 ./run_zenoh_router
@@ -59,7 +61,8 @@ cd hello_zenoh
 This will print a bunch of startup information and then continue running silently, waiting for inbound Zenoh traffic. Leave this terminal running.
 
 In the second terminal, we'll run the Zenoh subscriber example:
-```
+
+```bash
 cd /path/to/zynq_rtems
 cd hello_zenoh
 ./run_zenoh_subscriber
@@ -67,7 +70,8 @@ cd hello_zenoh
 
 In the third terminal, we will run the RTEMS-based application, which will communicate with the Zenoh router and thence to the Zenoh subscriber.
 The following script will run QEMU inside the container, with a volume-mount of the `hello_zenoh` demo application so that the build products from the previous step are made available to the QEMU that was built inside the container.
-```
+
+```bash
 cd /path/to/zynq_rtems
 cd hello_zenoh
 ./run_rtems.sh
@@ -75,6 +79,7 @@ cd hello_zenoh
 
 The terminal should print a bunch of information about the various emulated Zynq network interfaces and their routing information.
 After that, it should contact the `zenohd` instance running in the other terminal. It should print something like this:
+
 ```
 Opening zenoh session...
 Zenoh session opened.
@@ -127,6 +132,7 @@ This is a good thing.
 # Clean up
 
 If you would like, you can now remove the network tap device that we created in the previous step:
-```
+
+```bash
 zynq_rtems/stop_network_tap.sh
 ```
