@@ -125,7 +125,7 @@ RUN cd src/octomap_msgs && git apply octomap_fix.diff
 
 # Build MoveIt2
 RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash \
-  && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --event-handlers desktop_notification- status- --parallel-workers 1'
+  && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --event-handlers desktop_notification- status-'
 
 # Add a couple sample GUI apps for testing
 RUN sudo apt-get install -y \
