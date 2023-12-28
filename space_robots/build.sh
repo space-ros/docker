@@ -14,6 +14,9 @@ echo ""
 echo "##### Building Space ROS Demo Docker Image #####"
 echo ""
 
+mkdir -p src
+vcs import src < demo_manual_pkgs.repos
+
 docker build -t $ORG/$IMAGE:$TAG \
     --build-arg VCS_REF="$VCS_REF" \
     --build-arg VERSION="$VERSION" .

@@ -14,6 +14,9 @@ echo ""
 echo "##### Building Space ROS/MoveIt2 Docker Image #####"
 echo ""
 
+mkdir -p src
+vcs import src < ./moveit2.repos
+
 docker build -t $ORG/$IMAGE:$TAG \
     --build-arg VCS_REF="$VCS_REF" \
     --build-arg VERSION="$VERSION" .
