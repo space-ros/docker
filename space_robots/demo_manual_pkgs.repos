@@ -31,4 +31,7 @@ repositories:
     type: git
     url: https://github.com/ros-planning/warehouse_ros_mongo.git
     version: ros2
-    
+  vision_msgs:
+    type: git
+    url: https://github.com/ros-perception/vision_msgs.git
+    version: ros2
