@@ -2,7 +2,11 @@ FROM ubuntu:20.04
 WORKDIR /root
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update \
+# Using Docker BuildKit cache mounts for /var/cache/apt and /var/lib/apt ensures that
+# the cache won't make it into the built image but will be maintained between steps.
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update \
     && apt-get install -y \
         apt-utils \
         bison \

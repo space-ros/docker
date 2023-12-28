@@ -46,12 +46,20 @@ RUN mkdir ${SPACEROS_DIR}/src \
 ENV MOVEIT2_DIR=${HOME_DIR}/moveit2
 
 # Make sure the latest versions of packages are installed
-RUN sudo apt-get update
-RUN sudo apt-get dist-upgrade -y
+# Using Docker BuildKit cache mounts for /var/cache/apt and /var/lib/apt ensures that
+# the cache won't make it into the built image but will be maintained between steps.
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt,sharing=locked \
+  sudo apt-get update
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt,sharing=locked \
+  sudo apt-get dist-upgrade -y
 RUN rosdep update
 
 # Install the various build and test tools
-RUN sudo apt install -y \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt,sharing=locked \
+  sudo apt install -y \
   build-essential \
   clang-format \
   cmake \
@@ -92,7 +100,9 @@ RUN cd ${MOVEIT2_DIR}/src \
 RUN sudo chown -R ${USERNAME}:${USERNAME} ${MOVEIT2_DIR}
 
 # Get rosinstall_generator
-RUN sudo apt-get update -y && sudo apt-get install -y python3-rosinstall-generator
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt,sharing=locked \
+  sudo apt-get update -y && sudo apt-get install -y python3-rosinstall-generator
 
 # Generate repos file for moveit2 dependencies, excluding packages from Space ROS core.
 COPY --chown=${USERNAME}:${USERNAME} moveit2-pkgs.txt /tmp/
@@ -116,7 +126,9 @@ RUN vcs import src < /tmp/moveit2_tutorials.repos
 RUN sudo chown -R ${USERNAME}:${USERNAME} ${MOVEIT2_DIR}
 
 # Install system dependencies
-RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash' \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt,sharing=locked \
+  /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash' \
  && rosdep install --from-paths ../spaceros/src src --ignore-src --rosdistro ${ROSDISTRO} -r -y --skip-keys "console_bridge generate_parameter_library fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers rmw_connextdds ros_testing rmw_connextdds rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp composition demo_nodes_py lifecycle rosidl_typesupport_fastrtps_cpp rosidl_typesupport_fastrtps_c ikos diagnostic_aggregator diagnostic_updater joy qt_gui rqt_gui rqt_gui_py"
 
 # Apply a patch to octomap_msgs to work around a build issue
@@ -128,7 +140,9 @@ RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash \
   && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --event-handlers desktop_notification- status-'
 
 # Add a couple sample GUI apps for testing
-RUN sudo apt-get install -y \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt,sharing=locked \
+  sudo apt-get install -y \
   firefox \
   glmark2 \
   libcanberra-gtk3-0 \
