@@ -1,6 +1,7 @@
 # MoveIt2 Docker Image
 
-The MoveIt2 Docker image uses the Space ROS docker image (*openrobotics/spaceros:latest*) as its base image. The MoveIt2 Dockerfile installs all of the prerequisite system dependencies to build MoveIt2 (and Moveit2 tutorials) and then pulls and builds the latest MoveIt2 and Moveit2 tutorials source code.
+The MoveIt2 Docker image uses the Space ROS docker image (*openrobotics/spaceros:latest*) as its base image.
+The MoveIt2 Dockerfile installs all of the prerequisite system dependencies to build MoveIt2 (and Moveit2 tutorials) and then pulls and builds the latest MoveIt2 and Moveit2 tutorials source code.
 
 ## Building the MoveIt2 Image
 
@@ -37,7 +38,8 @@ There is a run.sh script provided for convenience that will run the spaceros ima
 ./run.sh
 ```
 
-Upon startup, the container automatically runs the entrypoint.sh script, which sources the MoveIt2 and Space ROS environment files. You'll now be running inside the container and should see a prompt similar to this:
+Upon startup, the container automatically runs the entrypoint.sh script, which sources the MoveIt2 and Space ROS environment files.
+You'll now be running inside the container and should see a prompt similar to this:
 
 ```
 spaceros-user@8e73b41a4e16:~/moveit2#
