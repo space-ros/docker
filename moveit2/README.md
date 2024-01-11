@@ -68,3 +68,7 @@ ros2 launch moveit2_tutorials move_group.launch.py
 ![rviz2 move group window](resources/moveit2-rviz.png)
 
 Then, you can follow the [Move Group C++ Interface Demo documentation](https://moveit.picknik.ai/humble/doc/examples/move_group_interface/move_group_interface_tutorial.html).
+
+## Running the Space ROS Space Robots Demos
+
+Once you have tested that MoveIt2 works, you are ready to run some of the other [Space ROS space robot demos](../space_robots/README.md).
