@@ -55,7 +55,7 @@ You should see lots of console output and the rviz2 window appear:
 
 ![rviz2 tutorial window](resources/moveit2-rviz-tutorial.png)
 
-You can now following the [MoveIt2 Tutorial documentation](https://moveit.picknik.ai/main/doc/tutorials/quickstart_in_rviz/quickstart_in_rviz_tutorial.html).
+You can now follow the [MoveIt2 Tutorial documentation](https://moveit.picknik.ai/main/doc/tutorials/quickstart_in_rviz/quickstart_in_rviz_tutorial.html).
 
 ## Running the MoveIt2 Move Group C++ Interface Demo
 

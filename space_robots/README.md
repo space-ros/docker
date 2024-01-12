@@ -29,7 +29,7 @@ Then run:
 ./run.sh
 ```
 
-Depending on the host computer, you might need to remove ```--gpus all``` flag in ```run.sh```, which uses your GPUs.
+Depending on the host computer, you might need to remove the ```--gpus all``` flag in ```run.sh```, which uses your GPUs.
 
 ## Running the Demos
 
