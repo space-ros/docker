@@ -6,8 +6,8 @@ The MoveIt2 Docker image uses the Space ROS docker image (*openrobotics/spaceros
 
 To build the docker image, run:
 
-```
-$ ./build.sh
+```bash
+./build.sh
 ```
 
 The build process will take about 30 minutes, depending on the host computer.
@@ -16,8 +16,8 @@ The build process will take about 30 minutes, depending on the host computer.
 
 After building the image, you can see the newly-built image by running:
 
-```
-$ docker image list
+```bash
+docker image list
 ```
 
 The output will look something like this:
@@ -33,8 +33,8 @@ The new image is named **openrobotics/moveit2:latest**.
 
 There is a run.sh script provided for convenience that will run the spaceros image in a container.
 
-```
-$ ./run.sh
+```bash
+./run.sh
 ```
 
 Upon startup, the container automatically runs the entrypoint.sh script, which sources the MoveIt2 and Space ROS environment files. You'll now be running inside the container and should see a prompt similar to this:
@@ -47,7 +47,7 @@ spaceros-user@8e73b41a4e16:~/moveit2#
 
 Run the following command to launch the MoveIt2 tutorials demo launch file:
 
-```
+```bash
 ros2 launch moveit2_tutorials demo.launch.py rviz_tutorial:=true
 ```
 
@@ -61,7 +61,7 @@ You can now following the [MoveIt2 Tutorial documentation](https://moveit.pickni
 
 To run the Move Group C++ Interface Demo, execute the following command:
 
-```
+```bash
 ros2 launch moveit2_tutorials move_group.launch.py
 ```
 

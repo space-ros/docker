@@ -3,15 +3,15 @@ Building [RTEMS Cross Compilation System (RCC)](https://www.gaisler.com/index.ph
 
 ## Usage
 To run the simulator in docker container
-```
-$ renode
+```bash
+renode
 ```
 
 > If you face GTK protocol error then exit the container, run `xhost + local:` and restart the conatiner to allow other users (including root) run programs in the current session.
 
 
 In the renode window, run
-```
+```bash
 start
 s @renode-rtems-leon3/leon3_rtems.resc
 ```
