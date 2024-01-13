@@ -4,7 +4,8 @@
 
 The goal is to create an hard real-time embedded application that runs on a Xilinx Zynq SoC FPGA which will communicate with Space-ROS.
 
-This demonstration will be on [QEMU](https://www.qemu.org), the open-source CPU and system emulator. This is for several reasons:
+This demonstration will be on [QEMU](https://www.qemu.org), the open-source CPU and system emulator.
+This is for several reasons:
  * Development cycles in QEMU are much faster and less painful than hardware.
  * Given the state of the semiconductor industry at time of writing (late 2022), it is nearly impossible to obtain Zynq development boards.
  * QEMU-based work requires no upfront hardware costs or purchasing delays
@@ -58,7 +59,8 @@ cd /path/to/zynq_rtems
 cd hello_zenoh
 ./run_zenoh_router
 ```
-This will print a bunch of startup information and then continue running silently, waiting for inbound Zenoh traffic. Leave this terminal running.
+This will print a bunch of startup information and then continue running silently, waiting for inbound Zenoh traffic.
+Leave this terminal running.
 
 In the second terminal, we'll run the Zenoh subscriber example:
 
@@ -78,7 +80,8 @@ cd hello_zenoh
 ```
 
 The terminal should print a bunch of information about the various emulated Zynq network interfaces and their routing information.
-After that, it should contact the `zenohd` instance running in the other terminal. It should print something like this:
+After that, it should contact the `zenohd` instance running in the other terminal.
+It should print something like this:
 
 ```
 Opening zenoh session...
