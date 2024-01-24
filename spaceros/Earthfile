@@ -150,6 +150,7 @@ rosdep:
       # `urdfdom_headers` is cloned from source, however rosdep can't find it.
       # It is because package.xml manifest is missing. See: https://github.com/ros/urdfdom_headers
       --skip-keys "$(tr '\n' ' ' < 'excluded-pkgs.txt') urdfdom_headers"
+  RUN rm excluded-pkgs.txt
 
   RUN sudo apt-get install --yes \
            gcc g++ cmake libgmp-dev libboost-dev libboost-filesystem-dev \
