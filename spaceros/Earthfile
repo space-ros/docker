@@ -149,7 +149,8 @@ rosdep:
       --rosdistro ${ROSDISTRO} \
       # `urdfdom_headers` is cloned from source, however rosdep can't find it.
       # It is because package.xml manifest is missing. See: https://github.com/ros/urdfdom_headers
-      --skip-keys "$(tr '\n' ' ' < 'excluded-pkgs.txt') urdfdom_headers"
+      # Additionally, IKOS must be excluded as per: https://github.com/space-ros/docker/issues/99
+      --skip-keys "$(tr '\n' ' ' < 'excluded-pkgs.txt') urdfdom_headers ikos"
   RUN rm excluded-pkgs.txt
 
   RUN sudo apt-get install --yes \
