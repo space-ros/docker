@@ -35,3 +35,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+
+# vcstool workspaces
+moveit2/src
+space_robots/src

@@ -15,3 +15,7 @@ repositories:
     type: git
     url: https://github.com/PickNikRobotics/rviz_visual_tools.git
     version: ros2
+  moveit2:
+    type: git
+    url: https://github.com/ros-planning/moveit2.git
+    version: humble
