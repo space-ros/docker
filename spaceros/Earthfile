@@ -178,6 +178,7 @@ rosdep:
         ..
   RUN make
   RUN sudo make install
+  RUN sudo ln -s /opt/ikos/bin/* /usr/local/bin/
   WORKDIR $SPACEROS_DIR
   RUN sudo rm -rf ikos/
 
