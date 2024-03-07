@@ -39,6 +39,8 @@ RUN mkdir -p /root/rtems/6
 ENV PREFIX /root/rtems/6
 ENV RTEMS_VERSION 6
 
+ENV LANG C.UTF-8
+
 RUN mkdir -p /root/rtems
 WORKDIR /root/rtems
 
@@ -77,7 +79,7 @@ RUN ./waf install
 WORKDIR /root
 RUN git clone https://github.com/eclipse-zenoh/zenoh-pico
 RUN mkdir /root/zenoh-pico/build
-RUN wget -q https://raw.githubusercontent.com/space-ros/docker/zynq_rtems_zenoh_pico/zynq_rtems/toolchain.cmake -O /root/toolchain.cmake
+COPY toolchain.cmake /root
 WORKDIR /root/zenoh-pico/build
 RUN cmake -DCMAKE_TOOLCHAIN_FILE=/root/toolchain.cmake -DBUILD_SHARED_LIBS=OFF -DBUILD_EXAMPLES=OFF -DBUILD_TOOLS=OFF -DBUILD_TESTING=OFF ..
 RUN make
