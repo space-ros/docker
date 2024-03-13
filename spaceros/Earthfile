@@ -112,9 +112,13 @@ spaceros-artifacts:
   END
 
   IF [ $SPACEROS_REPO_URL = "https://github.com/space-ros/space-ros.git" ] 
-    # run wget instead of `GIT CLONE`, because main repo's host is known + it is public 
+    # run wget instead of `GIT CLONE`, because main repo's host is known + it is public
     RUN wget https://raw.githubusercontent.com/space-ros/space-ros/${_GIT_COMMIT_HASH}/ros2.repos
     RUN wget https://raw.githubusercontent.com/space-ros/space-ros/${_GIT_COMMIT_HASH}/excluded-pkgs.txt
+    RUN mkdir colcon_ws_config
+    RUN wget https://raw.githubusercontent.com/space-ros/space-ros/${_GIT_COMMIT_HASH}/colcon_ws_config/prepare_workspace.py -P colcon_ws_config
+    RUN wget https://raw.githubusercontent.com/space-ros/space-ros/${_GIT_COMMIT_HASH}/colcon_ws_config/spaceros_inject.cmake -P colcon_ws_config
+    RUN wget https://raw.githubusercontent.com/space-ros/space-ros/${_GIT_COMMIT_HASH}/colcon_ws_config/spaceros_linters_deps.yaml -P colcon_ws_config
   ELSE
     GIT CLONE --branch ${SPACEROS_GIT_REF} ${SPACEROS_REPO_URL} .
   END
@@ -128,6 +132,7 @@ spaceros-artifacts:
   SAVE ARTIFACT ros2.repos # vcs pulled from `spaceros` repo as-is
   SAVE ARTIFACT exact.repos # `ros2.repos`, but with pinned versions (e.g. SHAs instead of branches)
   SAVE ARTIFACT excluded-pkgs.txt
+  SAVE ARTIFACT colcon_ws_config
 
 sources:
   FROM +setup
@@ -189,7 +194,9 @@ build:
 
 build-testing:
   FROM +rosdep
-  RUN colcon build --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --no-warn-unused-cli
+  COPY +spaceros-artifacts/colcon_ws_config colcon_ws_config
+  RUN python3 colcon_ws_config/prepare_workspace.py # outputs spaceros-linters.meta
+  RUN colcon build --metas ./spaceros-linters.meta --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --no-warn-unused-cli
   RUN . install/setup.sh && colcon test --retest-until-pass 2 --ctest-args -LE "(ikos|xfail)" --pytest-args -m "not xfail"
   RUN . install/setup.sh && ros2 run process_sarif make_build_archive
   COPY +spaceros-artifacts/exact.repos install/exact.repos
