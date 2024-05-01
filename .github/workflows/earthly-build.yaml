@@ -56,4 +56,4 @@ jobs:
         run: |
           echo $DOCKER_HUB_TOKEN | docker login --username osrfbot --password-stdin
           cd spaceros
-          earthly --ci --push +image --tag=$INPUT_IMAGE-TAG
+          earthly --ci --push +image --tag=${{ inputs.image-tag }}
