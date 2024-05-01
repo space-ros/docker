@@ -1,6 +1,11 @@
 name: Earthly build
 on:
   workflow_dispatch:
+    inputs:
+      image-tag:
+        description: 'Image tag for Dockerhub'
+        required: false
+        default: 'latest'
   push:
     branches: ['main']
     tags: ['*']
@@ -51,4 +56,4 @@ jobs:
         run: |
           echo $DOCKER_HUB_TOKEN | docker login --username osrfbot --password-stdin
           cd spaceros
-          earthly --ci --push +image
+          earthly --ci --push +image --tag=$INPUT_IMAGE-TAG
