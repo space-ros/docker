@@ -141,6 +141,7 @@ sources:
 workspace:
   FROM +sources
   COPY src src/
+  SAVE ARTIFACT src
 
 vcs-exact:
   COPY +spaceros-artifacts/exact.repos exact.repos
@@ -196,6 +197,7 @@ build-testing:
   COPY +spaceros-artifacts/exact.repos install/exact.repos
   SAVE ARTIFACT log/build_results_archives/build_results_*.tar.bz2 AS LOCAL log/build_results_archives/
   SAVE ARTIFACT install AS LOCAL install
+  SAVE ARTIFACT build
 
 image:
   FROM +rosdep
