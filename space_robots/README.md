@@ -8,12 +8,11 @@ This is for Curiosity Mars rover and Canadarm demos.
 
 ## Building the Demo Docker
 
-The demo image builds on top of the `spaceros` and `moveit2` images.
-To build the docker image, first build both required images, then the `space_robots` demo image:
+The demo image builds on top of the `spaceros` base image the local `moveit2` image.
+To build the docker image, first ensure the `spaceros` base image is available either by building it locally or pulling it,
+then build the `moveit2` and the `space_robots` demo image:
 
 ```bash
-cd docker/spaceros
-./build.sh
 cd ../moveit2
 ./build.sh
 cd ../space_robots
