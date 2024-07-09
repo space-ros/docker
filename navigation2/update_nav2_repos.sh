@@ -3,7 +3,7 @@
 source $SPACEROS_DIR/install/setup.bash
 
 # TODO - replace ./generate_repos.sh with file from the spaceros image as soon as the PR is merged:
-# https://github.com/space-ros/space-ros/pull/164
+# https://github.com/eholum/space-ros/pull/1
 
 ./generate_repos.sh \
     --rosdistro $ROSDISTRO \

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# TODO - remove this file from here as soon as https://github.com/space-ros/space-ros/pull/164 is merged
+# TODO - remove this file from here as soon as https://github.com/eholum/space-ros/pull/1 is merged
 
 set -e
 
