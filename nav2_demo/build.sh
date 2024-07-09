@@ -30,7 +30,7 @@ echo ""
 echo "##### Building additional ROS2 $BASE_ROSDISTRO image with Rviz2 and Nav2, for visualization and goal setting  #####"
 echo ""
 
-docker build -f Dockerfile.rviz_nav2 \
+docker build -f rviz_nav2.Dockerfile \
     --build-arg BASE_ROSDISTRO=$BASE_ROSDISTRO \
     -t $ORG/$RVIZ2_IMAGE:$TAG \
     .
