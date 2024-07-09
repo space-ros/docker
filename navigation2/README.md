@@ -53,13 +53,13 @@ To run the latest demo, see the README in the [nav2_demo](../nav2_demo/README.md
 ## Updating navigation2 packages
 The `navigation2.repos` file available in this repository provides a list of repos that are required to build the nav2 stack. ROS packages already included in the SpaceROS base image are omited from this file.
 
-To update navigation2 packages used to build the space nav2 image, run the `docker_update_repos.sh` script:
+To update navigation2 packages used to build the space nav2 image, run the `docker_update_nav2_repos.sh` script:
 
 ```
-./docker_update_repos.sh
+./docker_update_nav2_repos.sh
 ```
 
 This will update the `navigation2.repos` file with the newest versions of nav2 packages. The script resolves missing packages in base spaceros image and creates a list with their latest versions. The `navigation2.repos` file is then copied during build to the docker image with space nav2, and packages specified in the file are cloned and installed.
 
-To generate a list of required packages for any other ROS workspace (e.g. your custom workspace built on top of SpaceROS that already has some nav2 dependencies installed), consider using the `update_repos.sh` as your starting point. You may also need to clone `generate-repos.sh` script from the main spaceros repository.
+To generate a list of required packages for any other ROS workspace (e.g. your custom workspace built on top of SpaceROS that already has some nav2 dependencies installed), consider using the `update_nav2_repos.sh` as your starting point. You may also need to clone `generate-repos.sh` script from the main spaceros repository.
 
