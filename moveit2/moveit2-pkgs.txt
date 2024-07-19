@@ -21,6 +21,7 @@ object_recognition_msgs
 octomap
 ompl
 orocos_kinematics_dynamics
+py_binding_tools
 python_qt_binding
 random_numbers
 realtime_tools
