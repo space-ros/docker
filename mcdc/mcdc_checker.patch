@@ -1,0 +1,45 @@
+--- mcdc_checker_original.py	2022-11-18 15:55:35.005496767 -0800
++++ mcdc_checker.py	2022-11-18 15:56:50.437698216 -0800
+@@ -216,6 +216,12 @@
+             node_location_index - linemarker_offset
+         ].split(" ")
+ 
++
++        # iche033: added check to make sure linemarker[1] is a number
++        # because linemarker can contain values like: ['#pragma', 'GCC', ...]
++        if not linemarker[1].isdigit():
++            return self.filename, node.location.line, node.location.column
++
+         orig_line, orig_file = (
+             int(linemarker[1]) + linemarker_offset - 1,
+             linemarker[2].split('"')[1],
+@@ -297,6 +303,15 @@
+             else:
+                 self.literal_counter += 1
+                 return "UnaryExpr(literal_{})".format(self.literal_counter)
++        # iche033: moved this elif condition up otherwise script crashes when
++        # checking children[0]
++        elif len(children) == 0:
++            # Handle leaf nodes by returning their spelling
++            if node.spelling:
++                return node.spelling
++            else:
++                self.literal_counter += 1
++                return "literal_{}".format(self.literal_counter)
+         elif node.kind == clang.cindex.CursorKind.MEMBER_REF_EXPR:
+             # Handle member references such as struct->member
+             return "{}->{}".format(
+@@ -326,13 +341,6 @@
+                     return node.spelling
+                 else:
+                     return self.get_condition_spelling(children[0])
+-        elif len(children) == 0:
+-            # Handle leaf nodes by returning their spelling
+-            if node.spelling:
+-                return node.spelling
+-            else:
+-                self.literal_counter += 1
+-                return "literal_{}".format(self.literal_counter)
+         else:
+             # We encountered something which has more than two children
+             print(
