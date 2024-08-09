@@ -48,7 +48,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 # the cache won't make it into the built image but will be maintained between steps.
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt,sharing=locked \
-  sudo apt-get update -y && sudo apt-get install -y python3-rosinstall-generator
+  sudo apt-get update -y && sudo apt-get install -y python3-rosinstall-generator libgl1-mesa-glx libgl1-mesa-dri
 
 # TODO(anyone): remove demo-pkgs.txt, no packages left after exclusions
 # Generate repos file for demo dependencies, excluding packages from Space ROS core.
@@ -83,7 +83,7 @@ RUN cd mongo-cxx-driver-r3.6.7/build && cmake .. -DCMAKE_BUILD_TYPE=Release -DCM
 # Get the source for the dependencies
 # RUN vcs import src < /tmp/demo_generated_pkgs.repos
 COPY --chown=${USERNAME}:${USERNAME} demo_manual_pkgs.repos /tmp/
-RUN vcs import src < /tmp/demo_manual_pkgs.repos && /bin/bash -c 'source "${SPACEROS_DIR}/install/setup.bash"' 
+RUN vcs import src < /tmp/demo_manual_pkgs.repos && /bin/bash -c 'source "${SPACEROS_DIR}/install/setup.bash"'
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt,sharing=locked \
