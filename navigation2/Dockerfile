@@ -62,7 +62,7 @@ RUN mkdir ${SPACEROS_DIR}/src \
 
 # Generate repos file for nav2 dependencies, exclude packages from Space ROS src
 RUN rosinstall_generator \
-  --rosdistro ${ROSDISTRO} \
+  --rosdistro ${ROS_DISTRO} \
   --deps \
   --exclude-path ${SPACEROS_DIR}/src -- \
   -- $(cat ${NAVIGATION2_WS}/nav2_dep_keys.txt) \
