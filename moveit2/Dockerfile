@@ -91,9 +91,9 @@ RUN python3 -m pip install -U \
 
 # Get the MoveIt2 source code
 WORKDIR ${HOME_DIR}
-RUN sudo git clone https://github.com/ros-planning/moveit2.git -b ${ROSDISTRO} moveit2/src
+RUN sudo git clone https://github.com/ros-planning/moveit2.git -b ${ROS_DISTRO} moveit2/src
 RUN cd ${MOVEIT2_DIR}/src \
-  && sudo git clone https://github.com/ros-planning/moveit2_tutorials.git -b ${ROSDISTRO}
+  && sudo git clone https://github.com/ros-planning/moveit2_tutorials.git -b ${ROS_DISTRO}
 
 # Update the ownership of the source files (had to use sudo above to work around
 # a possible inherited 'insteadof' from the host that forces use of ssh
@@ -108,7 +108,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 COPY --chown=${USERNAME}:${USERNAME} moveit2-pkgs.txt /tmp/
 COPY --chown=${USERNAME}:${USERNAME} excluded-pkgs.txt /tmp/
 RUN rosinstall_generator \
-  --rosdistro ${ROSDISTRO} \
+  --rosdistro ${ROS_DISTRO} \
   --deps \
   --exclude-path ${SPACEROS_DIR}/src \
   --exclude $(cat /tmp/excluded-pkgs.txt) -- \
@@ -129,7 +129,7 @@ RUN sudo chown -R ${USERNAME}:${USERNAME} ${MOVEIT2_DIR}
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt,sharing=locked \
   /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash' \
- && rosdep install --from-paths ../spaceros/src src --ignore-src --rosdistro ${ROSDISTRO} -r -y --skip-keys "console_bridge generate_parameter_library fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers rmw_connextdds ros_testing rmw_connextdds rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp composition demo_nodes_py lifecycle rosidl_typesupport_fastrtps_cpp rosidl_typesupport_fastrtps_c ikos diagnostic_aggregator diagnostic_updater joy qt_gui rqt_gui rqt_gui_py"
+ && rosdep install --from-paths ../spaceros/src src --ignore-src --rosdistro ${ROS_DISTRO} -r -y --skip-keys "console_bridge generate_parameter_library fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers rmw_connextdds ros_testing rmw_connextdds rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp composition demo_nodes_py lifecycle rosidl_typesupport_fastrtps_cpp rosidl_typesupport_fastrtps_c ikos diagnostic_aggregator diagnostic_updater joy qt_gui rqt_gui rqt_gui_py"
 
 # Apply a patch to octomap_msgs to work around a build issue
 COPY --chown=${USERNAME}:${USERNAME} octomap_fix.diff ./src/octomap_msgs
