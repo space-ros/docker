@@ -57,7 +57,7 @@ docker exec -it <container-name> bash
 Make sure packages are sourced:
 
 ```bash
-source ~/spaceros/install/setup.bash
+source ${SPACEROS_DIR}/install/setup.bash
 ```
 
 ```bash
