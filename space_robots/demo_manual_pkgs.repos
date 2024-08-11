@@ -29,7 +29,7 @@ repositories:
     version: main
   ros-humble-warehouse-ros-mongo:
     type: git
-    url: https://github.com/ros-planning/warehouse_ros_mongo.git
+    url: https://github.com/moveit/warehouse_ros_mongo.git
     version: ros2
   vision_msgs:
     type: git
