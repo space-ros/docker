@@ -5,7 +5,8 @@
 #   docker
 #   an X server
 
-IMG_NAME=openrobotics/moveit2
+#IMG_NAME=openrobotics/moveit2
+IMG_NAME=moveit/moveit2
 
 # Replace `/` with `_` to comply with docker container naming
 # And append `_runtime`

@@ -20,6 +20,7 @@
 #   VERSION     - The version of Space ROS (default: "preview")
 
 FROM osrf/space-ros:latest
+#FROM moveit/moveit2:humble-release
 
 # Define arguments used in the metadata definition
 ARG VCS_REF
@@ -44,6 +45,7 @@ RUN mkdir ${SPACEROS_DIR}/src \
 
 # Define key locations
 ENV MOVEIT2_DIR=${HOME_DIR}/moveit2
+ENV ROSDISTRO=humble
 
 # Make sure the latest versions of packages are installed
 # Using Docker BuildKit cache mounts for /var/cache/apt and /var/lib/apt ensures that
@@ -125,11 +127,12 @@ RUN vcs import src < /tmp/moveit2_tutorials.repos
 # a possible inherited 'insteadof' from the host that forces use of ssh
 RUN sudo chown -R ${USERNAME}:${USERNAME} ${MOVEIT2_DIR}
 
+
 # Install system dependencies
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt,sharing=locked \
   /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash' \
- && rosdep install --from-paths ../spaceros/src src --ignore-src --rosdistro ${ROSDISTRO} -r -y --skip-keys "console_bridge generate_parameter_library fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers rmw_connextdds ros_testing rmw_connextdds rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp composition demo_nodes_py lifecycle rosidl_typesupport_fastrtps_cpp rosidl_typesupport_fastrtps_c ikos diagnostic_aggregator diagnostic_updater joy qt_gui rqt_gui rqt_gui_py"
+ && rosdep install --from-paths ${SPACEROS_DIR}/src src --ignore-src --rosdistro ${ROSDISTRO} -r -y --skip-keys "console_bridge generate_parameter_library fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers rmw_connextdds ros_testing rmw_connextdds rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp composition demo_nodes_py lifecycle rosidl_typesupport_fastrtps_cpp rosidl_typesupport_fastrtps_c ikos diagnostic_aggregator diagnostic_updater joy qt_gui rqt_gui rqt_gui_py"
 
 # Apply a patch to octomap_msgs to work around a build issue
 COPY --chown=${USERNAME}:${USERNAME} octomap_fix.diff ./src/octomap_msgs
