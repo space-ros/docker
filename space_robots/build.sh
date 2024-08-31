@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-ORG=openrobotics
+#ORG=openrobotics
+ORG=osrf
 IMAGE=space_robots_demo
+#IMAGE=space-ros
 TAG=latest
 
 VCS_REF=""

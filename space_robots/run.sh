@@ -5,7 +5,8 @@
 #   docker
 #   an X server
 
-IMG_NAME=openrobotics/space_robots_demo
+#IMG_NAME=openrobotics/space_robots_demo
+IMG_NAME=osrf/space_robots_demo
 
 # Replace `/` with `_` to comply with docker container naming
 # And append `_runtime`
