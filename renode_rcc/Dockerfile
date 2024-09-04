@@ -1,6 +1,6 @@
 FROM ubuntu:20.04
 WORKDIR /root
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Using Docker BuildKit cache mounts for /var/cache/apt and /var/lib/apt ensures that
 # the cache won't make it into the built image but will be maintained between steps.
@@ -36,9 +36,9 @@ WORKDIR /root/renode-rtems-leon3
 RUN ./build-rtems.sh
 RUN ./build-prom.sh
 RUN mv rcc-1.3.0-gcc/ /opt/renode/
-RUN mv grlib-gpl-2021.2-b4267 /opt/renode/
+RUN mv grlib-gpl-2024.1-b4291 /opt/renode/
 
-ENV PATH $PATH:/opt/renode/rcc-1.3.0-gcc/bin
+ENV PATH=$PATH:/opt/renode/rcc-1.3.0-gcc/bin
 
 WORKDIR /root
 COPY config .config/renode/
