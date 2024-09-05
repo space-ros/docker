@@ -10,7 +10,8 @@ IMG_NAME=osrf/space_robots_demo
 
 # Replace `/` with `_` to comply with docker container naming
 # And append `_runtime`
-CONTAINER_NAME="$(tr '/' '_' <<< "$IMG_NAME")"
+CONTAINER_NAME="my_test_2"
+#"$(tr '/' '_' <<< "$IMG_NAME")"
 
 # Start the container
 docker run --rm -it --name $CONTAINER_NAME  --network host \

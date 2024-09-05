@@ -112,6 +112,9 @@ RUN sudo apt-get update && sudo apt-get install -y curl gnupg2 lsb-release \
   && sudo sh -c 'echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros2-latest.list' \
   && sudo apt-get update
 
+RUN sudo apt-get update && sudo apt-get install -y vim python3-pip
+
+
 ENV ROSDISTRO=humble
 RUN rosdep install --from-paths src --ignore-src -r -y --rosdistro ${ROSDISTRO}
 
@@ -128,6 +131,19 @@ RUN echo "USERNAME is set to: $USERNAME"
 
 # Add the user to the render group so that the user can access /dev/dri/renderD128
 RUN sudo usermod -aG render $USERNAME
+
+# 以下の行を追加 (変更箇所開始)
+# Create /demo_ws/ directory and copy new files
+RUN mkdir -p /demos_ws/
+COPY generate_src.py /demos_ws/
+COPY sample_code_by_gpt.py /demos_ws/
+COPY config_dummy.json /demos_ws/
+COPY prompt.txt /demos_ws/ 
+
+# Grant execute permissions to Python scripts (if needed)
+RUN chmod +x /demos_ws/generate_src.py /demos_ws/sample_code_by_gpt.py
+# 変更箇所終了
+
 
 # Setup the entrypoint
 COPY ./entrypoint.sh /
