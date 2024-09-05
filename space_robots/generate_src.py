@@ -63,7 +63,7 @@ def main():
     config = load_config('config.json')
     client = OpenAI(api_key=config['openai_api_key'])
     
-    pre_prompt = load_prompt("prompt_2.txt")
+    pre_prompt = load_prompt("prompt.txt")
     print("Pre-prompt loaded successfully")
 
     print("Please input command like 'Go forward 10 seconds' and push enter-key")
