@@ -42,6 +42,7 @@ RUN mkdir ${SPACEROS_DIR}/src \
 # Define a few key variables
 ENV DEMO_DIR=${HOME_DIR}/demos_ws
 ENV GZ_VERSION garden
+ENV GZ_PARTITION spaceros
 
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
