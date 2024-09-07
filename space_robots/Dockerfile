@@ -85,13 +85,9 @@ RUN cd mongo-cxx-driver-r3.6.7/build && cmake .. -DCMAKE_BUILD_TYPE=Release -DCM
 
 # Get the source for the dependencies
 # RUN vcs import src < /tmp/demo_generated_pkgs.repos
-#RUN echo "SPACEROS_DIR is set to: ${SPACEROS_DIR}"
-#RUN if [ -z "${SPACEROS_DIR}" ]; then echo "SPACEROS_DIR is empty"; else echo "SPACEROS_DIR is set to: ${SPACEROS_DIR}"; fi
 ENV SPACEROS_DIR=/root/ws_moveit
 ENV MOVEIT2_DIR=${SPACEROS_DIR}
-#ENV ROSDISTRO=""
 
-#RUN ls -l ${SPACEROS_DIR}  # この行を追加して、ディレクトリの内容を確認
 RUN echo "SPACEROS_DIR is set to: ${SPACEROS_DIR}"
 
 COPY --chown=${USERNAME}:${USERNAME} demo_manual_pkgs.repos /tmp/
@@ -123,16 +119,13 @@ RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash && source ${MOVEIT2_
   && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
 
 ENV USERNAME=root 
- # ここでUSERNAMEを設定
 
-# 確認用のデバッグコマンド
 RUN echo "USERNAME is set to: $USERNAME"
 
 
 # Add the user to the render group so that the user can access /dev/dri/renderD128
 RUN sudo usermod -aG render $USERNAME
 
-# 以下の行を追加 (変更箇所開始)
 # Create /demo_ws/ directory and copy new files
 RUN mkdir -p /demos_ws/
 COPY generate_src.py /demos_ws/
@@ -145,8 +138,6 @@ COPY prompt.txt /demos_ws/
 RUN chmod +x /demos_ws/generate_src.py /demos_ws/sample_code_by_gpt.py /demos_ws/sample_code_turn_left_by_gpt.py
 
 RUN pip install openai
-# 変更箇所終了
-
 
 # Setup the entrypoint
 COPY ./entrypoint.sh /
