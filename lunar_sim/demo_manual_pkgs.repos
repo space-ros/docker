@@ -16,3 +16,8 @@ repositories:
     url: https://github.com/swri-robotics/gps_umd.git
     path: gps_msgs
     version: 113782d
+
+  leo_common-ros2:
+    type: git
+    url: https://github.com/LeoRover/leo_common-ros2.git
+    version: humble

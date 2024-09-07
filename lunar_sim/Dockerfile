@@ -41,8 +41,8 @@ RUN mkdir ${SPACEROS_DIR}/src \
 
 # Define a few key variables
 ENV DEMO_DIR=${HOME_DIR}/demos_ws
-ENV GZ_VERSION garden
-ENV GZ_PARTITION spaceros
+ENV GZ_VERSION=garden
+ENV GZ_PARTITION=spaceros
 
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
@@ -75,6 +75,10 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   python3-setuptools \
   python3-vcstool \
   wget
+
+RUN sudo add-apt-repository ppa:kisak/kisak-mesa
+
+RUN sudo apt install xterm -y
 
 # Get rosinstall_generator
 # Using Docker BuildKit cache mounts for /var/cache/apt and /var/lib/apt ensures that
