@@ -137,11 +137,14 @@ RUN sudo usermod -aG render $USERNAME
 RUN mkdir -p /demos_ws/
 COPY generate_src.py /demos_ws/
 COPY sample_code_by_gpt.py /demos_ws/
-COPY config_dummy.json /demos_ws/
+COPY sample_code_turn_left_by_gpt.py /demos_ws/
+COPY config.json /demos_ws/
 COPY prompt.txt /demos_ws/ 
 
 # Grant execute permissions to Python scripts (if needed)
-RUN chmod +x /demos_ws/generate_src.py /demos_ws/sample_code_by_gpt.py
+RUN chmod +x /demos_ws/generate_src.py /demos_ws/sample_code_by_gpt.py /demos_ws/sample_code_turn_left_by_gpt.py
+
+RUN pip install openai
 # 変更箇所終了
 
 
