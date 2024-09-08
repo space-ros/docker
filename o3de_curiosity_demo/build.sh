@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ORG=openrobotics
-IMAGE=space_robots_demo
+IMAGE=o3de_curiosity_docker
 TAG=latest
 
 VCS_REF=""
@@ -11,7 +11,7 @@ VERSION=preview
 set -eo pipefail
 
 echo ""
-echo "##### Building Space ROS Demo Docker Image #####"
+echo "##### Building O3DE + Space ROS Demo Docker Image #####"
 echo ""
 
 docker build -t $ORG/$IMAGE:$TAG \
