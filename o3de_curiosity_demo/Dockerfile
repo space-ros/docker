@@ -47,9 +47,20 @@ ARG DEBIAN_FRONTEND=noninteractive
 # Get rosinstall_generator
 # Using Docker BuildKit cache mounts for /var/cache/apt and /var/lib/apt ensures that
 # the cache won't make it into the built image but will be maintained between steps.
+# RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+#   --mount=type=cache,target=/var/lib/apt,sharing=locked \
+#   sudo apt-get update -y && sudo apt-get install -y python3-rosinstall-generator
+
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt,sharing=locked \
-  sudo apt-get update -y && sudo apt-get install -y python3-rosinstall-generator
+  sudo apt-get update -y && sudo apt-get install -y \
+  python3-rosinstall-generator \
+  libboost-python-dev build-essential cmake libboost-all-dev libois-dev \
+  libzzip-dev libfreeimage-dev libfreetype6-dev libx11-dev libxt-dev libxaw7-dev \
+  libsdl2-dev libpugixml-dev libglew-dev qtbase5-dev libspdlog-dev libfmt-dev \
+  libignition-gazebo6-dev libssl-dev devscripts debian-keyring fakeroot debhelper \
+  libboost-dev libsasl2-dev libicu-dev libzstd-dev doxygen libtinyxml-dev \
+  libtinyxml2-dev python3-pyqt5 lark
 
 RUN mkdir -p ${DEMO_DIR}/src
 WORKDIR ${DEMO_DIR}
@@ -69,7 +80,7 @@ RUN cd mongo-cxx-driver-r3.6.7/build && cmake .. -DCMAKE_BUILD_TYPE=Release -DCM
 
 # Get the source for the dependencies
 # RUN vcs import src < /tmp/demo_generated_pkgs.repos
-COPY --chown=${USERNAME}:${USERNAME} demo_manual_pkgs.repos /tmp/
+COPY --chown=${USERNAME}:${USERNAME} o3de-robot-sim.repos /tmp/
 RUN vcs import src < /tmp/o3de-robot-sim.repos && /bin/bash -c 'source "${SPACEROS_DIR}/install/setup.bash"' 
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
