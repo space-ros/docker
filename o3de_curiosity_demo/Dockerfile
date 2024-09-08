@@ -60,7 +60,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   libsdl2-dev libpugixml-dev libglew-dev qtbase5-dev libspdlog-dev libfmt-dev \
   libignition-gazebo6-dev libssl-dev devscripts debian-keyring fakeroot debhelper \
   libboost-dev libsasl2-dev libicu-dev libzstd-dev doxygen libtinyxml-dev \
-  libtinyxml2-dev python3-pyqt5 lark
+  libtinyxml2-dev python3-pyqt5
 
 RUN mkdir -p ${DEMO_DIR}/src
 WORKDIR ${DEMO_DIR}
