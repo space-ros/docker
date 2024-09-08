@@ -55,9 +55,6 @@ cd o3de_curiosity_demo
 ./build.sh
 ```
 
-* Checklist
-  * Install 
-
 
 * Install rosintall-generator: ```sudo apt-get update -y && sudo apt-get install -y python3-rosinstall-generator```
 

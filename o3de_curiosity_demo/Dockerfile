@@ -40,6 +40,9 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 ENV DEMO_DIR=${HOME_DIR}/demos_ws
 ENV IGNITION_VERSION fortress
 ENV GZ_VERSION fortress
+ENV PROJECT_NAME=RobotSim
+ENV O3DE_DIR=${HOME_DIR}/O3DE
+ENV 03DE_EXTRAS=${HOME_DIR}/az-o3de-extras
 
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
@@ -95,7 +98,7 @@ RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash && source ${MOVEIT2_
   && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
 
 # Setup enviornment variables
-# ENV PROJECT_NAME=RobotSim
+
 
 # Install Open 3D Engine
 
