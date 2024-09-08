@@ -42,11 +42,31 @@ docker pull osrf/space-ros
 
 * Buld moveit2 docker image
 
-uses the moveit2 docker image (*openrobotics/moveit2:latest*) as its base image.
-Build instructions for that image can be found in [this README](../moveit2/README.md).
+```bash
+cd moveit2
+./build.sh
+```
+
+## Build the o3de_docker image
+
+```bash
+cd ..
+cd o3de_curiosity_demo
+./build.sh
+```
+
+* Checklist
+  * Install 
 
 
-along with the demos source code, then builds the Space ROS Space Robots Demo.
+* Install rosintall-generator: ```sudo apt-get update -y && sudo apt-get install -y python3-rosinstall-generator```
 
-This is for Curiosity Mars rover and Canadarm demos.
+* Install the lark library: ```pip3 install lark```
+
+* Clone repositories into ```src``` folder: ```vcs import src < space-ros.repos```
+
+* Clone simulation related packages: ```vcs import src < space-robot-sim.repos```
+
+* Install all dependencies ```rosdep update && rosdep install --from-paths src --ignore-src -r -y --rosdistro humble --skip-keys urdfom_headers ikos```
+
 

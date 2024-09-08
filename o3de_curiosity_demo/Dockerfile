@@ -1,4 +1,4 @@
-# Copyright 2021 Open Source Robotics Foundation, Inc.
+# Copyright 2024 Azmyin Md. Kamal
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# A Docker configuration script to build the Space ROS image.
+# A Docker configuration script to build the o3de_curiosit_docker image that showcases Open 3D Engine
+# in simulating a Curiositry rover traversing through a test ground inspired by the NASA JPL Mars Yard
 #
 # The script provides the following build arguments:
 #
@@ -28,11 +29,11 @@ ARG VERSION="preview"
 # Specify the docker image metadata
 LABEL org.label-schema.schema-version="1.0"
 LABEL org.label-schema.name="Curiosity Rover"
-LABEL org.label-schema.description="Curiosity rover demo on the Space ROS platform"
-LABEL org.label-schema.vendor="Open Robotics"
+LABEL org.label-schema.description="Curiosity rover demo on a new test enviornment on the Space ROS platform and Open 3D Engine"
+LABEL org.label-schema.vendor="Nasa Space ROS Sim Summer Spring Challenge 2024"
 LABEL org.label-schema.version=${VERSION}
 LABEL org.label-schema.url="https://github.com/space-ros"
-LABEL org.label-schema.vcs-url="https://github.com/space-ros/docker"
+LABEL org.label-schema.vcs-url="https://github.com/Mechazo11/space-ros-docker"
 LABEL org.label-schema.vcs-ref=${VCS_REF}
 
 # Define a few key variables
