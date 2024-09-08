@@ -28,7 +28,7 @@ ARG VERSION="preview"
 
 # Specify the docker image metadata
 LABEL org.label-schema.schema-version="1.0"
-LABEL org.label-schema.name="Curiosity Rover"
+LABEL org.label-schema.name="O3DE Curiosity Rover"
 LABEL org.label-schema.description="Curiosity rover demo on a new test enviornment on the Space ROS platform and Open 3D Engine"
 LABEL org.label-schema.vendor="Nasa Space ROS Sim Summer Spring Challenge 2024"
 LABEL org.label-schema.version=${VERSION}
@@ -51,22 +51,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt,sharing=locked \
   sudo apt-get update -y && sudo apt-get install -y python3-rosinstall-generator
 
-# TODO(anyone): remove demo-pkgs.txt, no packages left after exclusions
-# Generate repos file for demo dependencies, excluding packages from Space ROS core.
-# COPY --chown=${USERNAME}:${USERNAME} demo-pkgs.txt /tmp/
-# COPY --chown=${USERNAME}:${USERNAME} excluded-pkgs.txt /tmp/
-# RUN rosinstall_generator \
-#   --rosdistro ${ROSDISTRO} \
-#   --deps \
-#   --exclude-path ${SPACEROS_DIR}/src \
-#   --exclude-path ${MOVEIT2_DIR}/src \
-#   --exclude $(cat /tmp/excluded-pkgs.txt) -- \
-#   -- $(cat /tmp/demo-pkgs.txt) \
-#   > /tmp/demo_generated_pkgs.repos
-
 RUN mkdir -p ${DEMO_DIR}/src
 WORKDIR ${DEMO_DIR}
-
 
 # Install libmongoc for development
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
@@ -84,7 +70,7 @@ RUN cd mongo-cxx-driver-r3.6.7/build && cmake .. -DCMAKE_BUILD_TYPE=Release -DCM
 # Get the source for the dependencies
 # RUN vcs import src < /tmp/demo_generated_pkgs.repos
 COPY --chown=${USERNAME}:${USERNAME} demo_manual_pkgs.repos /tmp/
-RUN vcs import src < /tmp/demo_manual_pkgs.repos && /bin/bash -c 'source "${SPACEROS_DIR}/install/setup.bash"' 
+RUN vcs import src < /tmp/o3de-robot-sim.repos && /bin/bash -c 'source "${SPACEROS_DIR}/install/setup.bash"' 
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt,sharing=locked \
@@ -93,14 +79,27 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 && /bin/bash -c 'source "${MOVEIT2_DIR}/install/setup.bash"' \
 && rosdep install --from-paths src --ignore-src -r -y --rosdistro ${ROSDISTRO}
 
-# Build the demo
+# Build the demo_ws
 RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash && source ${MOVEIT2_DIR}/install/setup.bash \
   && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
 
-# Add the user to the render group so that the user can access /dev/dri/renderD128
-RUN sudo usermod -aG render $USERNAME
+# Setup enviornment variables
+# ENV PROJECT_NAME=RobotSim
 
-# Setup the entrypoint
-COPY ./entrypoint.sh /
-ENTRYPOINT ["/entrypoint.sh"]
-CMD ["bash"]
+# Install Open 3D Engine
+
+
+# Register Engine
+
+
+# Create O3DE/Projects and O3DE/Gems directory
+
+# Git clone RobotSim, NasaMarsRoverGem and MarsYardGem
+
+# # Add the user to the render group so that the user can access /dev/dri/renderD128
+# RUN sudo usermod -aG render $USERNAME
+
+# # Setup the entrypoint
+# COPY ./entrypoint.sh /
+# ENTRYPOINT ["/entrypoint.sh"]
+# CMD ["bash"]
