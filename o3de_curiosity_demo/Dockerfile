@@ -43,13 +43,15 @@ ENV DEMO_DIR=${HOME_DIR}/demos_ws
 ENV IGNITION_VERSION fortress
 ENV GZ_VERSION fortress
 ENV PROJECT_NAME=RobotSim
-ENV O3DE_ENGINE=${HOME}/o3de
+ENV O3DE_ENGINE=${HOME_DIR}/o3de
 ENV O3DE_DIR=${HOME_DIR}/O3DE
 ENV O3DE_EXTRAS=${HOME_DIR}/o3de-extras
 ENV PROJECT_PATH=${O3DE_DIR}/Projects/$PROJECT_NAME
 
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Etc/UTC
 
 ####  Install DEMO_WS   ####
 
@@ -58,14 +60,74 @@ ARG DEBIAN_FRONTEND=noninteractive
 # the cache won't make it into the built image but will be maintained between steps.
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt,sharing=locked \
-  sudo apt-get update -y && sudo apt-get install -y \
+  sudo apt-get update -y && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   python3-rosinstall-generator \
   libboost-python-dev build-essential cmake libboost-all-dev libois-dev \
   libzzip-dev libfreeimage-dev libfreetype6-dev libx11-dev libxt-dev libxaw7-dev \
   libsdl2-dev libpugixml-dev libglew-dev qtbase5-dev libspdlog-dev libfmt-dev \
   libignition-gazebo6-dev libssl-dev devscripts debian-keyring fakeroot debhelper \
   libboost-dev libsasl2-dev libicu-dev libzstd-dev doxygen libtinyxml-dev \
-  libtinyxml2-dev python3-pyqt5
+  libtinyxml2-dev python3-pyqt5 tzdata locales keyboard-configuration
+
+# RUN apt-get install -y tzdata
+# RUN apt-get install -y locales
+# RUN apt-get install -y keyboard-configuration
+
+RUN sudo sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
+    && sudo dpkg-reconfigure --frontend=noninteractive locales \
+    && sudo update-locale LANG=en_US.UTF-8
+
+# RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
+# && dpkg-reconfigure --frontend=noninteractive locales \
+# && update-locale LANG=en_US.UTF-8
+
+ENV LANG=en_US.UTF-8
+
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt,sharing=locked \
+  sudo apt-get update -y && sudo apt-get install -y \
+  bc \
+  bind9-utils \
+  binutils \
+  ca-certificates \
+  clang \
+  cmake \
+  file \
+  firewalld \
+  git \
+  git-lfs \
+  jq \
+  kbd \
+  kmod \
+  less \
+  lsb-release \
+  libglu1-mesa-dev \
+  libxcb-xinerama0 \
+  libfontconfig1-dev \
+  libcurl4-openssl-dev \
+  libnvidia-gl-470 \
+  libssl-dev \
+  libxcb-xkb-dev \
+  libxkbcommon-x11-dev \
+  libxkbcommon-dev \
+  libxcb-xfixes0-dev \
+  libxcb-xinput-dev \
+  libxcb-xinput0 \
+  libpcre2-16-0 \
+  lsof \
+  net-tools \
+  ninja-build \
+  pciutils \
+  python3-pip \
+  software-properties-common \
+  sudo \
+  tar \
+  unzip \
+  vim \
+  wget \
+  xz-utils
+  # && rm -rf /var/lib/apt/lists/* #  TODO need to figure out how to use this correctly
+
 
 RUN mkdir -p ${DEMO_DIR}/src
 WORKDIR ${DEMO_DIR}
@@ -114,23 +176,16 @@ WORKDIR ${O3DE_DIR}/Gems
 RUN git clone --branch nasa_submission https://github.com/Mechazo11/NasaCuriosityRoverGem.git
 RUN git clone --branch nasa_submission https://github.com/Mechazo11/MarsYardGem.git
 
+## Symlink clang version to non-versioned clang and set cc to clang
+# RUN update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100 \
+#     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 100
+
 ####  Install Open 3D Engine   ####  
 
-# Setup time zone and locale data (necessary for SSL and HTTPS packages)
-RUN apt-get update && apt-get -y \
-    install \
-    tzdata \
-    locales \
-    keyboard-configuration \
-    && rm -rf /var/lib/apt/lists/*
 
-RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
-    && dpkg-reconfigure --frontend=noninteractive locales \
-    && update-locale LANG=en_US.UTF-8
-
-ENV LANG=en_US.UTF-8
-
-RUN apt-get update && apt-get install -y \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    sudo apt-get update -y && sudo apt-get install -y \
     bc \
     bind9-utils \
     binutils \
@@ -170,12 +225,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     vim \
     wget \
-    xz-utils \
-    && rm -rf /var/lib/apt/lists/*
-
-## Symlink clang version to non-versioned clang and set cc to clang
-RUN update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100 \
-    && update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 100
+    xz-utils
+    # && rm -rf /var/lib/apt/lists/* #  TODO need to figure out how to use this correctly
 
 # Pull latest commit from development and build o3de. Note this does't build the whole engine
 WORKDIR ${HOME_DIR}
@@ -195,12 +246,15 @@ RUN git clone https://github.com/o3de/o3de-extras.git \
     && git lfs install \
     && git lfs pull
 
-# Register engine
+
 WORKDIR ${O3DE_ENGINE}
+
 # Register RobotSim with this engine
 RUN ${O3DE_ENGINE}/scripts/o3de.sh register --this-engine 
+
 # Register RobotSim project
 RUN {O3DE_ENGINE}/scripts/o3de.sh register --project-path ${O3DE_DIR}/Projects/${PROJECT_NAME}
+
 # Register ROS 2 Gem, Husarion robot, Curiosity rover and Mars Yard gem
 RUN ${O3DE_ENGINE}/scripts/o3de.sh register --gem-path ${O3DE_EXTRAS}/Gems/ROS2 \
     && ${O3DE_ENGINE}/scripts/o3de.sh register --gem-path ${O3DE_EXTRAS}/Gems/RosRobotSample \
@@ -222,10 +276,11 @@ RUN cmake -B build/linux -G "Ninja Multi-Config" -DLY_DISABLE_TEST_MODULES=ON -D
 # Activate Cyclone DDS
 ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp 
 
-# # Add the user to the render group so that the user can access /dev/dri/renderD128
-# RUN sudo usermod -aG render $USERNAME
+# Add the user to the render group so that the user can access /dev/dri/renderD128
+# /dev/dri/renderD128 gives access to hardware-accelerated rendering tool such as GPU
+RUN sudo usermod -aG render $USERNAME
 
-# # Setup the entrypoint
-# COPY ./entrypoint.sh /
-# ENTRYPOINT ["/entrypoint.sh"]
-# CMD ["bash"]
+# Setup the entrypoint
+COPY ./entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["bash"]
