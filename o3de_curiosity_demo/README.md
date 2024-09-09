@@ -1,3 +1,5 @@
+[![Apache License, Version 2.0][apache_shield]][apache]
+
 # Integrating Open 3D Engine with Space ROS for an Accurate Physics Simulation of the Curiosity Rover: A Case Study
 
 This docker image is part of a submission to the NASA Space ROS Sim Summer Spring Challenge 2024.
@@ -55,15 +57,8 @@ cd o3de_curiosity_demo
 ./build.sh
 ```
 
+## Docker
 
-* Install rosintall-generator: ```sudo apt-get update -y && sudo apt-get install -y python3-rosinstall-generator```
-
-* Install the lark library: ```pip3 install lark```
-
-* Clone repositories into ```src``` folder: ```vcs import src < space-ros.repos```
-
-* Clone simulation related packages: ```vcs import src < space-robot-sim.repos```
-
-* Install all dependencies ```rosdep update && rosdep install --from-paths src --ignore-src -r -y --rosdistro humble --skip-keys urdfom_headers ikos```
-
-
+## Misc.
+[apache]: https://opensource.org/licenses/Apache-2.0
+[apache_shield]: https://img.shields.io/badge/License-Apache_2.0-blue.svg

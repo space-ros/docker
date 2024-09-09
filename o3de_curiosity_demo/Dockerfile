@@ -14,6 +14,8 @@
 #
 # A Docker configuration script to build the o3de_curiosit_docker image that showcases Open 3D Engine
 # in simulating a Curiositry rover traversing through a test ground inspired by the NASA JPL Mars Yard
+# O3DE docker file based on https://github.com/husarion/o3de-docker/blob/main/Dockerfile
+#
 #
 # The script provides the following build arguments:
 #
@@ -36,24 +38,24 @@ LABEL org.label-schema.url="https://github.com/space-ros"
 LABEL org.label-schema.vcs-url="https://github.com/Mechazo11/space-ros-docker"
 LABEL org.label-schema.vcs-ref=${VCS_REF}
 
-# Define a few key variables
+# Define a key enviornment variables
 ENV DEMO_DIR=${HOME_DIR}/demos_ws
 ENV IGNITION_VERSION fortress
 ENV GZ_VERSION fortress
 ENV PROJECT_NAME=RobotSim
+ENV O3DE_ENGINE=${HOME}/o3de
 ENV O3DE_DIR=${HOME_DIR}/O3DE
-ENV 03DE_EXTRAS=${HOME_DIR}/az-o3de-extras
+ENV O3DE_EXTRAS=${HOME_DIR}/o3de-extras
+ENV PROJECT_PATH=${O3DE_DIR}/Projects/$PROJECT_NAME
 
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
 
+####  Install DEMO_WS   ####
+
 # Get rosinstall_generator
 # Using Docker BuildKit cache mounts for /var/cache/apt and /var/lib/apt ensures that
 # the cache won't make it into the built image but will be maintained between steps.
-# RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-#   --mount=type=cache,target=/var/lib/apt,sharing=locked \
-#   sudo apt-get update -y && sudo apt-get install -y python3-rosinstall-generator
-
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt,sharing=locked \
   sudo apt-get update -y && sudo apt-get install -y \
@@ -97,18 +99,128 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash && source ${MOVEIT2_DIR}/install/setup.bash \
   && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
 
-# Setup enviornment variables
-
-
-# Install Open 3D Engine
-
-
-# Register Engine
-
-
 # Create O3DE/Projects and O3DE/Gems directory
+RUN if [ -d "${O3DE_DIR}/Projects" ]; then rm -rf ${O3DE_DIR}/Gems; fi
+RUN mkdir -p ${O3DE_DIR}/Projects
+
+RUN if [ -d "${O3DE_DIR}/Gems" ]; then rm -rf ${O3DE_DIR}/Gems; fi
+RUN mkdir -p ${O3DE_DIR}/Gems
 
 # Git clone RobotSim, NasaMarsRoverGem and MarsYardGem
+WORKDIR ${O3DE_DIR}/Projects
+RUN git clone --branch nasa_submission https://github.com/Mechazo11/RobotSim.git
+
+WORKDIR ${O3DE_DIR}/Gems
+RUN git clone --branch nasa_submission https://github.com/Mechazo11/NasaCuriosityRoverGem.git
+RUN git clone --branch nasa_submission https://github.com/Mechazo11/MarsYardGem.git
+
+####  Install Open 3D Engine   ####  
+
+# Setup time zone and locale data (necessary for SSL and HTTPS packages)
+RUN apt-get update && apt-get -y \
+    install \
+    tzdata \
+    locales \
+    keyboard-configuration \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
+    && dpkg-reconfigure --frontend=noninteractive locales \
+    && update-locale LANG=en_US.UTF-8
+
+ENV LANG=en_US.UTF-8
+
+RUN apt-get update && apt-get install -y \
+    bc \
+    bind9-utils \
+    binutils \
+    ca-certificates \
+    clang \
+    cmake \
+    file \
+    firewalld \
+    git \
+    git-lfs \
+    jq \
+    kbd \
+    kmod \
+    less \
+    lsb-release \
+    libglu1-mesa-dev \
+    libxcb-xinerama0 \
+    libfontconfig1-dev \
+    libcurl4-openssl-dev \
+    libnvidia-gl-470 \
+    libssl-dev \
+    libxcb-xkb-dev \
+    libxkbcommon-x11-dev \
+    libxkbcommon-dev \
+    libxcb-xfixes0-dev \
+    libxcb-xinput-dev \
+    libxcb-xinput0 \
+    libpcre2-16-0 \
+    lsof \
+    net-tools \
+    ninja-build \
+    pciutils \
+    python3-pip \
+    software-properties-common \
+    sudo \
+    tar \
+    unzip \
+    vim \
+    wget \
+    xz-utils \
+    && rm -rf /var/lib/apt/lists/*
+
+## Symlink clang version to non-versioned clang and set cc to clang
+RUN update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100 \
+    && update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 100
+
+# Pull latest commit from development and build o3de. Note this does't build the whole engine
+WORKDIR ${HOME_DIR}
+
+# Install o3de engine (automatically pulls last commit from "development" branch)
+RUN git clone https://github.com/o3de/o3de.git \
+    && cd o3de \
+    && git lfs install \
+    && git lfs pull \
+    && python/get_python.sh
+
+# Install o3de-extras (automatically pulls last commit from "development" branch)
+# Contains ROS 2 Gem and other relevant assets
+WORKDIR ${HOME_DIR}
+RUN git clone https://github.com/o3de/o3de-extras.git \
+    && cd o3de-extras \
+    && git lfs install \
+    && git lfs pull
+
+# Register engine
+WORKDIR ${O3DE_ENGINE}
+# Register RobotSim with this engine
+RUN ${O3DE_ENGINE}/scripts/o3de.sh register --this-engine 
+# Register RobotSim project
+RUN {O3DE_ENGINE}/scripts/o3de.sh register --project-path ${O3DE_DIR}/Projects/${PROJECT_NAME}
+# Register ROS 2 Gem, Husarion robot, Curiosity rover and Mars Yard gem
+RUN ${O3DE_ENGINE}/scripts/o3de.sh register --gem-path ${O3DE_EXTRAS}/Gems/ROS2 \
+    && ${O3DE_ENGINE}/scripts/o3de.sh register --gem-path ${O3DE_EXTRAS}/Gems/RosRobotSample \
+    && ${O3DE_ENGINE}/scripts/o3de.sh register --gem-path ${O3DE_DIR}/Gems/NasaCuriosityRoverGem \
+    && ${O3DE_ENGINE}/scripts/o3de.sh register --gem-path ${O3DE_DIR}/Gems/MarsYardGem
+
+# Source space_ros and movit2 workspaces
+RUN /bin/bash -c 'source "${SPACEROS_DIR}/install/setup.bash"' \
+    && /bin/bash -c 'source "${MOVEIT2_DIR}/install/setup.bash"'
+
+# Move to project directory
+WORKDIR ${PROJECT_PATH}
+# Run cmake and build project (Warning takes about 10-15 mins)
+
+# Build project
+RUN cmake -B build/linux -G "Ninja Multi-Config" -DLY_DISABLE_TEST_MODULES=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLY_STRIP_DEBUG_SYMBOLS=ON -DAZ_USE_PHYSX5:BOOL=ON \
+    && cmake --build build/linux --config profile --target ${PROJECT_NAME} Editor ${PROJECT_NAME}.Assets
+
+# Activate Cyclone DDS
+ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp 
 
 # # Add the user to the render group so that the user can access /dev/dri/renderD128
 # RUN sudo usermod -aG render $USERNAME
