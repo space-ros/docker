@@ -1,4 +1,8 @@
 repositories:
+  demos:
+    type: git
+    url: https://github.com/element-robotics/demos.git
+    version: feature/lunarsim
   actuator_msgs:
     type: git
     url: https://github.com/rudislabs/actuator_msgs.git

@@ -143,9 +143,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 && /bin/bash -c 'source "${SPACEROS_DIR}/install/setup.bash"' \
 && rosdep install --from-paths src --ignore-src -r -y --rosdistro ${ROSDISTRO}
 
-# Copy the demo source code
-COPY --chown=${USERNAME}:${USERNAME} space-ros-demos-er src/
-
 # Build the demo
 RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash \
   && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release --packages-skip canadarm canadarm_moveit_config mars_rover space_ros_memory_allocation_demo'
