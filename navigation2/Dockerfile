@@ -46,7 +46,7 @@ ENV NAV2_DEPS_WS=${HOME_DIR}/nav2_deps_ws
 RUN mkdir -p ${NAVIGATION2_WS}/src
 WORKDIR ${NAVIGATION2_WS}/src
 ARG NAV2_BRANCH=humble
-RUN sudo git clone --branch $NAV2_BRANCH https://github.com/ros-planning/navigation2.git
+RUN sudo git clone --branch $NAV2_BRANCH https://github.com/ros-navigation/navigation2.git
 
 # Get keys for Nav2 dependencies
 WORKDIR ${NAVIGATION2_WS}/
