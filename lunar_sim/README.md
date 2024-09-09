@@ -26,6 +26,7 @@ xhost +local:docker
 ```
 
 Then run:
+
 ```bash
 ./run.sh
 ```
@@ -35,29 +36,12 @@ Depending on the host computer, you might need to remove the ```--gpus all``` fl
 ## Running the Demos
 
 ### Curiosity Mars rover demo
+
 Launch the demo:
+
 ```bash
 source install/setup.bash
 ros2 launch lunarsim_gz_bringup lunarsim_world.launch.py
 ```
 
-### Perform Tasks
-
-#### Setup
-
-Open a new terminal and attach to the currently running container:
-
-```bash
-docker exec -it <container-name> bash
-```
-
-Make sure packages are sourced:
-
-```bash
-source ~/spaceros/install/setup.bash
-```
-
-```bash
-source ~/demos_ws/install/setup.bash
-```
-
+This will launch the gazebo lunar world, spawn the rover and start teleop. This will be a new terminal window which enables you to control the rover as per the instructions in the terminal window.
