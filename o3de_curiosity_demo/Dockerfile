@@ -282,33 +282,33 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     libunwind-dev
 
 # Testing build by manually building out a ROS 2 Humble core
-RUN sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+# RUN sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
 
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    sudo apt-get update -y && sudo apt-get install -y \
-    ros-humble-ros-base
-
-
-# RUN /bin/bash -c 'source "/opt/ros/humble/install/setup.bash"'
+# RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+#     --mount=type=cache,target=/var/lib/apt,sharing=locked \
+#     sudo apt-get update -y && sudo apt-get install -y \
+#     ros-humble-ros-base
 
 # # Move to project directory
-# WORKDIR ${PROJECT_PATH}
+WORKDIR ${PROJECT_PATH}
 
-# # Source space_ros, movit2 and demo_ws
-# RUN /bin/bash -c 'source "${SPACEROS_DIR}/install/setup.bash"' \
-#   && /bin/bash -c 'source "${MOVEIT2_DIR}/install/setup.bash"' \
-#   && /bin/bash -c 'source "${DEMO_DIR}/install/setup.bash"' \
-#   && cmake -B build/linux -G "Ninja Multi-Config" -DLY_DISABLE_TEST_MODULES=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLY_STRIP_DEBUG_SYMBOLS=ON -DAZ_USE_PHYSX5:BOOL=ON \
-#   && cmake --build build/linux --config profile --target ${PROJECT_NAME} Editor ${PROJECT_NAME}.Assets
-
-
-#   # Build project
-# # RUN cmake -B build/linux -G "Ninja Multi-Config" -DLY_DISABLE_TEST_MODULES=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLY_STRIP_DEBUG_SYMBOLS=ON -DAZ_USE_PHYSX5:BOOL=ON \
-# #     && cmake --build build/linux --config profile --target ${PROJECT_NAME} Editor ${PROJECT_NAME}.Assets
-
-# # Activate Cyclone DDS
+# Activate Cyclone DDS
 # ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp 
+
+# Source space_ros, movit2 and demo_ws
+RUN /bin/bash -c 'source "${SPACEROS_DIR}/install/setup.bash"' \
+  && /bin/bash -c 'source "${MOVEIT2_DIR}/install/setup.bash"' \
+  && /bin/bash -c 'source "${DEMO_DIR}/install/setup.bash"'
+  #&& cmake -B build/linux -G "Ninja Multi-Config" -DLY_DISABLE_TEST_MODULES=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLY_STRIP_DEBUG_SYMBOLS=ON -DAZ_USE_PHYSX5:BOOL=ON \
+  #&& cmake --build build/linux --config profile --target ${PROJECT_NAME} Editor ${PROJECT_NAME}.Assets
+
+#RUN /bin/bash -c 'source "/opt/ros/humble/setup.bash"'
+
+RUN cmake -B build/linux -G "Ninja Multi-Config" -DLY_DISABLE_TEST_MODULES=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLY_STRIP_DEBUG_SYMBOLS=ON -DAZ_USE_PHYSX5:BOOL=ON \
+  && cmake --build build/linux --config profile --target ${PROJECT_NAME} Editor ${PROJECT_NAME}.Assets
+
+
+
 
 # # Add the user to the render group so that the user can access /dev/dri/renderD128
 # # /dev/dri/renderD128 gives access to hardware-accelerated rendering tool such as GPU
