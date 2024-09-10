@@ -273,7 +273,7 @@ RUN ./scripts/o3de.sh register --gem-path ${HOME_DIR}/o3de/Gems/Terrain
 RUN ./scripts/o3de.sh register --project-path ${O3DE_DIR}/Projects/${PROJECT_NAME}
 
 # Move to project directory
-WORKDIR ${PROJECT_PATH}
+WORKDIR ${HOME_DIR}
 # Run cmake and build project (Warning takes about 10-15 mins)
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
@@ -284,29 +284,37 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 # Testing build by manually building out a ROS 2 Humble core
 RUN sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
 
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    sudo apt-get update -y && sudo apt-get install -y \
+    ros-humble-ros-base
 
-# Source space_ros, movit2 and demo_ws
-# RUN /bin/bash -c 'source "${SPACEROS_DIR}/install/setup.bash"'
-# RUN /bin/bash -c 'source "${MOVEIT2_DIR}/install/setup.bash"'
-# RUN /bin/bash -c 'source "${DEMO_DIR}/install/setup.bash"'
-RUN /bin/bash -c 'source "${SPACEROS_DIR}/install/setup.bash"' \
-  && /bin/bash -c 'source "${MOVEIT2_DIR}/install/setup.bash"' \
-  && /bin/bash -c 'source "${DEMO_DIR}/install/setup.bash"' \
-  && cmake -B build/linux -G "Ninja Multi-Config" -DLY_DISABLE_TEST_MODULES=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLY_STRIP_DEBUG_SYMBOLS=ON -DAZ_USE_PHYSX5:BOOL=ON \
-  && cmake --build build/linux --config profile --target ${PROJECT_NAME} Editor ${PROJECT_NAME}.Assets
 
-# Build project
-# RUN cmake -B build/linux -G "Ninja Multi-Config" -DLY_DISABLE_TEST_MODULES=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLY_STRIP_DEBUG_SYMBOLS=ON -DAZ_USE_PHYSX5:BOOL=ON \
-#     && cmake --build build/linux --config profile --target ${PROJECT_NAME} Editor ${PROJECT_NAME}.Assets
+# RUN /bin/bash -c 'source "/opt/ros/humble/install/setup.bash"'
 
-# Activate Cyclone DDS
-ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp 
+# # Move to project directory
+# WORKDIR ${PROJECT_PATH}
 
-# Add the user to the render group so that the user can access /dev/dri/renderD128
-# /dev/dri/renderD128 gives access to hardware-accelerated rendering tool such as GPU
-RUN sudo usermod -aG render $USERNAME
+# # Source space_ros, movit2 and demo_ws
+# RUN /bin/bash -c 'source "${SPACEROS_DIR}/install/setup.bash"' \
+#   && /bin/bash -c 'source "${MOVEIT2_DIR}/install/setup.bash"' \
+#   && /bin/bash -c 'source "${DEMO_DIR}/install/setup.bash"' \
+#   && cmake -B build/linux -G "Ninja Multi-Config" -DLY_DISABLE_TEST_MODULES=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLY_STRIP_DEBUG_SYMBOLS=ON -DAZ_USE_PHYSX5:BOOL=ON \
+#   && cmake --build build/linux --config profile --target ${PROJECT_NAME} Editor ${PROJECT_NAME}.Assets
 
-# Setup the entrypoint
-COPY ./entrypoint.sh /
-ENTRYPOINT ["/entrypoint.sh"]
-CMD ["bash"]
+
+#   # Build project
+# # RUN cmake -B build/linux -G "Ninja Multi-Config" -DLY_DISABLE_TEST_MODULES=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLY_STRIP_DEBUG_SYMBOLS=ON -DAZ_USE_PHYSX5:BOOL=ON \
+# #     && cmake --build build/linux --config profile --target ${PROJECT_NAME} Editor ${PROJECT_NAME}.Assets
+
+# # Activate Cyclone DDS
+# ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp 
+
+# # Add the user to the render group so that the user can access /dev/dri/renderD128
+# # /dev/dri/renderD128 gives access to hardware-accelerated rendering tool such as GPU
+# RUN sudo usermod -aG render $USERNAME
+
+# # Setup the entrypoint
+# COPY ./entrypoint.sh /
+# ENTRYPOINT ["/entrypoint.sh"]
+# CMD ["bash"]
