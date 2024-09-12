@@ -1,0 +1,83 @@
+{
+  "configById": {
+    "CallService!26i0ivb": {
+      "requestPayload": "{}",
+      "layout": "vertical",
+      "timeoutSeconds": 10,
+      "serviceName": "/close_arm",
+      "buttonText": "Close Arm",
+      "buttonColor": "#000000"
+    },
+    "Image!2h1h9is": {},
+    "CallService!n2xdj1": {
+      "requestPayload": "{}",
+      "layout": "vertical",
+      "timeoutSeconds": 10,
+      "serviceName": "/move_forward",
+      "buttonText": "Forward",
+      "buttonColor": "#000000"
+    },
+    "CallService!40l6rnm": {
+      "requestPayload": "{}",
+      "layout": "vertical",
+      "timeoutSeconds": 10,
+      "serviceName": "/turn_left",
+      "buttonText": "Left",
+      "buttonColor": "#000000"
+    },
+    "CallService!3kc2rth": {
+      "requestPayload": "{}",
+      "layout": "vertical",
+      "timeoutSeconds": 10,
+      "serviceName": "/move_stop",
+      "buttonText": "Stop",
+      "buttonColor": "#000000"
+    },
+    "CallService!3qfcuxh": {
+      "requestPayload": "{}",
+      "layout": "vertical",
+      "timeoutSeconds": 10,
+      "serviceName": "/turn_right",
+      "buttonText": "Right",
+      "buttonColor": "#000000"
+    },
+    "CallService!16vat9y": {
+      "requestPayload": "{}",
+      "layout": "vertical",
+      "timeoutSeconds": 10,
+      "serviceName": "/open_arm",
+      "buttonText": "Open Arm",
+      "buttonColor": "#000000"
+    }
+  },
+  "globalVariables": {},
+  "userNodes": {},
+  "playbackConfig": {
+    "speed": 1
+  },
+  "layout": {
+    "first": {
+      "first": "CallService!26i0ivb",
+      "second": "CallService!16vat9y",
+      "direction": "row"
+    },
+    "second": {
+      "first": "Image!2h1h9is",
+      "second": {
+        "first": {
+          "first": "CallService!n2xdj1",
+          "second": "CallService!40l6rnm",
+          "direction": "column"
+        },
+        "second": {
+          "first": "CallService!3kc2rth",
+          "second": "CallService!3qfcuxh",
+          "direction": "column"
+        },
+        "direction": "row"
+      },
+      "direction": "row"
+    },
+    "direction": "column"
+  }
+}
