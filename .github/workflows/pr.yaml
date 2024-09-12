@@ -1,0 +1,10 @@
+on:
+  pull_request:
+
+jobs:
+  commit_message_standards:
+    name: Space ROS Commit Message Standards
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: space-ros/check-commit-message-action@main
