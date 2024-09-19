@@ -16,10 +16,13 @@
 #
 # The script provides the following build arguments:
 #
-#   VCS_REF     - The git revision of the Space ROS source code (no default value).
-#   VERSION     - The version of Space ROS (default: "preview")
+#   VCS_REF         - The git revision of the Space ROS source code (no default value).
+#   VERSION         - The version of Space ROS (default: "preview")
+#   SPACE_ROS_IMAGE - The base Space ROS image to build on
 
-FROM osrf/space-ros:latest
+ARG SPACE_ROS_IMAGE=osrf/space-ros:latest
+
+FROM ${SPACE_ROS_IMAGE}
 
 # Define arguments used in the metadata definition
 ARG VCS_REF
