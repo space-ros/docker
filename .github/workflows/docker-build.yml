@@ -40,7 +40,7 @@ jobs:
           cache-to: type=gha,mode=max
           no-cache: false
           build-args: |
-            SPACE_ROS_IMAGE=ghcr.io/space-ros/space-ros:main
+            SPACE_ROS_IMAGE=osrf/space-ros:main
           outputs: type=docker,dest=/tmp/moveit2.tar
       - name: Build space robots demo image
         run: |
@@ -63,3 +63,5 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           no-cache: false
+          build-args: |
+            SPACE_ROS_IMAGE=osrf/space-ros:main
