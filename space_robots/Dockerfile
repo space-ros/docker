@@ -43,12 +43,13 @@ ENV GZ_VERSION fortress
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Get rosinstall_generator
-# Using Docker BuildKit cache mounts for /var/cache/apt and /var/lib/apt ensures that
-# the cache won't make it into the built image but will be maintained between steps.
+# Install base image dependencies
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-  --mount=type=cache,target=/var/lib/apt,sharing=locked \
-  sudo apt-get update -y && sudo apt-get install -y python3-rosinstall-generator
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    sudo apt-get update -y && \
+    sudo apt-get install -y \
+      git-lfs \
+      python3-rosinstall-generator
 
 # TODO(anyone): remove demo-pkgs.txt, no packages left after exclusions
 # Generate repos file for demo dependencies, excluding packages from Space ROS core.
