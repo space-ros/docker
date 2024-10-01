@@ -114,6 +114,26 @@ Close the mast (camera arm)
 ros2 service call /mast_close std_srvs/srv/Empty
 ```
 
+##### Generate codes for moving rover by OpenAI API
+
+Step.1 Initial settingsi
+
+Check the config.json for input your API-Key and the LLM model you want to
+
+Step.2 After run the launch demo command, run the code
+
+```bash
+python3 generate_src.py
+```
+("openai" of python module is verified in the version 1.44.0)
+
+
+Step.3 Automatically saving the generated code by LLM
+
+```bash
+gen_script_20240907_0835.py
+```
+
 #### Canadarm demo
 
 ```bash

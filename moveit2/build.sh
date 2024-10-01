@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-ORG=openrobotics
+#ORG=openrobotics
+ORG=moveit
 IMAGE=moveit2
 TAG=latest
 
