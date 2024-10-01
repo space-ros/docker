@@ -16,7 +16,9 @@ echo ""
 
 docker build -t $ORG/$IMAGE:$TAG \
     --build-arg VCS_REF="$VCS_REF" \
-    --build-arg VERSION="$VERSION" .
+    --build-arg VERSION="$VERSION" \
+    --build-arg SPACE_ROS_IMAGE="${SPACE_ROS_IMAGE:-osrf/space-ros:latest}" \
+    .
 
 echo ""
 echo "##### Done! #####"

@@ -16,10 +16,13 @@
 #
 # The script provides the following build arguments:
 #
-#   VCS_REF     - The git revision of the Space ROS source code (no default value).
-#   VERSION     - The version of Space ROS (default: "preview")
+#   VCS_REF         - The git revision of the Space ROS source code (no default value).
+#   VERSION         - The version of Space ROS (default: "preview")
+#   SPACE_ROS_IMAGE - The base Space ROS image to build on
 
-FROM osrf/space-ros:latest
+ARG SPACE_ROS_IMAGE=osrf/space-ros:latest
+
+FROM ${SPACE_ROS_IMAGE}
 
 # Define arguments used in the metadata definition
 ARG VCS_REF
@@ -62,7 +65,7 @@ RUN mkdir ${SPACEROS_DIR}/src \
 
 # Generate repos file for nav2 dependencies, exclude packages from Space ROS src
 RUN rosinstall_generator \
-  --rosdistro ${ROSDISTRO} \
+  --rosdistro ${ROS_DISTRO} \
   --deps \
   --exclude-path ${SPACEROS_DIR}/src -- \
   -- $(cat ${NAVIGATION2_WS}/nav2_dep_keys.txt) \

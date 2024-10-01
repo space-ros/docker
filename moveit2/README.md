@@ -11,6 +11,14 @@ To build the docker image, run:
 ./build.sh
 ```
 
+By default, this will build on top of the latest released version of the Space ROS base image (typically `osrf/space-ros:latest`).
+If building locally, the underlying base image can be set in the [build script](./build.sh), or through the environment with:
+
+```bash
+# Use a locally built image as the base
+SPACE_ROS_IMAGE="space-ros:main" ./build.sh
+```
+
 The build process will take about 30 minutes, depending on the host computer.
 
 ## Running the MoveIt2 Docker Image in a Container
