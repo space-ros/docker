@@ -41,69 +41,36 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
 
+SHELL ["/bin/bash", "-c"]
+
 # Define workspace locations
 ENV NAVIGATION2_WS=${HOME_DIR}/nav2_ws
-ENV NAV2_DEPS_WS=${HOME_DIR}/nav2_deps_ws
 
-# Get the Navigation2 source code
 RUN mkdir -p ${NAVIGATION2_WS}/src
-WORKDIR ${NAVIGATION2_WS}/src
-ARG NAV2_BRANCH=humble
-RUN sudo git clone --branch $NAV2_BRANCH https://github.com/ros-navigation/navigation2.git
 
-# Get keys for Nav2 dependencies
 WORKDIR ${NAVIGATION2_WS}/
-SHELL ["/bin/bash", "-c"]
-RUN source ${SPACEROS_DIR}/install/setup.bash && sudo apt update && rosdep keys --from-paths src --ignore-src --rosdistro humble -y > ${NAVIGATION2_WS}/nav2_dep_keys.txt
 
-# Get rosinstall_generator
-RUN sudo apt-get update -y && sudo apt-get install -y python3-rosinstall-generator
+COPY navigation2.repos .
+COPY excluded-pkgs.txt .
+RUN vcs import --shallow src < navigation2.repos
+COPY --chown=spaceros-user:spaceros-user src/ src
 
-# Clone Space ROS sources temporarily as input to rosinstall_generator
-RUN mkdir ${SPACEROS_DIR}/src \
-  && vcs import ${SPACEROS_DIR}/src < ${SPACEROS_DIR}/exact.repos
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \ 
+    source ${SPACEROS_DIR}/install/setup.bash && \
+    sudo apt update && \
+    rosdep install -i --from-path src --skip-keys $(cat excluded-pkgs.txt) -y
+RUN source ${SPACEROS_DIR}/install/setup.bash && \
+    colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --no-warn-unused-cli
+RUN rm -rf src build log
 
-# Generate repos file for nav2 dependencies, exclude packages from Space ROS src
-RUN rosinstall_generator \
-  --rosdistro ${ROS_DISTRO} \
-  --deps \
-  --exclude-path ${SPACEROS_DIR}/src -- \
-  -- $(cat ${NAVIGATION2_WS}/nav2_dep_keys.txt) \
-  > ${NAVIGATION2_WS}/nav2_deps.repos
 
-# Remove unneeded src files now that repos are generated
-RUN rm -rf ${SPACEROS_DIR}/src
-
-# Get the repositories required by Nav2
-RUN mkdir -p ${NAV2_DEPS_WS}/src
-WORKDIR ${NAV2_DEPS_WS}
-RUN sudo vcs import src < ${NAVIGATION2_WS}/nav2_deps.repos
-
-# Update the ownership of the source files
-RUN sudo chown -R ${USERNAME}:${USERNAME} ${NAV2_DEPS_WS}
-
-# Install nav2_deps_ws dependencies
-SHELL ["/bin/bash", "-c"]
-RUN source ${SPACEROS_DIR}/install/setup.bash && sudo apt update && rosdep install --from-paths src --ignore-src --rosdistro humble -y \
-      --skip-keys "composition demo_nodes_py ikos lifecycle rmw_connextdds rmw_fastrtps_dynamic_cpp rmw_fastrtps_cpp \
-                   rosidl_typesupport_fastrtps_c rosidl_typesupport_fastrtps_cpp urdfdom_headers"
-
-# Build dependencies
-RUN source ${SPACEROS_DIR}/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-
-# Install remaining nav2 dependencies (not in rosdistro)
-WORKDIR ${NAVIGATION2_WS}
-SHELL ["/bin/bash", "-c"]
-RUN source ${NAV2_DEPS_WS}/install/setup.bash && sudo apt update && rosdep install --from-paths src --ignore-src --rosdistro humble -y \
-      --skip-keys "composition demo_nodes_py ikos lifecycle rmw_connextdds rmw_fastrtps_dynamic_cpp rmw_fastrtps_cpp \
-                   rosidl_typesupport_fastrtps_c rosidl_typesupport_fastrtps_cpp urdfdom_headers"
-
-# Build Navigation2
-SHELL ["/bin/bash", "-c"]
-RUN source ${NAV2_DEPS_WS}/install/setup.bash && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-
-# Install rviz2 to send goals to Nav2
-RUN sudo apt update && sudo apt install -y ros-humble-rviz2
+# Install rviz2 to send goals to Nav2. 
+# TODO(xfiderek): Remove rviz2 and humble-nav2 froms this image
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \  
+    sudo apt update && \
+    sudo apt install -y ros-humble-rviz2 ros-humble-nav2-bringup
 
 # Set up the entrypoint
 COPY ./entrypoint.sh /
