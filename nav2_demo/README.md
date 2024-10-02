@@ -22,7 +22,7 @@ Start the space_nav2 container and launch the navigation2 nodes:
 
 ```
 ./run.sh
-ros2 launch nav2_bringup navigation_launch.py use_sim_time:=True params_file:=nav2_params.yaml
+ros2 launch space_nav2_bringup navigation_launch.py use_sim_time:=True params_file:=nav2_params.yaml
 ```
 
 ## Terminal 3 - launch localization with map
@@ -30,7 +30,7 @@ ros2 launch nav2_bringup navigation_launch.py use_sim_time:=True params_file:=na
 ```
 docker exec -it osrf_space_nav2_demo bash
 source install/setup.bash
-ros2 launch nav2_bringup localization_launch.py use_sim_time:=True map:=mars_map.yaml
+ros2 launch space_nav2_bringup localization_launch.py use_sim_time:=True map:=mars_map.yaml params_file:=nav2_params.yaml
 ```
 
 ## Terminal 4 - launch Rviz
@@ -38,7 +38,7 @@ ros2 launch nav2_bringup localization_launch.py use_sim_time:=True map:=mars_map
 Exec into the same space_nav2 container and launch Rviz2:
 
 ```
-docker exec -it -e DISPLAY=:0 osrf_space_nav2_demo bash
+docker exec -it -e DISPLAY osrf_space_nav2_demo bash
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 ros2 launch nav2_bringup rviz_launch.py
