@@ -24,6 +24,8 @@ ARG SPACE_ROS_IMAGE=osrf/space-ros:latest
 
 FROM ${SPACE_ROS_IMAGE}
 
+SHELL ["bash", "-c"]
+
 # Define arguments used in the metadata definition
 ARG VCS_REF
 ARG VERSION="preview"
@@ -41,12 +43,9 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Clone all space-ros sources
-RUN mkdir ${SPACEROS_DIR}/src \
-  && vcs import ${SPACEROS_DIR}/src < ${SPACEROS_DIR}/exact.repos
-
 # Define key locations
-ENV MOVEIT2_DIR=${HOME_DIR}/moveit2
+ENV MOVEIT2_DIR=${HOME}/moveit2
+ENV SPACEROS_WS=${HOME}/spaceros
 
 # Make sure the latest versions of packages are installed
 # Using Docker BuildKit cache mounts for /var/cache/apt and /var/lib/apt ensures that
@@ -57,7 +56,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt,sharing=locked \
   sudo apt-get dist-upgrade -y
-RUN rosdep update
+RUN sudo rosdep init && rosdep update
 
 # Install the various build and test tools
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
@@ -92,15 +91,14 @@ RUN python3 -m pip install -U \
   pytest-rerunfailures \
   pytest
 
-# Get the MoveIt2 source code
-WORKDIR ${HOME_DIR}
-RUN sudo git clone https://github.com/ros-planning/moveit2.git -b ${ROS_DISTRO} moveit2/src
-RUN cd ${MOVEIT2_DIR}/src \
-  && sudo git clone https://github.com/ros-planning/moveit2_tutorials.git -b ${ROS_DISTRO}
+# Clone all space-ros sources
+RUN mkdir -p ${SPACEROS_WS}/src \
+  && vcs import ${SPACEROS_WS}/src < ${SPACEROS_DIR}/scripts/spaceros.repos
 
-# Update the ownership of the source files (had to use sudo above to work around
-# a possible inherited 'insteadof' from the host that forces use of ssh
-RUN sudo chown -R ${USERNAME}:${USERNAME} ${MOVEIT2_DIR}
+# Get the MoveIt2 source code
+WORKDIR ${MOVEIT2_DIR}/src
+RUN git clone https://github.com/ros-planning/moveit2.git -b ${ROS_DISTRO}
+RUN git clone https://github.com/ros-planning/moveit2_tutorials.git -b ${ROS_DISTRO}
 
 # Get rosinstall_generator
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
@@ -113,7 +111,7 @@ COPY --chown=${USERNAME}:${USERNAME} excluded-pkgs.txt /tmp/
 RUN rosinstall_generator \
   --rosdistro ${ROS_DISTRO} \
   --deps \
-  --exclude-path ${SPACEROS_DIR}/src \
+  --exclude-path ${SPACEROS_WS}/ \
   --exclude $(cat /tmp/excluded-pkgs.txt) -- \
   -- $(cat /tmp/moveit2-pkgs.txt) \
   > /tmp/moveit2_generated_pkgs.repos
@@ -121,25 +119,21 @@ RUN rosinstall_generator \
 # Get the repositories required by MoveIt2, but not included in Space ROS
 WORKDIR ${MOVEIT2_DIR}
 RUN vcs import src < /tmp/moveit2_generated_pkgs.repos
-COPY --chown=${USERNAME}:${USERNAME} moveit2_tutorials.repos /tmp/
+COPY moveit2_tutorials.repos /tmp/
 RUN vcs import src < /tmp/moveit2_tutorials.repos
-
-# Update the ownership of the source files (had to use sudo above to work around
-# a possible inherited 'insteadof' from the host that forces use of ssh
-RUN sudo chown -R ${USERNAME}:${USERNAME} ${MOVEIT2_DIR}
 
 # Install system dependencies
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt,sharing=locked \
-  /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash' \
- && rosdep install --from-paths src --ignore-src --rosdistro ${ROS_DISTRO} -r -y --skip-keys "console_bridge generate_parameter_library fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers rmw_connextdds ros_testing rmw_connextdds rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp composition demo_nodes_py lifecycle rosidl_typesupport_fastrtps_cpp rosidl_typesupport_fastrtps_c ikos diagnostic_aggregator diagnostic_updater joy qt_gui rqt_gui rqt_gui_py"
+  /bin/bash -c 'source ${SPACEROS_DIR}/setup.bash' \
+  && rosdep install --from-paths src --ignore-src --rosdistro ${ROS_DISTRO} -r -y --skip-keys "console_bridge generate_parameter_library fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers rmw_connextdds ros_testing rmw_connextdds rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp composition demo_nodes_py lifecycle rosidl_typesupport_fastrtps_cpp rosidl_typesupport_fastrtps_c ikos diagnostic_aggregator diagnostic_updater joy qt_gui rqt_gui rqt_gui_py"
 
 # Apply a patch to octomap_msgs to work around a build issue
 COPY --chown=${USERNAME}:${USERNAME} octomap_fix.diff ./src/octomap_msgs
 RUN cd src/octomap_msgs && git apply octomap_fix.diff
 
 # Build MoveIt2
-RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash \
+RUN /bin/bash -c 'source ${SPACEROS_DIR}/setup.bash \
   && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --event-handlers desktop_notification- status-'
 
 # Add a couple sample GUI apps for testing
