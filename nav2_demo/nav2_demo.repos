@@ -1,0 +1,5 @@
+repositories:
+  simulation:
+    type: git
+    url: https://github.com/space-ros/simulation.git
+    version: ead69c448cd08484b12c252d17cbd8473c4d309e

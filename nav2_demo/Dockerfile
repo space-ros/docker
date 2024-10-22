@@ -40,14 +40,33 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 # Define workspace locations
 ENV NAVIGATION2_WS=${HOME_DIR}/nav2_ws
-ENV NAV2_DEPS_WS=${HOME_DIR}/nav2_deps_ws
+ENV NAV2_DEMO_WS=${HOME_DIR}/nav2_demo_ws
+
+# Install LFS for simulation resources
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    sudo apt-get update -y && \
+    sudo apt-get install -y \
+      git-lfs
+
+# Grab required simulation resources
+WORKDIR ${NAV2_DEMO_WS}
+RUN mkdir -p src
+COPY nav2_demo.repos /tmp/
+RUN vcs import --input /tmp/nav2_demo.repos src/
+
+# Install them
+RUN source ${SPACEROS_DIR}/install/setup.bash && \
+    source ${NAVIGATION2_WS}/install/setup.bash && \
+    colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
+RUN rm -rf src build log
 
 # Setup mars_rover demo
 # Install map file for localization
-COPY mars_map* /home/spaceros-user/nav2_ws
+COPY --chown=${USERNAME}:${USERNAME}  mars_map* .
 
 # Install nav2 config file for mars rover demo
-COPY nav2_params.yaml /home/spaceros-user/nav2_ws
+COPY --chown=${USERNAME}:${USERNAME}  nav2_params.yaml .
 
 # Set up the entrypoint
 COPY ./entrypoint.sh /
