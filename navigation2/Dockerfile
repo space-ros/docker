@@ -43,8 +43,17 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 SHELL ["/bin/bash", "-c"]
 
+# Install required dependencies
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    sudo apt update && \
+    sudo apt install -y \
+    python3-rosdep \
+    python3-vcstool
+RUN sudo rosdep init && rosdep update
+
 # Define workspace locations
-ENV NAVIGATION2_WS=${HOME_DIR}/nav2_ws
+ENV NAVIGATION2_WS=${HOME}/nav2_ws
 
 RUN mkdir -p ${NAVIGATION2_WS}/src
 
@@ -56,19 +65,19 @@ RUN vcs import --shallow src < navigation2.repos
 COPY --chown=spaceros-user:spaceros-user src/ src
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked \ 
-    source ${SPACEROS_DIR}/install/setup.bash && \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    source ${SPACEROS_DIR}/setup.bash && \
     sudo apt update && \
     rosdep install -i --from-path src --skip-keys $(cat excluded-pkgs.txt) -y
-RUN source ${SPACEROS_DIR}/install/setup.bash && \
+RUN source ${SPACEROS_DIR}/setup.bash && \
     colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --no-warn-unused-cli
 RUN rm -rf src build log
 
 
-# Install rviz2 to send goals to Nav2. 
+# Install rviz2 to send goals to Nav2.
 # TODO(xfiderek): Remove rviz2 and humble-nav2 froms this image
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked \  
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
     sudo apt update && \
     sudo apt install -y ros-humble-rviz2 ros-humble-nav2-bringup
 
