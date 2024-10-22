@@ -39,8 +39,8 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Define workspace locations
-ENV NAVIGATION2_WS=${HOME_DIR}/nav2_ws
-ENV NAV2_DEPS_WS=${HOME_DIR}/nav2_deps_ws
+ENV NAVIGATION2_WS=${HOME}/nav2_ws
+ENV NAV2_DEPS_WS=${HOME}/nav2_deps_ws
 
 # Setup mars_rover demo
 # Install map file for localization

@@ -36,7 +36,7 @@ LABEL org.label-schema.vcs-url="https://github.com/space-ros/docker"
 LABEL org.label-schema.vcs-ref=${VCS_REF}
 
 # Define a few key variables
-ENV DEMO_DIR=${HOME_DIR}/demos_ws
+ENV DEMO_DIR=${HOME}/demos_ws
 ENV IGNITION_VERSION fortress
 ENV GZ_VERSION fortress
 
@@ -84,21 +84,18 @@ RUN cd mongo-cxx-driver-r3.6.7/build && cmake .. -DCMAKE_BUILD_TYPE=Release -DCM
 # Get the source for the dependencies
 # RUN vcs import src < /tmp/demo_generated_pkgs.repos
 COPY --chown=${USERNAME}:${USERNAME} demo_manual_pkgs.repos /tmp/
-RUN vcs import src < /tmp/demo_manual_pkgs.repos && /bin/bash -c 'source "${SPACEROS_DIR}/install/setup.bash"' 
+RUN vcs import src < /tmp/demo_manual_pkgs.repos && /bin/bash -c 'source "${SPACEROS_DIR}/setup.bash"'
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt,sharing=locked \
   sudo apt-get update -y \
-&& /bin/bash -c 'source "${SPACEROS_DIR}/install/setup.bash"' \
+&& /bin/bash -c 'source "${SPACEROS_DIR}/setup.bash"' \
 && /bin/bash -c 'source "${MOVEIT2_DIR}/install/setup.bash"' \
 && rosdep install --from-paths src --ignore-src -r -y --rosdistro ${ROS_DISTRO}
 
 # Build the demo
-RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash && source ${MOVEIT2_DIR}/install/setup.bash \
+RUN /bin/bash -c 'source ${SPACEROS_DIR}/setup.bash && source ${MOVEIT2_DIR}/install/setup.bash \
   && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
-
-# Add the user to the render group so that the user can access /dev/dri/renderD128
-RUN sudo usermod -aG render $USERNAME
 
 # Setup the entrypoint
 COPY ./entrypoint.sh /

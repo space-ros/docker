@@ -16,7 +16,7 @@ If building locally, the underlying base image can be set in the [build script](
 
 ```bash
 # Use a locally built image as the base
-SPACE_ROS_IMAGE="space-ros:main" ./build.sh
+SPACE_ROS_IMAGE="space-ros:latest" ./build.sh
 ```
 
 The build process will take about 30 minutes, depending on the host computer.
@@ -31,11 +31,10 @@ docker image list
 
 The output will look something like this:
 
-```
-REPOSITORY              TAG                        IMAGE ID       CREATED        SIZE
-openrobotics/moveit2    latest                     6edb2edc9643   10 hours ago   15.5GB
-openrobotics/spaceros   latest                     629b13cf7b74   12 hours ago   7.8GB
-nvidia/cudagl           11.4.1-devel-ubuntu20.04   336416dfcbba   1 week ago     5.35GB
+```docker image list
+REPOSITORY             TAG       IMAGE ID       CREATED              SIZE
+openrobotics/moveit2   latest    98cd8f08f954   About a minute ago   8.2GB
+osrf/space-ros         latest    cf10cd2cb82c   27 hours ago         1.05GB
 ```
 
 The new image is named **openrobotics/moveit2:latest**.

@@ -37,6 +37,7 @@ Depending on the host computer, you might need to remove the ```--gpus all``` fl
 ## Running the Demos
 
 ### Curiosity Mars rover demo
+
 Launch the demo:
 ```bash
 ros2 launch mars_rover mars_rover.launch.py
@@ -57,11 +58,7 @@ docker exec -it <container-name> bash
 Make sure packages are sourced:
 
 ```bash
-source ${SPACEROS_DIR}/install/setup.bash
-```
-
-```bash
-source ~/demos_ws/install/setup.bash
+source ${DEMO_DIR}/install/setup.bash
 ```
 
 #### Available Commands
