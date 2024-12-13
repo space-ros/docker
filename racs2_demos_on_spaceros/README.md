@@ -79,6 +79,9 @@ Drive commands to the rover are input via keyboard. The keymap is as follows.
 * "d": Turn right
 * "x": Stop the rover
 
+#### Nodes in Demo 
+<img width="899" alt="racs2_demo_on_spaceros_nodes" src="https://github.com/user-attachments/assets/77bfdc70-4a5f-4124-a526-ba746db44ec3" />
+
 ## Reference
 
 * [Hiroki Kato, et al. "ROS and cFS System (RACS): Easing Space Robotic Development post-opensource activities and ROS2 integration" Flight Software Workshop 2021.](https://drive.google.com/file/d/11L48doT_pRNs7R0hdChPALqJO849TvV2/view?usp=drive_web)
