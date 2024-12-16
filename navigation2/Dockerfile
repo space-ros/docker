@@ -70,7 +70,7 @@ RUN rm -rf src build log
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \  
     sudo apt update && \
-    sudo apt install -y ros-humble-rviz2 ros-humble-nav2-bringup
+    sudo -E apt install -y ros-humble-rviz2 ros-humble-nav2-bringup
 
 # Set up the entrypoint
 COPY ./entrypoint.sh /
