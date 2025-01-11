@@ -72,12 +72,12 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
 
-      # - name: Login to ghcr
-      #   uses: docker/login-action@v3
-      #   with:
-      #     registry: ghcr.io
-      #     username: ${{ github.repository_owner }}
-      #     password: ${{ secrets.PACKAGES_TOKEN }}
+      - name: Login to ghcr
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.PACKAGES_TOKEN }}
 
       - name: Checkout
         uses: actions/checkout@v2
