@@ -22,6 +22,8 @@
 
 ARG SPACE_ROS_IMAGE=osrf/space-ros:latest
 
+
+
 FROM ${SPACE_ROS_IMAGE}
 
 # Define arguments used in the metadata definition
@@ -45,6 +47,12 @@ SHELL ["/bin/bash", "-c"]
 
 # Define workspace locations
 ENV NAVIGATION2_WS=${HOME_DIR}/nav2_ws
+
+RUN sudo apt-get update
+RUN sudo apt-get install ca-certificates curl gnupg
+RUN sudo install -m 0755 -d /etc/apt/keyrings
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+RUN sudo chmod a+r /etc/apt/keyrings/docker.gpg
 
 RUN mkdir -p ${NAVIGATION2_WS}/src
 
