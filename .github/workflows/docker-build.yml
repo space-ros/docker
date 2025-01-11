@@ -34,7 +34,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: moveit2
-          push: false
+          push: true
           tags: openrobotics/moveit2:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -58,7 +58,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: navigation2
-          push: false
+          push: true
           tags: osrf/space_nav2:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
