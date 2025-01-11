@@ -26,10 +26,16 @@ jobs:
       #     registry: ghcr.io
       #     username: ${{ github.actor }}
       #     password: ${{ secrets.GITHUB_TOKEN }}
-      # - name: Checkout
-      #   uses: actions/checkout@v2
-      # - name: Set up buildx
-      #   uses: docker/setup-buildx-action@v1
+      - name: Login to ghcr
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.PACKAGES_TOKEN }}
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up buildx
+        uses: docker/setup-buildx-action@v1
 
       #   # 登录到 Docker Hub（或其他 Docker 注册表）
       # - name: Log in to Docker Hub
@@ -45,33 +51,33 @@ jobs:
       #     # 从 GitHub Secrets 获取 Docker 密码
       #     password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # - name: Build moveit2 image
-      #   uses: docker/build-push-action@v2
-      #   with:
-      #     context: moveit2
-      #     push: ${{ github.event_name != 'pull_request' }}
-      #     tags: zxfw9931/moveit2:latest
-      #     cache-from: type=gha
-      #     cache-to: type=gha,mode=max
-      #     no-cache: false
-      #     build-args: |
-      #       SPACE_ROS_IMAGE=osrf/space-ros:main
-      #     outputs: type=docker,dest=/tmp/moveit2.tar
-      # - name: Build space robots demo image
-      #   run: |
-      #     docker load --input /tmp/moveit2.tar
-      #     docker images
-      #     cd space_robots && ./build.sh
+      - name: Build moveit2 image
+        uses: docker/build-push-action@v2
+        with:
+          context: moveit2
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ghcr.io/kaneleo/moveit2:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          no-cache: false
+          build-args: |
+            SPACE_ROS_IMAGE=osrf/space-ros:main
+          outputs: type=docker,dest=/tmp/moveit2.tar
+      - name: Build space robots demo image
+        run: |
+          docker load --input /tmp/moveit2.tar
+          docker images
+          cd space_robots && ./build.sh
   space_nav2:
     runs-on: ubuntu-20.04
     steps:
 
-      - name: Login to ghcr
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.PACKAGES_TOKEN }}
+      # - name: Login to ghcr
+      #   uses: docker/login-action@v3
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.repository_owner }}
+      #     password: ${{ secrets.PACKAGES_TOKEN }}
 
       - name: Checkout
         uses: actions/checkout@v2
