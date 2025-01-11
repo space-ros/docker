@@ -82,7 +82,7 @@ jobs:
         with:
           context: navigation2
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ghcr.io/${{ github.repository_owner }}/space_nav2:latest
+          tags: ghcr.io/kaneleo/space_nav2:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
           no-cache: false
