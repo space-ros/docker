@@ -51,18 +51,18 @@ jobs:
       #     # 从 GitHub Secrets 获取 Docker 密码
       #     password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build moveit2 image
-        uses: docker/build-push-action@v2
-        with:
-          context: moveit2
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ghcr.io/kaneleo/moveit2:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          no-cache: false
-          build-args: |
-            SPACE_ROS_IMAGE=osrf/space-ros:main
-          outputs: type=docker,dest=/tmp/moveit2.tar
+      # - name: Build moveit2 image
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: moveit2
+      #     push: ${{ github.event_name != 'pull_request' }}
+      #     tags: ghcr.io/kaneleo/moveit2:latest
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max
+      #     no-cache: false
+      #     build-args: |
+      #       SPACE_ROS_IMAGE=osrf/space-ros:main
+      #     outputs: type=docker,dest=/tmp/moveit2.tar
       - name: Build space robots demo image
         run: |
           docker load --input /tmp/moveit2.tar
