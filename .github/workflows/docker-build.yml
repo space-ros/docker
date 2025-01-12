@@ -65,7 +65,6 @@ jobs:
       #     outputs: type=docker,dest=/tmp/moveit2.tar
       - name: Build space robots demo image
         run: |
-          docker load --input /tmp/moveit2.tar
           docker images
           cd space_robots && ./build.sh
   space_nav2:
