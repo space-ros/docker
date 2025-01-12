@@ -93,3 +93,28 @@ jobs:
           no-cache: false
           build-args: |
             SPACE_ROS_IMAGE=osrf/space-ros:main
+
+  space_robots:
+    runs-on: ubuntu-20.04
+    steps:
+
+      - name: Login to ghcr
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.PACKAGES_TOKEN }}
+
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Build space_robots image
+        uses: docker/build-push-action@v2
+        with:
+          context: space_robots
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ghcr.io/kaneleo/space_robots:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          no-cache: false
