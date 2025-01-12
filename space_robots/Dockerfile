@@ -19,7 +19,7 @@
 #   VCS_REF     - The git revision of the Space ROS source code (no default value).
 #   VERSION     - The version of Space ROS (default: "preview")
 
-FROM openrobotics/moveit2:latest
+FROM ghcr.io/kaneleo/moveit2:latest
 
 # Define arguments used in the metadata definition
 ARG VCS_REF
