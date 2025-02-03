@@ -33,9 +33,9 @@ docker image list
 The output will look something like this:
 
 ```
-REPOSITORY              TAG                        IMAGE ID       CREATED        SIZE
-osrf/space_nav2         latest                     6edb2edc9643   10 hours ago   15.5GB
-osrf/space-ros           latest                     629b13cf7b74   12 hours ago   7.8GB
+REPOSITORY                       TAG       IMAGE ID       CREATED          SIZE
+osrf/space_nav2                  latest    7016292fba1c   32 minutes ago   3.65GB
+osrf/space-ros                   latest    cf10cd2cb82c   4 days ago       1.05GB
 ```
 
 The new image is named **osrf/space_nav2:latest**.
