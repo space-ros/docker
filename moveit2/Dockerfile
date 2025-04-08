@@ -92,8 +92,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 # Get the MoveIt2 source code
 WORKDIR ${HOME_DIR}
 RUN sudo git clone https://github.com/ros-planning/moveit2.git -b ${ROS_DISTRO} moveit2/src
-RUN cd ${MOVEIT2_DIR}/src \
-  && sudo git clone https://github.com/ros-planning/moveit2_tutorials.git -b ${ROS_DISTRO}
 
 # Update the ownership of the source files (had to use sudo above to work around
 # a possible inherited 'insteadof' from the host that forces use of ssh
