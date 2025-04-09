@@ -9,7 +9,7 @@ on:
     - cron: '0 2 * * *'
 jobs:
   space_robots:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - name: "Free up disk space"
         run: |
@@ -48,7 +48,7 @@ jobs:
           docker images
           cd space_robots && ./build.sh
   space_nav2:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v2
