@@ -53,32 +53,6 @@ You'll now be running inside the container and should see a prompt similar to th
 spaceros-user@8e73b41a4e16:~/moveit2#
 ```
 
-## Running MoveIt2 Tutorials
-
-Run the following command to launch the MoveIt2 tutorials demo launch file:
-
-```bash
-ros2 launch moveit2_tutorials demo.launch.py rviz_tutorial:=true
-```
-
-You should see lots of console output and the rviz2 window appear:
-
-![rviz2 tutorial window](resources/moveit2-rviz-tutorial.png)
-
-You can now follow the [MoveIt2 Tutorial documentation](https://moveit.picknik.ai/main/doc/tutorials/quickstart_in_rviz/quickstart_in_rviz_tutorial.html).
-
-## Running the MoveIt2 Move Group C++ Interface Demo
-
-To run the Move Group C++ Interface Demo, execute the following command:
-
-```bash
-ros2 launch moveit2_tutorials move_group.launch.py
-```
-
-![rviz2 move group window](resources/moveit2-rviz.png)
-
-Then, you can follow the [Move Group C++ Interface Demo documentation](https://moveit.picknik.ai/humble/doc/examples/move_group_interface/move_group_interface_tutorial.html).
-
 ## Running the Space ROS Space Robots Demos
 
 Once you have tested that MoveIt2 works, you are ready to run some of the other [Space ROS space robot demos](../space_robots/README.md).
