@@ -2,7 +2,7 @@
 
 ORG=openrobotics
 IMAGE=moveit2
-TAG=latest
+TAG=${MOVEIT2_TAG:-"latest"}
 
 VCS_REF=""
 VERSION=preview
