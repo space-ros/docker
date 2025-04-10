@@ -19,6 +19,14 @@ If building locally, the underlying base image can be set in the [build script](
 SPACE_ROS_IMAGE="space-ros:main" ./build.sh
 ```
 
+Similarly, the tag for the resulting Docker image can be customized using the `MOVEIT2_TAG` environment variable.
+For example, to build an image based on the `space-ros:humble-2024.10.0` image and tag it with the same release label use:
+
+```bash
+# Use a locally built image as the base
+SPACE_ROS_IMAGE="osrf/space-ros:humble-2024.10.0" MOVEIT2_TAG=humble-2024.10.0 ./build.sh
+```
+
 The build process will take about 30 minutes, depending on the host computer.
 
 ## Running the MoveIt2 Docker Image in a Container
