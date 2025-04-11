@@ -20,7 +20,7 @@
 #   VERSION         - The version of Space ROS (default: "preview")
 #   SPACE_ROS_IMAGE - The base Space ROS image to build on
 
-ARG SPACE_ROS_IMAGE=osrf/space-ros:humble-2024.10.0
+ARG SPACE_ROS_IMAGE=osrf/space-ros:jazzy-2025.01.0
 
 FROM ${SPACE_ROS_IMAGE}
 
@@ -66,11 +66,13 @@ RUN rm -rf src build log
 
 
 # Install rviz2 to send goals to Nav2. 
-# TODO(xfiderek): Remove rviz2 and humble-nav2 froms this image
+# TODO(asimonov): Remove rviz2 apt install in the future.
+#                 It brings a lot of dependencies with it. 
+#                 It installs 146 packages into /opt/ros/jazzy which is confusing as space-ros is in /opt/spaceros.
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \  
     sudo apt update && \
-    sudo apt install -y ros-humble-rviz2 ros-humble-nav2-bringup
+    sudo apt install -y ros-${ROS_DISTRO}-rviz2
 
 # Set up the entrypoint
 COPY ./entrypoint.sh /
