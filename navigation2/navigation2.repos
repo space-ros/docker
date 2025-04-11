@@ -2,189 +2,213 @@ repositories:
   angles:
     type: git
     url: https://github.com/ros2-gbp/angles-release.git
-    version: release/humble/angles/1.15.0-1
-  behaviortree_cpp_v3:
+    version: release/jazzy/angles/1.16.0-5
+  behaviortree_cpp:
     type: git
-    url: https://github.com/BehaviorTree/behaviortree_cpp_v3-release.git
-    version: release/humble/behaviortree_cpp_v3/3.8.7-1
+    url: https://github.com/ros2-gbp/behaviortree_cpp_v4-release.git
+    version: release/jazzy/behaviortree_cpp/4.6.2-1
   bond_core/bond:
     type: git
     url: https://github.com/ros2-gbp/bond_core-release.git
-    version: release/humble/bond/3.0.2-3
+    version: release/jazzy/bond/4.1.2-1
   bond_core/bondcpp:
     type: git
     url: https://github.com/ros2-gbp/bond_core-release.git
-    version: release/humble/bondcpp/3.0.2-3
+    version: release/jazzy/bondcpp/4.1.2-1
   bond_core/smclib:
     type: git
     url: https://github.com/ros2-gbp/bond_core-release.git
-    version: release/humble/smclib/3.0.2-3
+    version: release/jazzy/smclib/4.1.2-1
   diagnostics/diagnostic_updater:
     type: git
     url: https://github.com/ros2-gbp/diagnostics-release.git
-    version: release/humble/diagnostic_updater/4.0.0-1
+    version: release/jazzy/diagnostic_updater/4.2.3-1
+  geographic_info/geographic_msgs:
+    type: git
+    url: https://github.com/ros2-gbp/geographic_info-release.git
+    version: release/jazzy/geographic_msgs/1.0.6-2
   image_common/image_transport:
     type: git
     url: https://github.com/ros2-gbp/image_common-release.git
-    version: release/humble/image_transport/3.1.9-1
+    version: release/jazzy/image_transport/5.1.6-1
   laser_geometry:
     type: git
     url: https://github.com/ros2-gbp/laser_geometry-release.git
-    version: release/humble/laser_geometry/2.4.0-2
+    version: release/jazzy/laser_geometry/2.7.0-3
   map_msgs:
     type: git
     url: https://github.com/ros2-gbp/navigation_msgs-release.git
-    version: release/humble/map_msgs/2.1.0-3
+    version: release/jazzy/map_msgs/2.4.1-2
   navigation2/costmap_queue:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/costmap_queue/1.1.16-1
+    version: release/jazzy/costmap_queue/1.3.5-1
   navigation2/dwb_core:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/dwb_core/1.1.16-1
+    version: release/jazzy/dwb_core/1.3.5-1
   navigation2/dwb_critics:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/dwb_critics/1.1.16-1
+    version: release/jazzy/dwb_critics/1.3.5-1
   navigation2/dwb_msgs:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/dwb_msgs/1.1.16-1
+    version: release/jazzy/dwb_msgs/1.3.5-1
   navigation2/dwb_plugins:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/dwb_plugins/1.1.16-1
+    version: release/jazzy/dwb_plugins/1.3.5-1
   navigation2/nav2_amcl:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_amcl/1.1.16-1
+    version: release/jazzy/nav2_amcl/1.3.5-1
   navigation2/nav2_behavior_tree:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_behavior_tree/1.1.16-1
+    version: release/jazzy/nav2_behavior_tree/1.3.5-1
   navigation2/nav2_behaviors:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_behaviors/1.1.16-1
+    version: release/jazzy/nav2_behaviors/1.3.5-1
   navigation2/nav2_bt_navigator:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_bt_navigator/1.1.16-1
+    version: release/jazzy/nav2_bt_navigator/1.3.5-1
   navigation2/nav2_collision_monitor:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_collision_monitor/1.1.16-1
+    version: release/jazzy/nav2_collision_monitor/1.3.5-1
   navigation2/nav2_common:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_common/1.1.16-1
+    version: release/jazzy/nav2_common/1.3.5-1
   navigation2/nav2_constrained_smoother:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_constrained_smoother/1.1.16-1
+    version: release/jazzy/nav2_constrained_smoother/1.3.5-1
   navigation2/nav2_controller:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_controller/1.1.16-1
+    version: release/jazzy/nav2_controller/1.3.5-1
   navigation2/nav2_core:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_core/1.1.16-1
+    version: release/jazzy/nav2_core/1.3.5-1
   navigation2/nav2_costmap_2d:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_costmap_2d/1.1.16-1
+    version: release/jazzy/nav2_costmap_2d/1.3.5-1
   navigation2/nav2_dwb_controller:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_dwb_controller/1.1.16-1
+    version: release/jazzy/nav2_dwb_controller/1.3.5-1
+  navigation2/nav2_graceful_controller:
+    type: git
+    url: https://github.com/SteveMacenski/navigation2-release.git
+    version: release/jazzy/nav2_graceful_controller/1.3.5-1
   navigation2/nav2_lifecycle_manager:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_lifecycle_manager/1.1.16-1
+    version: release/jazzy/nav2_lifecycle_manager/1.3.5-1
   navigation2/nav2_map_server:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_map_server/1.1.16-1
+    version: release/jazzy/nav2_map_server/1.3.5-1
   navigation2/nav2_mppi_controller:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_mppi_controller/1.1.16-1
+    version: release/jazzy/nav2_mppi_controller/1.3.5-1
   navigation2/nav2_msgs:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_msgs/1.1.16-1
+    version: release/jazzy/nav2_msgs/1.3.5-1
   navigation2/nav2_navfn_planner:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_navfn_planner/1.1.16-1
+    version: release/jazzy/nav2_navfn_planner/1.3.5-1
   navigation2/nav2_planner:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_planner/1.1.16-1
+    version: release/jazzy/nav2_planner/1.3.5-1
   navigation2/nav2_regulated_pure_pursuit_controller:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_regulated_pure_pursuit_controller/1.1.16-1
+    version: release/jazzy/nav2_regulated_pure_pursuit_controller/1.3.5-1
   navigation2/nav2_rotation_shim_controller:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_rotation_shim_controller/1.1.16-1
+    version: release/jazzy/nav2_rotation_shim_controller/1.3.5-1
   navigation2/nav2_simple_commander:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_simple_commander/1.1.16-1
+    version: release/jazzy/nav2_simple_commander/1.3.5-1
   navigation2/nav2_smac_planner:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_smac_planner/1.1.16-1
+    version: release/jazzy/nav2_smac_planner/1.3.5-1
   navigation2/nav2_smoother:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_smoother/1.1.16-1
+    version: release/jazzy/nav2_smoother/1.3.5-1
   navigation2/nav2_theta_star_planner:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_theta_star_planner/1.1.16-1
+    version: release/jazzy/nav2_theta_star_planner/1.3.5-1
   navigation2/nav2_util:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_util/1.1.16-1
+    version: release/jazzy/nav2_util/1.3.5-1
   navigation2/nav2_velocity_smoother:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_velocity_smoother/1.1.16-1
+    version: release/jazzy/nav2_velocity_smoother/1.3.5-1
   navigation2/nav2_voxel_grid:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_voxel_grid/1.1.16-1
+    version: release/jazzy/nav2_voxel_grid/1.3.5-1
   navigation2/nav2_waypoint_follower:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav2_waypoint_follower/1.1.16-1
+    version: release/jazzy/nav2_waypoint_follower/1.3.5-1
   navigation2/nav_2d_msgs:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav_2d_msgs/1.1.16-1
+    version: release/jazzy/nav_2d_msgs/1.3.5-1
   navigation2/nav_2d_utils:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/nav_2d_utils/1.1.16-1
+    version: release/jazzy/nav_2d_utils/1.3.5-1
   navigation2/navigation2:
     type: git
     url: https://github.com/SteveMacenski/navigation2-release.git
-    version: release/humble/navigation2/1.1.16-1
+    version: release/jazzy/navigation2/1.3.5-1
+  navigation2/opennav_docking:
+    type: git
+    url: https://github.com/SteveMacenski/navigation2-release.git
+    version: release/jazzy/opennav_docking/1.3.5-1
+  navigation2/opennav_docking_bt:
+    type: git
+    url: https://github.com/SteveMacenski/navigation2-release.git
+    version: release/jazzy/opennav_docking_bt/1.3.5-1
+  navigation2/opennav_docking_core:
+    type: git
+    url: https://github.com/SteveMacenski/navigation2-release.git
+    version: release/jazzy/opennav_docking_core/1.3.5-1
   ompl:
     type: git
     url: https://github.com/ros2-gbp/ompl-release.git
-    version: release/humble/ompl/1.6.0-1
+    version: release/jazzy/ompl/1.6.0-1
+  robot_localization:
+    type: git
+    url: https://github.com/ros2-gbp/robot_localization-release.git
+    version: release/jazzy/robot_localization/3.8.2-1
   vision_opencv/cv_bridge:
     type: git
     url: https://github.com/ros2-gbp/vision_opencv-release.git
-    version: release/humble/cv_bridge/3.2.1-1
+    version: release/jazzy/cv_bridge/4.1.0-1
   yaml_cpp_vendor:
     type: git
     url: https://github.com/ros2-gbp/yaml_cpp_vendor-release.git
-    version: release/humble/yaml_cpp_vendor/8.0.2-1
+    version: release/jazzy/yaml_cpp_vendor/9.0.1-1
 
