@@ -21,6 +21,7 @@ object_recognition_msgs
 octomap
 ompl
 orocos_kinematics_dynamics
+osqp_vendor
 py_binding_tools
 python_qt_binding
 random_numbers
@@ -31,8 +32,10 @@ ros2_controllers
 ruckig
 rviz2
 srdfdom
+stomp
 urdf_parser_py
 vision_opencv
 warehouse_ros
+warehouse_ros_sqlite
 xacro
 yaml_cpp_vendor

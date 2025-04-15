@@ -20,7 +20,7 @@
 #   VERSION         - The version of Space ROS (default: "preview")
 #   SPACE_ROS_IMAGE - The base Space ROS image to build on
 
-ARG SPACE_ROS_IMAGE=osrf/space-ros:humble-2024.10.0
+ARG SPACE_ROS_IMAGE=osrf/space-ros:jazzy-2025.01.0
 
 FROM ${SPACE_ROS_IMAGE}
 
@@ -116,8 +116,6 @@ RUN rosinstall_generator \
 # Get the repositories required by MoveIt2, but not included in Space ROS
 WORKDIR ${MOVEIT2_DIR}
 RUN vcs import src < /tmp/moveit2_generated_pkgs.repos
-COPY --chown=${USERNAME}:${USERNAME} moveit2_tutorials.repos /tmp/
-RUN vcs import src < /tmp/moveit2_tutorials.repos
 
 # Update the ownership of the source files (had to use sudo above to work around
 # a possible inherited 'insteadof' from the host that forces use of ssh
