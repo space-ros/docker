@@ -37,8 +37,6 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 
 # Define a few key variables
 ENV DEMO_DIR=${HOME_DIR}/demos_ws
-ENV IGNITION_VERSION fortress
-ENV GZ_VERSION fortress
 
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
@@ -51,40 +49,23 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
       git-lfs \
       python3-rosinstall-generator
 
-# TODO(anyone): remove demo-pkgs.txt, no packages left after exclusions
+RUN sudo git clone https://github.com/space-ros/demos.git ${DEMO_DIR}/src/demos
+RUN sudo git clone https://github.com/space-ros/simulation.git ${DEMO_DIR}/src/simulation
+RUN sudo chown -R ${USERNAME}:${USERNAME} ${DEMO_DIR}
+
 # Generate repos file for demo dependencies, excluding packages from Space ROS core.
-# COPY --chown=${USERNAME}:${USERNAME} demo-pkgs.txt /tmp/
-# COPY --chown=${USERNAME}:${USERNAME} excluded-pkgs.txt /tmp/
-# RUN rosinstall_generator \
-#   --rosdistro ${ROS_DISTRO} \
-#   --deps \
-#   --exclude-path ${SPACEROS_DIR}/src \
-#   --exclude-path ${MOVEIT2_DIR}/src \
-#   --exclude $(cat /tmp/excluded-pkgs.txt) -- \
-#   -- $(cat /tmp/demo-pkgs.txt) \
-#   > /tmp/demo_generated_pkgs.repos
+COPY --chown=${USERNAME}:${USERNAME} demo-pkgs.txt /tmp/
+COPY --chown=${USERNAME}:${USERNAME} excluded-pkgs.txt /tmp/
+RUN rosinstall_generator \
+  --rosdistro ${ROS_DISTRO} \
+  --deps \
+  --exclude-path ${SPACEROS_DIR}/src ${MOVEIT2_DIR}/src \
+  --exclude $(cat /tmp/excluded-pkgs.txt) -- \
+  -- $(cat /tmp/demo-pkgs.txt) \
+  > /tmp/demo_generated_pkgs.repos
 
-RUN mkdir -p ${DEMO_DIR}/src
 WORKDIR ${DEMO_DIR}
-
-
-# Install libmongoc for development
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-  --mount=type=cache,target=/var/lib/apt,sharing=locked \
-  sudo -E apt-get install libmongoc-dev -y
-
-# Compile mongo cxx driver https://mongocxx.org/mongocxx-v3/installation/linux/
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-  --mount=type=cache,target=/var/lib/apt,sharing=locked \
-  sudo -E apt-get install libssl-dev build-essential devscripts debian-keyring fakeroot debhelper cmake libboost-dev libsasl2-dev libicu-dev libzstd-dev doxygen -y
-RUN wget https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.6.7/mongo-cxx-driver-r3.6.7.tar.gz
-RUN tar -xzf mongo-cxx-driver-r3.6.7.tar.gz
-RUN cd mongo-cxx-driver-r3.6.7/build && cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local && sudo cmake --build . --target EP_mnmlstc_core && cmake --build . && sudo cmake --build . --target install
-
-# Get the source for the dependencies
-# RUN vcs import src < /tmp/demo_generated_pkgs.repos
-COPY --chown=${USERNAME}:${USERNAME} demo_manual_pkgs.repos /tmp/
-RUN vcs import src < /tmp/demo_manual_pkgs.repos && /bin/bash -c 'source "${SPACEROS_DIR}/install/setup.bash"' 
+RUN vcs import src < /tmp/demo_generated_pkgs.repos
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt,sharing=locked \
