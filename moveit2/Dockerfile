@@ -125,7 +125,7 @@ RUN sudo chown -R ${USERNAME}:${USERNAME} ${MOVEIT2_DIR}
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt,sharing=locked \
   /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash' \
- && rosdep install --from-paths src --ignore-src --rosdistro ${ROS_DISTRO} -r -y --skip-keys "console_bridge generate_parameter_library fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers rmw_connextdds ros_testing rmw_connextdds rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp composition demo_nodes_py lifecycle rosidl_typesupport_fastrtps_cpp rosidl_typesupport_fastrtps_c ikos diagnostic_aggregator diagnostic_updater joy qt_gui rqt_gui rqt_gui_py"
+ && rosdep install --from-paths src --ignore-src --rosdistro ${ROS_DISTRO} -r -y --skip-keys "composition console_bridge demo_nodes_py diagnostic_aggregator diagnostic_updater fastcdr fastrtps generate_parameter_library google_benchmark_vendor ikos joy lifecycle qt_gui rmw_connextdds rmw_connextdds rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp ros_testing rosidl_typesupport_fastrtps_c rosidl_typesupport_fastrtps_cpp rqt_gui rqt_gui_py rti-connext-dds-5.3.1 urdfdom urdfdom_headers"
 
 # Build MoveIt2
 RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash \
