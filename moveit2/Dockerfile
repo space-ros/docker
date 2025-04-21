@@ -125,8 +125,8 @@ RUN sudo chown -R ${USERNAME}:${USERNAME} ${MOVEIT2_DIR}
 COPY --chown=${USERNAME}:${USERNAME} rosdep-skip.txt /tmp/
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt,sharing=locked \
-  /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash' \
- && rosdep install --from-paths src --ignore-src --rosdistro ${ROS_DISTRO} -r -y --skip-keys "$(cat /tmp/rosdep-skip.txt | tr '\n' ' ')"
+  /bin/bash -c "source ${SPACEROS_DIR}/install/setup.bash \
+ && rosdep install --from-paths src --ignore-src --rosdistro ${ROS_DISTRO} -r -y --skip-keys \"$(cat /tmp/rosdep-skip.txt | tr '\n' ' ')\""
 
 # Build MoveIt2
 RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash \
