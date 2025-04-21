@@ -62,7 +62,7 @@ RUN rosdep update
 # Install the various build and test tools
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt,sharing=locked \
-  sudo apt install -y \
+  sudo -E apt install -y \
   build-essential \
   clang-format \
   cmake \
@@ -100,7 +100,7 @@ RUN sudo chown -R ${USERNAME}:${USERNAME} ${MOVEIT2_DIR}
 # Get rosinstall_generator
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt,sharing=locked \
-  sudo apt-get update -y && sudo apt-get install -y python3-rosinstall-generator
+  sudo apt-get update -y && sudo -E apt-get install -y python3-rosinstall-generator
 
 # Generate repos file for moveit2 dependencies, excluding packages from Space ROS core.
 COPY --chown=${USERNAME}:${USERNAME} moveit2-pkgs.txt /tmp/
@@ -137,7 +137,7 @@ RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash \
 # Add a couple sample GUI apps for testing
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt,sharing=locked \
-  sudo apt-get install -y \
+  sudo -E apt-get install -y \
   firefox \
   glmark2 \
   libcanberra-gtk3-0 \
