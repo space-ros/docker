@@ -44,6 +44,10 @@ jobs:
           outputs: type=docker,dest=/tmp/moveit2.tar
       - name: Build space robots demo image
         run: |
+          echo "Docker image list"
+          docker image list
+          echo "Empty space"
+          df -h
           docker load --input /tmp/moveit2.tar
           docker images
           cd space_robots && ./build.sh
