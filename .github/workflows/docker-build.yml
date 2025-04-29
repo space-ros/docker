@@ -41,14 +41,20 @@ jobs:
           no-cache: false
           build-args: |
             SPACE_ROS_IMAGE=osrf/space-ros:main
-          outputs: type=docker,dest=/tmp/moveit2.tar
+          outputs: type=docker,dest=/tmp/moveit2.tar.gz
+      - name: Build space robots demo image
+        run: |
+          df -h
+          docker system prune -a
+          df -h
       - name: Build space robots demo image
         run: |
           echo "Docker image list"
           docker image list
           echo "Empty space"
           df -h
-          docker load --input /tmp/moveit2.tar
+          ls -lh /tmp/moveit2.tar.gz
+          docker load --input /tmp/moveit2.tar.gz
           docker images
           cd space_robots && ./build.sh
   space_nav2:
