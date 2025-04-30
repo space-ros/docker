@@ -72,7 +72,7 @@ RUN rm -rf src build log
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \  
     sudo apt update && \
-    sudo apt install -y ros-${ROS_DISTRO}-rviz2
+    sudo -E apt install -y ros-${ROS_DISTRO}-rviz2
 
 # Set up the entrypoint
 COPY ./entrypoint.sh /
