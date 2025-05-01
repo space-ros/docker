@@ -17,7 +17,7 @@ echo ""
 docker build -t $ORG/$IMAGE:$TAG \
     --build-arg VCS_REF="$VCS_REF" \
     --build-arg VERSION="$VERSION" \
-    --build-arg SPACE_ROS_IMAGE="${SPACE_ROS_IMAGE:-osrf/space-ros:jazzy-2025.01.0}" \
+    --build-arg SPACE_ROS_IMAGE="${SPACE_ROS_IMAGE:-osrf/space-ros:jazzy-2025.04.0}" \
     .
 
 echo ""
