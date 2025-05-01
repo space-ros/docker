@@ -20,7 +20,7 @@
 #   VERSION         - The version of Space ROS (default: "preview")
 #   SPACE_ROS_IMAGE - The base Space ROS image to build on
 
-ARG SPACE_ROS_IMAGE=osrf/space-ros:jazzy-2025.01.0
+ARG SPACE_ROS_IMAGE=osrf/space-ros:jazzy-2025.04.0
 
 FROM ${SPACE_ROS_IMAGE}
 
