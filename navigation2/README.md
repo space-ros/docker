@@ -19,7 +19,7 @@ If building locally, the underlying base image can be set in the [build script](
 
 ```bash
 # Use a locally built image as the base
-SPACE_ROS_IMAGE="space-ros:main" ./build.sh
+SPACE_ROS_IMAGE="osrf/space-ros:latest" ./build.sh
 ```
 
 ## Running the Navigation2 Docker Image in a Container
@@ -33,9 +33,9 @@ docker image list
 The output will look something like this:
 
 ```
-REPOSITORY              TAG                        IMAGE ID       CREATED        SIZE
-osrf/space_nav2         latest                     6edb2edc9643   10 hours ago   15.5GB
-osrf/space-ros           latest                     629b13cf7b74   12 hours ago   7.8GB
+REPOSITORY             TAG       IMAGE ID       CREATED          SIZE
+osrf/space_nav2        latest    c9b1693fbe5e   2 hours ago      3.79GB
+osrf/space-ros         latest    18a3c6709c93   3 hours ago      1.37GB
 ```
 
 The new image is named **osrf/space_nav2:latest**.
@@ -73,7 +73,7 @@ By default, this update nav2 repositories using the latest released version of t
 If building locally, the underlying base image can be set in the through the environment with:
 
 ```
-SPACE_ROS_IMAGE=osrf/space-ros:main ./docker_update_nav2_repos.sh
+SPACE_ROS_IMAGE=osrf/space-ros:latest ./docker_update_nav2_repos.sh
 ```
 
 To generate a list of required packages for any other ROS workspace (e.g. your custom workspace built on top of SpaceROS that already has some nav2 dependencies installed), consider using the `update_nav2_repos.sh` as your starting point. You may also need to clone `generate-repos.sh` script from the main spaceros repository.
