@@ -11,6 +11,22 @@ To build the docker image, run:
 ./build.sh
 ```
 
+By default, this will build on top of the latest released version of the Space ROS base image (typically `osrf/space-ros:latest`).
+If building locally, the underlying base image can be set in the [build script](./build.sh), or through the environment with:
+
+```bash
+# Use a locally built image as the base
+SPACE_ROS_IMAGE="space-ros:main" ./build.sh
+```
+
+Similarly, the tag for the resulting Docker image can be customized using the `MOVEIT2_TAG` environment variable.
+For example, to build an image based on the `space-ros:humble-2024.10.0` image and tag it with the same release label use:
+
+```bash
+# Use a locally built image as the base
+SPACE_ROS_IMAGE="osrf/space-ros:humble-2024.10.0" MOVEIT2_TAG=humble-2024.10.0 ./build.sh
+```
+
 The build process will take about 30 minutes, depending on the host computer.
 
 ## Running the MoveIt2 Docker Image in a Container
@@ -44,32 +60,6 @@ You'll now be running inside the container and should see a prompt similar to th
 ```
 spaceros-user@8e73b41a4e16:~/moveit2#
 ```
-
-## Running MoveIt2 Tutorials
-
-Run the following command to launch the MoveIt2 tutorials demo launch file:
-
-```bash
-ros2 launch moveit2_tutorials demo.launch.py rviz_tutorial:=true
-```
-
-You should see lots of console output and the rviz2 window appear:
-
-![rviz2 tutorial window](resources/moveit2-rviz-tutorial.png)
-
-You can now follow the [MoveIt2 Tutorial documentation](https://moveit.picknik.ai/main/doc/tutorials/quickstart_in_rviz/quickstart_in_rviz_tutorial.html).
-
-## Running the MoveIt2 Move Group C++ Interface Demo
-
-To run the Move Group C++ Interface Demo, execute the following command:
-
-```bash
-ros2 launch moveit2_tutorials move_group.launch.py
-```
-
-![rviz2 move group window](resources/moveit2-rviz.png)
-
-Then, you can follow the [Move Group C++ Interface Demo documentation](https://moveit.picknik.ai/humble/doc/examples/move_group_interface/move_group_interface_tutorial.html).
 
 ## Running the Space ROS Space Robots Demos
 

@@ -9,7 +9,7 @@ on:
     - cron: '0 2 * * *'
 jobs:
   space_robots:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - name: "Free up disk space"
         run: |
@@ -20,6 +20,12 @@ jobs:
           # free up a lot of stuff from /usr/local
           sudo rm -rf /usr/local
           df -h
+      - name: Login to ghcr
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up buildx
@@ -33,14 +39,11 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           no-cache: false
+          build-args: |
+            SPACE_ROS_IMAGE=osrf/space-ros:main
           outputs: type=docker,dest=/tmp/moveit2.tar
-      - name: Build space robots demo image
-        run: |
-          docker load --input /tmp/moveit2.tar
-          docker images
-          cd space_robots && ./build.sh
   space_nav2:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -55,3 +58,5 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           no-cache: false
+          build-args: |
+            SPACE_ROS_IMAGE=osrf/space-ros:main
