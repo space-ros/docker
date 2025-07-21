@@ -41,6 +41,9 @@ ENV DEMO_DIR=${HOME_DIR}/demos_ws
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
 
+# Update the ROS package keys
+ADD --chmod=644 https://raw.githubusercontent.com/ros/rosdistro/master/ros.key /usr/share/keyrings/ros-archive-keyring.gpg
+
 # Install base image dependencies
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
