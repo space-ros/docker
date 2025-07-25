@@ -41,6 +41,9 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
 
+# Update the ROS package keys
+ADD --chmod=644 https://raw.githubusercontent.com/ros/rosdistro/master/ros.key /usr/share/keyrings/ros-archive-keyring.gpg
+
 # Clone all space-ros sources
 RUN mkdir ${SPACEROS_DIR}/src \
   && vcs import ${SPACEROS_DIR}/src < ${SPACEROS_DIR}/exact.repos
