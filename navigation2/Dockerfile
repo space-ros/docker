@@ -55,6 +55,9 @@ COPY excluded-pkgs.txt .
 RUN vcs import --shallow src < navigation2.repos
 COPY --chown=spaceros-user:spaceros-user src/ src
 
+# Update the ROS package keys
+ADD --chmod=644 https://raw.githubusercontent.com/ros/rosdistro/master/ros.key /usr/share/keyrings/ros-archive-keyring.gpg
+
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \ 
     source ${SPACEROS_DIR}/install/setup.bash && \
