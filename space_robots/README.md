@@ -22,24 +22,26 @@ cd ../space_robots
 
 ## Running the Demo Docker
 
-run the following to allow GUI passthrough:
+Run the following to allow GUI passthrough:
+
 ```bash
 xhost +local:docker
 ```
 
 Then run:
+
 ```bash
 ./run.sh
 ```
 
-Depending on the host computer, you might need to remove the ```--gpus all``` flag in ```run.sh```, which uses your GPUs.
-
 ## Running the Demos
 
 ### Curiosity Mars rover demo
+
 Launch the demo:
+
 ```bash
-ros2 launch mars_rover mars_rover.launch.py
+ros2 launch curiosity_rover_demo mars_rover.launch.py
 ```
 
 On the top left corner, click on the refresh button to show camera feed.
@@ -57,7 +59,7 @@ docker exec -it <container-name> bash
 Make sure packages are sourced:
 
 ```bash
-source ${SPACEROS_DIR}/install/setup.bash
+source ${SPACEROS_DIR}/setup.bash
 ```
 
 ```bash
