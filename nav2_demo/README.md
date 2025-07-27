@@ -1,20 +1,20 @@
 # This folder contains the necessary files for running Nav2 on the Mars Rover demo
 
-# This demo is a preliminary release, please file any issues found
+This demo is a preliminary release, please file any issues found.
 
-## First build this container using the build script
+First build this container using the build script
 
-```
-build.sh
+```bash
+./build.sh
 ```
 
 There will now be a docker image called "osrf/space_nav2_demo:latest".
 
-# Run the Mars Rover demo with Nav2 and SLAM toolbox
+## Run the Mars Rover demo with Nav2 and SLAM toolbox
 
 ## Terminal 1 - launch the mars_rover demo
 
-Follow instructions on space-ros/docker/space-robots/README.md.
+Follow the instructions to build and run the mars rover demo in [space-robots/README.md](../space_robots/README.md).
 
 ## Terminal 2 - launch Nav2
 
