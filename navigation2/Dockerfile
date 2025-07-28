@@ -20,13 +20,15 @@
 #   VERSION         - The version of Space ROS (default: "preview")
 #   SPACE_ROS_IMAGE - The base Space ROS image to build on
 
-ARG SPACE_ROS_IMAGE=osrf/space-ros:jazzy-2025.04.0
+# TODO: Reset to a tagged image after the release
+ARG SPACE_ROS_IMAGE=osrf/space-ros:main
 
 FROM ${SPACE_ROS_IMAGE}
 
 # Define arguments used in the metadata definition
 ARG VCS_REF
 ARG VERSION="preview"
+ARG USERNAME="spaceros-user"
 
 # Specify the docker image metadata
 LABEL org.label-schema.schema-version="1.0"
@@ -44,7 +46,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-c"]
 
 # Define workspace locations
-ENV NAVIGATION2_WS=${HOME_DIR}/nav2_ws
+ENV NAVIGATION2_WS=${HOME}/nav2_ws
 
 RUN mkdir -p ${NAVIGATION2_WS}/src
 
@@ -53,27 +55,33 @@ WORKDIR ${NAVIGATION2_WS}/
 COPY navigation2.repos .
 COPY excluded-pkgs.txt .
 RUN vcs import --shallow src < navigation2.repos
-COPY --chown=spaceros-user:spaceros-user src/ src
+COPY --chown=${USERNAME}:${USERNAME} src/ src
 
 # Update the ROS package keys
 ADD --chmod=644 https://raw.githubusercontent.com/ros/rosdistro/master/ros.key /usr/share/keyrings/ros-archive-keyring.gpg
 
+RUN sudo rosdep init
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked \ 
-    source ${SPACEROS_DIR}/install/setup.bash && \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    source ${SPACEROS_DIR}/setup.bash && \
+    rosdep update && \
     sudo apt update && \
-    rosdep install -i --from-path src --skip-keys $(cat excluded-pkgs.txt) -y
-RUN source ${SPACEROS_DIR}/install/setup.bash && \
-    colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --no-warn-unused-cli
-RUN rm -rf src build log
+    rosdep install -i --from-path src --skip-keys "$(cat excluded-pkgs.txt)" -y
+RUN source ${SPACEROS_DIR}/setup.bash && \
+    colcon build \
+      --cmake-args \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+      --no-warn-unused-cli && \
+    rm -rf src build log
 
 
-# Install rviz2 to send goals to Nav2. 
+# Install rviz2 to send goals to Nav2.
 # TODO(asimonov): Remove rviz2 apt install in the future.
-#                 It brings a lot of dependencies with it. 
+#                 It brings a lot of dependencies with it.
 #                 It installs 146 packages into /opt/ros/jazzy which is confusing as space-ros is in /opt/spaceros.
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked \  
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
     sudo apt update && \
     sudo -E apt install -y ros-${ROS_DISTRO}-rviz2
 

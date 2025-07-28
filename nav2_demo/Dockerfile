@@ -39,15 +39,14 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Define workspace locations
-ENV NAVIGATION2_WS=${HOME_DIR}/nav2_ws
-ENV NAV2_DEPS_WS=${HOME_DIR}/nav2_deps_ws
+ENV NAVIGATION2_WS=${HOME}/nav2_ws
 
 # Setup mars_rover demo
 # Install map file for localization
-COPY mars_map* /home/spaceros-user/nav2_ws
+COPY mars_map* ${HOME}/nav2_ws
 
 # Install nav2 config file for mars rover demo
-COPY nav2_params.yaml /home/spaceros-user/nav2_ws
+COPY nav2_params.yaml ${HOME}/nav2_ws
 
 # Set up the entrypoint
 COPY ./entrypoint.sh /

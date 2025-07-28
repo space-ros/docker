@@ -24,6 +24,7 @@ FROM openrobotics/moveit2:latest
 # Define arguments used in the metadata definition
 ARG VCS_REF
 ARG VERSION="preview"
+ARG USERNAME="spaceros-user"
 
 # Specify the docker image metadata
 LABEL org.label-schema.schema-version="1.0"
@@ -36,7 +37,8 @@ LABEL org.label-schema.vcs-url="https://github.com/space-ros/docker"
 LABEL org.label-schema.vcs-ref=${VCS_REF}
 
 # Define a few key variables
-ENV DEMO_DIR=${HOME_DIR}/demos_ws
+ENV DEMO_DIR=${HOME}/demos_ws
+WORKDIR ${DEMO_DIR}
 
 # Disable prompting during package installation
 ARG DEBIAN_FRONTEND=noninteractive
@@ -52,37 +54,39 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
       git-lfs \
       python3-rosinstall-generator
 
-RUN sudo git clone https://github.com/space-ros/demos.git ${DEMO_DIR}/src/demos
-RUN sudo git clone https://github.com/space-ros/simulation.git ${DEMO_DIR}/src/simulation
-RUN sudo chown -R ${USERNAME}:${USERNAME} ${DEMO_DIR}
+RUN git clone https://github.com/space-ros/demos.git ${DEMO_DIR}/src/demos
+RUN git clone https://github.com/space-ros/simulation.git ${DEMO_DIR}/src/simulation
 
-# Generate repos file for demo dependencies, excluding packages from Space ROS core.
+# Get a list of all installed ros2 packges
+RUN source "${SPACEROS_DIR}/setup.bash" && \
+    source "${MOVEIT2_DIR}/install/setup.bash" && \
+    ros2 pkg list > /tmp/installed-pkgs.txt
+
+# Generate repos file for demo dependencies, excluding previously installed packages
 COPY --chown=${USERNAME}:${USERNAME} demo-pkgs.txt /tmp/
 COPY --chown=${USERNAME}:${USERNAME} excluded-pkgs.txt /tmp/
 RUN rosinstall_generator \
   --rosdistro ${ROS_DISTRO} \
   --deps \
-  --exclude-path ${SPACEROS_DIR}/src ${MOVEIT2_DIR}/src \
-  --exclude $(cat /tmp/excluded-pkgs.txt) -- \
-  -- $(cat /tmp/demo-pkgs.txt) \
-  > /tmp/demo_generated_pkgs.repos
+  --exclude $(cat /tmp/excluded-pkgs.txt /tmp/installed-pkgs.txt) -- \
+  $(cat /tmp/demo-pkgs.txt) \
+  > demo_generated_pkgs.repos
 
-WORKDIR ${DEMO_DIR}
-RUN vcs import src < /tmp/demo_generated_pkgs.repos
+RUN vcs import --shallow src < demo_generated_pkgs.repos
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-  --mount=type=cache,target=/var/lib/apt,sharing=locked \
-  sudo apt-get update -y \
-&& /bin/bash -c 'source "${SPACEROS_DIR}/install/setup.bash"' \
-&& /bin/bash -c 'source "${MOVEIT2_DIR}/install/setup.bash"' \
-&& rosdep install --from-paths src --ignore-src -r -y --rosdistro ${ROS_DISTRO}
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    sudo apt-get update -y && \
+    source "${SPACEROS_DIR}/setup.bash" && \
+    source "${MOVEIT2_DIR}/install/setup.bash" && \
+    rosdep install --from-paths src --ignore-src -r -y --rosdistro ${ROS_DISTRO}
 
 # Build the demo
-RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash && source ${MOVEIT2_DIR}/install/setup.bash \
-  && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release'
-
-# Add the user to the render group so that the user can access /dev/dri/renderD128
-RUN sudo usermod -aG render $USERNAME
+RUN source ${SPACEROS_DIR}/setup.bash && \
+    source ${MOVEIT2_DIR}/install/setup.bash && \
+    colcon build \
+      --cmake-args \
+      -DCMAKE_BUILD_TYPE=Release
 
 # Setup the entrypoint
 COPY ./entrypoint.sh /

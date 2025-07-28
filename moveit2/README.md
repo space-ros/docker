@@ -16,18 +16,18 @@ If building locally, the underlying base image can be set in the [build script](
 
 ```bash
 # Use a locally built image as the base
-SPACE_ROS_IMAGE="space-ros:main" ./build.sh
+SPACE_ROS_IMAGE="osrf/space-ros:latest" ./build.sh
 ```
 
 Similarly, the tag for the resulting Docker image can be customized using the `MOVEIT2_TAG` environment variable.
-For example, to build an image based on the `space-ros:humble-2024.10.0` image and tag it with the same release label use:
+For example, to build an image based on the `osrf/space-ros:jazzy-2025.04.0` image and tag it with the same release label use:
 
 ```bash
 # Use a locally built image as the base
-SPACE_ROS_IMAGE="osrf/space-ros:humble-2024.10.0" MOVEIT2_TAG=humble-2024.10.0 ./build.sh
+SPACE_ROS_IMAGE="osrf/space-ros:jazzy-2025.04.0" MOVEIT2_TAG="jazzy-2025.04.0" ./build.sh
 ```
 
-The build process will take about 30 minutes, depending on the host computer.
+The build process will take about 45 minutes, depending on the host computer.
 
 ## Running the MoveIt2 Docker Image in a Container
 
@@ -39,11 +39,10 @@ docker image list
 
 The output will look something like this:
 
-```
-REPOSITORY              TAG                        IMAGE ID       CREATED        SIZE
-openrobotics/moveit2    latest                     6edb2edc9643   10 hours ago   15.5GB
-openrobotics/spaceros   latest                     629b13cf7b74   12 hours ago   7.8GB
-nvidia/cudagl           11.4.1-devel-ubuntu20.04   336416dfcbba   1 week ago     5.35GB
+```bash
+REPOSITORY             TAG       IMAGE ID       CREATED             SIZE
+openrobotics/moveit2   latest    bd7342baeff2   4 hours ago         5.49GB
+osrf/space-ros         latest    18a3c6709c93   6 hours ago         1.37GB
 ```
 
 The new image is named **openrobotics/moveit2:latest**.

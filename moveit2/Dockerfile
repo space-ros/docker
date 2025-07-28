@@ -20,13 +20,17 @@
 #   VERSION         - The version of Space ROS (default: "preview")
 #   SPACE_ROS_IMAGE - The base Space ROS image to build on
 
-ARG SPACE_ROS_IMAGE=osrf/space-ros:jazzy-2025.04.0
+# TODO: Reset to a tagged image after the release
+ARG SPACE_ROS_IMAGE=osrf/space-ros:main
 
 FROM ${SPACE_ROS_IMAGE}
+
+SHELL [ "/bin/bash", "-o", "pipefail", "-c" ]
 
 # Define arguments used in the metadata definition
 ARG VCS_REF
 ARG VERSION="preview"
+ARG USERNAME="spaceros-user"
 
 # Specify the docker image metadata
 LABEL org.label-schema.schema-version="1.0"
@@ -44,109 +48,94 @@ ARG DEBIAN_FRONTEND=noninteractive
 # Update the ROS package keys
 ADD --chmod=644 https://raw.githubusercontent.com/ros/rosdistro/master/ros.key /usr/share/keyrings/ros-archive-keyring.gpg
 
-# Clone all space-ros sources
-RUN mkdir ${SPACEROS_DIR}/src \
-  && vcs import ${SPACEROS_DIR}/src < ${SPACEROS_DIR}/exact.repos
-
 # Define key locations
-ENV MOVEIT2_DIR=${HOME_DIR}/moveit2
+ENV MOVEIT2_DIR=${HOME}/moveit2
 
 # Make sure the latest versions of packages are installed
 # Using Docker BuildKit cache mounts for /var/cache/apt and /var/lib/apt ensures that
 # the cache won't make it into the built image but will be maintained between steps.
+RUN sudo rosdep init
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-  --mount=type=cache,target=/var/lib/apt,sharing=locked \
-  sudo apt-get update
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    sudo apt-get update
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-  --mount=type=cache,target=/var/lib/apt,sharing=locked \
-  sudo apt-get dist-upgrade -y
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    sudo apt-get dist-upgrade -y
 RUN rosdep update
 
 # Install the various build and test tools
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt,sharing=locked \
   sudo -E apt install -y \
-  build-essential \
-  clang-format \
-  cmake \
-  git \
-  libbullet-dev \
-  python3-argcomplete \
-  python3-colcon-common-extensions \
-  python3-flake8 \
-  python3-flake8-blind-except \
-  python3-flake8-builtins \
-  python3-flake8-class-newline \
-  python3-flake8-comprehensions \
-  python3-flake8-deprecated \
-  python3-flake8-docstrings \
-  python3-flake8-import-order \
-  python3-flake8-quotes \
-  python3-pip \
-  python3-pytest \
-  python3-pytest-cov \
-  python3-pytest-repeat \
-  python3-pytest-rerunfailures \
-  python3-rosdep \
-  python3-setuptools \
-  python3-vcstool \
-  wget
+    build-essential \
+    clang-format \
+    cmake \
+    git \
+    libbullet-dev \
+    python3-argcomplete \
+    python3-colcon-common-extensions \
+    python3-flake8 \
+    python3-flake8-blind-except \
+    python3-flake8-builtins \
+    python3-flake8-class-newline \
+    python3-flake8-comprehensions \
+    python3-flake8-deprecated \
+    python3-flake8-docstrings \
+    python3-flake8-import-order \
+    python3-flake8-quotes \
+    python3-pip \
+    python3-pytest \
+    python3-pytest-cov \
+    python3-pytest-repeat \
+    python3-pytest-rerunfailures \
+    python3-rosdep \
+    python3-rosinstall-generator \
+    python3-setuptools \
+    python3-vcstool \
+    wget
 
 # Get the MoveIt2 source code
-WORKDIR ${HOME_DIR}
-RUN sudo git clone https://github.com/ros-planning/moveit2.git -b ${ROS_DISTRO} moveit2/src
+RUN git clone https://github.com/ros-planning/moveit2.git -b ${ROS_DISTRO} ${MOVEIT2_DIR}/src/moveit2
 
-# Update the ownership of the source files (had to use sudo above to work around
-# a possible inherited 'insteadof' from the host that forces use of ssh
-RUN sudo chown -R ${USERNAME}:${USERNAME} ${MOVEIT2_DIR}
-
-# Get rosinstall_generator
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-  --mount=type=cache,target=/var/lib/apt,sharing=locked \
-  sudo apt-get update -y && sudo -E apt-get install -y python3-rosinstall-generator
+# Get a list of all installed spaceros sources
+RUN source "${SPACEROS_DIR}/setup.bash" && \
+    ros2 pkg list > /tmp/spaceros-pkgs.txt
 
 # Generate repos file for moveit2 dependencies, excluding packages from Space ROS core.
 COPY --chown=${USERNAME}:${USERNAME} moveit2-pkgs.txt /tmp/
 COPY --chown=${USERNAME}:${USERNAME} excluded-pkgs.txt /tmp/
 RUN rosinstall_generator \
-  --rosdistro ${ROS_DISTRO} \
-  --deps \
-  --exclude-path ${SPACEROS_DIR}/src \
-  --exclude $(cat /tmp/excluded-pkgs.txt) \
-  -- $(cat /tmp/moveit2-pkgs.txt) \
-  > /tmp/moveit2_generated_pkgs.repos
+    --rosdistro ${ROS_DISTRO} \
+    --deps \
+    --exclude $(cat /tmp/spaceros-pkgs.txt /tmp/excluded-pkgs.txt) -- \
+    -- $(cat /tmp/moveit2-pkgs.txt) \
+    > ${MOVEIT2_DIR}/moveit2_generated_pkgs.repos
 
 # Get the repositories required by MoveIt2, but not included in Space ROS
 WORKDIR ${MOVEIT2_DIR}
-RUN vcs import src < /tmp/moveit2_generated_pkgs.repos
-
-# Update the ownership of the source files (had to use sudo above to work around
-# a possible inherited 'insteadof' from the host that forces use of ssh
-RUN sudo chown -R ${USERNAME}:${USERNAME} ${MOVEIT2_DIR}
+RUN vcs import --shallow src < ${MOVEIT2_DIR}/moveit2_generated_pkgs.repos
 
 # Install system dependencies
 COPY --chown=${USERNAME}:${USERNAME} rosdep-skip.txt /tmp/
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-  --mount=type=cache,target=/var/lib/apt,sharing=locked \
-  /bin/bash -c "source ${SPACEROS_DIR}/install/setup.bash \
- && rosdep install --from-paths src --ignore-src --rosdistro ${ROS_DISTRO} -r -y --skip-keys \"$(cat /tmp/rosdep-skip.txt | tr '\n' ' ')\""
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    source ${SPACEROS_DIR}/setup.bash && \
+    rosdep install \
+      --from-paths src \
+      --ignore-src \
+      --rosdistro ${ROS_DISTRO} \
+      -r -y \
+      --skip-keys "$(cat /tmp/rosdep-skip.txt | tr '\n' ' ')"
 
 # Build MoveIt2
-#
 # We temporarily disable OMPL's demos due to a build error.
-RUN /bin/bash -c 'source ${SPACEROS_DIR}/install/setup.bash \
-  && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DOMPL_BUILD_DEMOS=OFF --event-handlers desktop_notification- status-'
-
-# Add a couple sample GUI apps for testing
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-  --mount=type=cache,target=/var/lib/apt,sharing=locked \
-  sudo -E apt-get install -y \
-  firefox \
-  glmark2 \
-  libcanberra-gtk3-0 \
-  libpci-dev \
-  xauth \
-  xterm
+RUN source ${SPACEROS_DIR}/setup.bash && \
+    colcon build \
+      --cmake-args \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+      -DOMPL_BUILD_DEMOS=OFF && \
+    rm -rf src build log
 
 # Set up the entrypoint
 COPY ./entrypoint.sh /
