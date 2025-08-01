@@ -14,11 +14,10 @@ echo ""
 echo "##### Building Navigation2/Space ROS Docker Image #####"
 echo ""
 
-# TODO: Reset to a tagged image after the release
 docker build -t $ORG/$IMAGE:$TAG \
     --build-arg VCS_REF="$VCS_REF" \
     --build-arg VERSION="$VERSION" \
-    --build-arg SPACE_ROS_IMAGE="${SPACE_ROS_IMAGE:-osrf/space-ros:main}" \
+    --build-arg SPACE_ROS_IMAGE="${SPACE_ROS_IMAGE:-osrf/space-ros:jazzy-2025.07.0}" \
     .
 
 echo ""
