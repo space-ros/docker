@@ -2,7 +2,9 @@
 
 The Navigation2 Docker image uses the Space ROS docker image (*osrf/space-ros:latest*) as its base image.
 The Navigation2 Dockerfile installs all of the prerequisite system dependencies to build Navigation2.
-All the required nav2 packages are cloned and built from sources using the `navigation2.repos` file. The `nav2_rviz_plugins` and `nav2_bringup` packages together with their dependencies (Rviz, Gazebo, etc) are excluded to reduce package dependencies. The image also contains a custom `space_nav2_bringup` package that can be used as a starting point for creating mission-specific nav2 launch files.
+All the required nav2 packages are cloned and built from sources using the `navigation2.repos` file.
+The `nav2_rviz_plugins` and `nav2_bringup` packages together with their dependencies (Rviz, Gazebo, etc) are excluded to reduce package dependencies.
+The image also contains a custom `space_ros_nav2_bringup` package that can be used as a starting point for creating mission-specific nav2 launch files.
 
 ## Building the Navigation2 Image
 
@@ -34,11 +36,11 @@ The output will look something like this:
 
 ```
 REPOSITORY             TAG       IMAGE ID       CREATED          SIZE
-osrf/space_nav2        latest    c9b1693fbe5e   2 hours ago      3.79GB
+osrf/space-ros-nav2        latest    c9b1693fbe5e   2 hours ago      3.79GB
 osrf/space-ros         latest    18a3c6709c93   3 hours ago      1.37GB
 ```
 
-The new image is named **osrf/space_nav2:latest**.
+The new image is named **osrf/space-ros-nav2:latest**.
 
 There is a run.sh script provided for convenience that will run the spaceros image in a container.
 
