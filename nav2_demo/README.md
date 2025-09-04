@@ -14,7 +14,7 @@ There will now be a docker image called "osrf/space-ros-nav2-demo:latest".
 
 ## Terminal 1 - launch the mars_rover demo
 
-Follow the instructions to build and run the mars rover demo in [space-robots/README.md](../space_robots/README.md).
+Follow the instructions to build and run the mars rover demo in [space-robots/README.md](https://github.com/space-ros/demos/tree/main/space_robots#readme).
 
 ## Terminal 2 - launch Nav2
 
