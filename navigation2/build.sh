@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ORG=osrf
-IMAGE=space_nav2
+IMAGE=space-ros-nav2
 TAG=latest
 
 VCS_REF=""

@@ -8,7 +8,7 @@ First build this container using the build script
 ./build.sh
 ```
 
-There will now be a docker image called "osrf/space_nav2_demo:latest".
+There will now be a docker image called "osrf/space-ros-nav2-demo:latest".
 
 ## Run the Mars Rover demo with Nav2 and SLAM toolbox
 
@@ -18,27 +18,27 @@ Follow the instructions to build and run the mars rover demo in [space-robots/RE
 
 ## Terminal 2 - launch Nav2
 
-Start the space_nav2 container and launch the navigation2 nodes:
+Start the space-ros-nav2 container and launch the navigation2 nodes:
 
 ```
 ./run.sh
-ros2 launch space_nav2_bringup navigation_launch.py use_sim_time:=True params_file:=nav2_params.yaml
+ros2 launch space_ros_nav2_bringup navigation_launch.py use_sim_time:=True params_file:=nav2_params.yaml
 ```
 
 ## Terminal 3 - launch localization with map
 
 ```
-docker exec -it osrf_space_nav2_demo bash
+docker exec -it osrf_space-ros-nav2-demo bash
 source install/setup.bash
-ros2 launch space_nav2_bringup localization_launch.py use_sim_time:=True map:=mars_map.yaml params_file:=nav2_params.yaml
+ros2 launch space_ros_nav2_bringup localization_launch.py use_sim_time:=True map:=mars_map.yaml params_file:=nav2_params.yaml
 ```
 
 ## Terminal 4 - launch Rviz
 
-Exec into the same space_nav2 container and launch Rviz2:
+Exec into the same space-ros-nav2 container and launch Rviz2:
 
 ```
-docker exec -it -e DISPLAY osrf_space_nav2_demo bash
+docker exec -it -e DISPLAY osrf_space-ros-nav2-demo bash
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 ros2 launch nav2_bringup rviz_launch.py

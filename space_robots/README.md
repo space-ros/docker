@@ -1,6 +1,6 @@
 # Space ROS Space Robots Demo Docker Image
 
-The Space ROS Space Robots Demo docker image uses the moveit2 docker image (*openrobotics/moveit2:latest*) as its base image.
+The Space ROS Space Robots Demo docker image uses the moveit2 docker image (*osrf/space-ros-moveit2:latest*) as its base image.
 Build instructions for that image can be found in [this README](../moveit2/README.md).
 The Dockerfile installs all of the prerequisite system dependencies along with the demos source code, then builds the Space ROS Space Robots Demo.
 

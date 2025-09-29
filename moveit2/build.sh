@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-ORG=openrobotics
-IMAGE=moveit2
+ORG=osrf
+IMAGE=space-ros-moveit2
 TAG=${MOVEIT2_TAG:-"latest"}
 
 VCS_REF=""

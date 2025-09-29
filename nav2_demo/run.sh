@@ -5,7 +5,7 @@
 #   docker
 #   an X server
 
-IMG_NAME=osrf/space_nav2_demo
+IMG_NAME=osrf/space-ros-nav2-demo
 IMG_TAG=latest
 
 # Replace `/` with `_` to comply with docker container naming

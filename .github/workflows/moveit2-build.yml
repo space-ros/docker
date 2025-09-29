@@ -1,0 +1,64 @@
+name: MoveIt2 Docker build
+on:
+  workflow_dispatch:
+  push:
+    branches: ['main']
+    paths: 'moveit2/**'
+  pull_request:
+    branches: ['main']
+    paths: 'moveit2/**'
+  schedule:
+    - cron: '0 2 * * *'
+jobs:
+  space-ros-moveit2:
+    runs-on: ubuntu-24.04
+    env:
+      IMAGE_TAG: "${{ github.head_ref || github.ref_name }}"
+      GHCR_IMAGE_NAME: "ghcr.io/space-ros/space-ros-moveit2"
+      DOCKER_HUB_USERNAME: osrfbot
+      DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_RW_TOKEN }}
+      DOCKER_HUB_IMAGE_NAME: "osrf/space-ros-moveit2"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build and tag Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: moveit2
+          push: false
+          tags: |
+            ${{ env.DOCKER_HUB_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+  
+      # Login and push the main builds to GHCR
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        if: ${{ github.ref_name == 'main' }}
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push the main spaceros image to GHCR
+        if: ${{ github.ref_name == 'main' }}
+        run: |
+          docker tag "$DOCKER_HUB_IMAGE_NAME:$IMAGE_TAG" "$GHCR_IMAGE_NAME:$IMAGE_TAG"
+          docker push "$GHCR_IMAGE_NAME:$IMAGE_TAG"
+
+      # Push both tagged releases and the latest main builds to Dockerhub
+      - name: Push spaceros images to Dockerhub
+        if: ${{ github.ref_type == 'tag' || github.ref_name == 'main' }}
+        run: |
+          # We must login using the password and not the action, as the action only supports tokens.
+          echo "$DOCKER_HUB_TOKEN" | docker login --username "$DOCKER_HUB_USERNAME" --password-stdin
+          docker push "$DOCKER_HUB_IMAGE_NAME:$IMAGE_TAG"
+
+      # Any tagged image should also be marked as "latest"
+      - name: Push spaceros latest images to Dockerhub
+        if: ${{ github.ref_type == 'tag' }}
+        run: |
+          # We must login using the password and not the action, as the action only supports tokens.
+          echo "$DOCKER_HUB_TOKEN" | docker login --username "$DOCKER_HUB_USERNAME" --password-stdin
+          docker tag "$DOCKER_HUB_IMAGE_NAME:$IMAGE_TAG" "$DOCKER_HUB_IMAGE_NAME:latest"
+          docker push "$DOCKER_HUB_IMAGE_NAME:latest"
