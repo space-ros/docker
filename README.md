@@ -10,5 +10,4 @@ See individual template directories for details.
 * [navigation2](./navigation2)
 * [renode_rcc](./renode_rcc)
 * [rtems](./rtems)
-* [space_robots](./space_robots)
 * [zynq_rtems](./zynq_rtems)
