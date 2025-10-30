@@ -55,10 +55,6 @@ You'll now be running inside the container and should see a prompt similar to th
 spaceros-user@ip-your-ip-address:/home/spaceros-user/nav2_ws#
 ```
 
-## Running Navigation2 Demo
-
-To run the latest demo, see the README in the [nav2_demo](../nav2_demo/README.md) folder.
-
 ## Updating navigation2 packages
 
 The `navigation2.repos` file available in this repository provides a list of repos that are required to build the nav2 stack. ROS packages already included in the SpaceROS base image are omited from this file.
