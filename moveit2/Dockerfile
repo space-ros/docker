@@ -119,6 +119,7 @@ COPY --chown=${USERNAME}:${USERNAME} rosdep-skip.txt /tmp/
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     source ${SPACEROS_DIR}/setup.bash && \
+    sudo apt-get update && \
     rosdep install \
       --from-paths src \
       --ignore-src \
