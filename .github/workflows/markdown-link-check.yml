@@ -1,12 +1,6 @@
 name: Markdown Link Check
 on:
-  workflow_dispatch:
-  push:
-    branches: ['main']
-  pull_request:
-    branches: ['main']
-  schedule:
-    - cron: '0 2 * * *'
+  workflow_call:
 jobs:
   markdown-link-check:
     runs-on: ubuntu-latest

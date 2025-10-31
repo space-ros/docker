@@ -1,14 +1,6 @@
 name: MoveIt2 Docker build
 on:
-  workflow_dispatch:
-  push:
-    branches: ['main']
-    paths: 'moveit2/**'
-  pull_request:
-    branches: ['main']
-    paths: 'moveit2/**'
-  schedule:
-    - cron: '0 2 * * *'
+  workflow_call:
 jobs:
   space-ros-moveit2:
     runs-on: ubuntu-24.04

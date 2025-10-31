@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  schedule:
+    - cron: "0 2 * * *"
+
+jobs:
+  detect-changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      moveit2-changed: ${{ steps.changes.outputs.moveit2 }}
+      nav2-changed: ${{ steps.changes.outputs.nav2 }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for changes
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            moveit2:
+              - 'moveit2/**'
+            nav2:
+              - 'navigation2/**'
+
+  markdown-link-check:
+    name: Markdown Link Check
+    uses: ./.github/workflows/markdown-link-check.yml
+
+  moveit2-build:
+    name: MoveIt2 Docker Build
+    needs: detect-changes
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'schedule' ||
+      needs.detect-changes.outputs.moveit2-changed == 'true'
+    uses: ./.github/workflows/moveit2-build.yml
+    secrets: inherit
+
+  nav2-build:
+    name: Nav2 Docker Build
+    needs: detect-changes
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'schedule' ||
+      needs.detect-changes.outputs.nav2-changed == 'true'
+    uses: ./.github/workflows/nav2-build.yml
+    secrets: inherit
