@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches: ["main"]
+    tags: ["*"]
   pull_request:
     branches: ["main"]
   schedule:
@@ -42,6 +43,7 @@ jobs:
     if: |
       github.event_name == 'workflow_dispatch' ||
       github.event_name == 'schedule' ||
+      startsWith(github.ref, 'refs/tags/') ||
       needs.detect-changes.outputs.moveit2-changed == 'true'
     uses: ./.github/workflows/moveit2-build.yml
     secrets: inherit
@@ -52,6 +54,7 @@ jobs:
     if: |
       github.event_name == 'workflow_dispatch' ||
       github.event_name == 'schedule' ||
+      startsWith(github.ref, 'refs/tags/') ||
       needs.detect-changes.outputs.nav2-changed == 'true'
     uses: ./.github/workflows/nav2-build.yml
     secrets: inherit
