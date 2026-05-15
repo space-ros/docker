@@ -2,7 +2,7 @@ name: Nav2 Docker build
 on:
   workflow_call:
 jobs:
-  space-ros-nav2:
+  Nav2 Docker Build:
     runs-on: ubuntu-24.04
     env:
       IMAGE_TAG: "${{ github.head_ref || github.ref_name }}"

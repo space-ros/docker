@@ -2,7 +2,7 @@ name: MoveIt2 Docker build
 on:
   workflow_call:
 jobs:
-  space-ros-moveit2:
+  MoveIt2 Docker Build:
     runs-on: ubuntu-24.04
     env:
       IMAGE_TAG: "${{ github.head_ref || github.ref_name }}"
