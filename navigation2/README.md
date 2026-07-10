@@ -1,4 +1,5 @@
 # Navigation2 Docker Image
+CHANGED NAV2
 
 The Navigation2 Docker image uses the Space ROS docker image (*osrf/space-ros:latest*) as its base image.
 The Navigation2 Dockerfile installs all of the prerequisite system dependencies to build Navigation2.
