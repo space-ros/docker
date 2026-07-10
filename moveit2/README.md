@@ -1,5 +1,6 @@
 # MoveIt2 Docker Image
-The MoveIt2 Docker image can be pulled directly from Docker Hub [osrf/space-ros-moveit2](https://hub.docker.com/r/osrf/space-ros-moveit2/tags) for use in space applications. The image is based on the Space ROS docker image [osrf/space-ros:latest](https://hub.docker.com/r/osrf/space-ros/tags) as its base image. 
+
+The MoveIt2 Docker image can be pulled directly from Docker Hub [osrf/space-ros-moveit2](https://hub.docker.com/r/osrf/space-ros-moveit2/tags) for use in space applications. The image is based on the Space ROS docker image [osrf/space-ros:latest](https://hub.docker.com/r/osrf/space-ros/tags) as its base image.
 
 Because the build can take over an hour, it's recommended to use the pre-built Docker Hub image for creating demos, however the MoveIt2 Docker image can also be built from source using the instructions below, so that it can be customized for a space application.
 
