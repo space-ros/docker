@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source $SPACEROS_DIR/install/setup.bash
+source $SPACEROS_DIR/setup.bash
 SCRIPT_PATH="$SPACEROS_DIR/scripts"
 bash $SCRIPT_PATH/generate-repos.sh \
     --rosdistro $ROS_DISTRO \
