@@ -40,21 +40,16 @@ jobs:
   moveit2-build:
     name: MoveIt2 Docker Build
     needs: detect-changes
-    if: |
-      github.event_name == 'workflow_dispatch' ||
-      github.event_name == 'schedule' ||
-      startsWith(github.ref, 'refs/tags/') ||
-      needs.detect-changes.outputs.moveit2-changed == 'true'
     uses: ./.github/workflows/moveit2-build.yml
+    with:
+      run_build: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || startsWith(github.ref, 'refs/tags/') || needs.detect-changes.outputs.moveit2-changed == 'true' }}
+
     secrets: inherit
 
   nav2-build:
     name: Nav2 Docker Build
     needs: detect-changes
-    if: |
-      github.event_name == 'workflow_dispatch' ||
-      github.event_name == 'schedule' ||
-      startsWith(github.ref, 'refs/tags/') ||
-      needs.detect-changes.outputs.nav2-changed == 'true'
     uses: ./.github/workflows/nav2-build.yml
+    with:
+      run_build: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || startsWith(github.ref, 'refs/tags/') || needs.detect-changes.outputs.nav2-changed == 'true' }}
     secrets: inherit
