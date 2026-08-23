@@ -1,9 +1,16 @@
 name: MoveIt2 Docker build
 on:
   workflow_call:
+    inputs:
+      run_build:
+        description: "True if anything in the MoveIt2 directory changed"
+        type: boolean
+        required: true
+
 jobs:
   space-ros-moveit2:
     runs-on: ubuntu-24.04
+    if: ${{ inputs.run_build == true }}
     env:
       IMAGE_TAG: "${{ github.head_ref || github.ref_name }}"
       GHCR_IMAGE_NAME: "ghcr.io/space-ros/space-ros-moveit2"
